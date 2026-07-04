@@ -26,6 +26,7 @@ module.exports = {
     "react-app",
     "react-app/jest",
   ],
+  plugins: ["only-warn"],
   rules: {
     "prettier/prettier": "error",
     "react/react-in-jsx-scope": "off",

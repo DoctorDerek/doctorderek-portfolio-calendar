@@ -24,6 +24,7 @@
   },
   "scripts": {
     "dev": "next dev",
+    "lint": "eslint src --ext .ts,.tsx,.js,.jsx",
     "start": "next start",
     "build": "next build",
     "test": "jest test --collectCoverage",
@@ -43,6 +44,7 @@
     "@babel/core": "^7.14.8",
     "@babel/preset-env": "^7.14.8",
     "@babel/preset-typescript": "^7.14.5",
+    "@ianvs/prettier-plugin-sort-imports": "^4.7.1",
     "@jackfranklin/test-data-bot": "^1.3.0",
     "@svgr/webpack": "^5.5.0",
     "@tailwindcss/forms": "^0.3.3",
@@ -68,37 +70,29 @@
     "esbuild-loader": "^2.13.1",
     "eslint": "^7.31.0",
     "eslint-config-next": "^11.0.1",
-    "eslint-config-prettier": "^8.3.0",
+    "eslint-config-prettier": "^8.10.2",
     "eslint-config-react-app": "^6.0.0",
     "eslint-plugin-flowtype": "^5.8.0",
     "eslint-plugin-import": "^2.23.4",
     "eslint-plugin-jest": "^24.3.6",
     "eslint-plugin-jsx-a11y": "^6.4.1",
+    "eslint-plugin-only-warn": "^1.2.1",
     "eslint-plugin-prettier": "^3.4.0",
     "eslint-plugin-react": "^7.24.0",
     "eslint-plugin-react-hooks": "^4.2.0",
     "eslint-plugin-testing-library": "^3.10.2",
     "file-loader": "^6.2.0",
-    "husky": "^7.0.1",
     "jest": "^27.0.6",
     "jest-axe": "^5.0.1",
     "jest-serializer-path": "^0.1.15",
     "jest-snapshot-serializer-raw": "^1.2.0",
     "jest-watch-typeahead": "^0.6.4",
-    "lint-staged": "^11.0.1",
     "postcss": "^8.3.5",
     "prettier": "^2.3.2",
     "react-test-renderer": "^17.0.2",
     "stylelint-config-recommended": "^5.0.0",
     "tailwindcss": "^2.2.4"
   },
-  "lint-staged": {
-    "*.+(js|jsx|ts|tsx)": [
-      "eslint --fix"
-    ],
-    "*.+(js|jsx|ts|tsx|json|css|md|mdx)": [
-      "prettier --write"
-    ]
-  },
+
   "packageManager": "pnpm@11.9.0+sha512.bd682d5d03fe525ef7c9fd6780c6884d1e756ac4c9c9fe00c538782824310dcf90e3ddc4f53835f06dfaebd5085e41855e0bcbb3b60de2ac5bbab89e5036f03b"
 }
