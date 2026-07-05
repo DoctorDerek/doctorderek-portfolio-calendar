@@ -47,9 +47,27 @@ Below you will find a complete feature set, description of technologies, and tec
   - Material UI `v5` (upgraded from Material UI `v3`) as a React component library wotj Tailwind CSS for maintainability.
   - date-fns `v2.22.1` (upgraded from `v2.0.0.alpha-27`) for date and time utility functions.
 
+## Local Development
+
+> **Note:** There will be a LIVE deployment, but for local development, this repository strictly requires `pnpm` (v11) and Node `v24`.
+
+1. **Install fnm & Corepack:**
+   ```powershell
+   fnm use
+   corepack enable pnpm
+   ```
+2. **Install Dependencies:**
+   ```powershell
+   pnpm install
+   ```
+3. **Run Development Server:**
+   ```powershell
+   pnpm dev
+   ```
+
 ## Test Coverage Report - Jest & React Testing Library
 
-### `npm run test`
+### `pnpm test`
 
 Launches the test runner and generates code coverage report.
 
