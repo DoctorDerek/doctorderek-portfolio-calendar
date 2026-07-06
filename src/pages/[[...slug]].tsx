@@ -5,6 +5,6 @@ const NextIndexWrapper = dynamic(
   { ssr: false },
 )
 
-export default function Page(props: any) {
+export default function Page(props: Record<string, unknown>) {
   return <NextIndexWrapper {...props} />
 }
