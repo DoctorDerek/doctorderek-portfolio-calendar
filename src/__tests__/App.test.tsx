@@ -17,8 +17,8 @@ const todaysDateAgenda = formatDateAgenda(todaysDate)
 const tomorrowsDate = addDays(todaysDate, 1)
 const tomorrowsDateAgenda = formatDateAgenda(tomorrowsDate)
 const formatTimePicker = (date: Date) => format(date, "hh:mm aaa")
-const getCurrentTimePicker = () => formatTimePicker(new Date()) // current time
-const formatDateCalendarDay = (date: Date) => format(date, "EEEE LLLL do, yyyy") // e.g. Thursday July 22, 2021
+const getCurrentTimePicker = () => formatTimePicker(new Date())
+const formatDateCalendarDay = (date: Date) => format(date, "EEEE LLLL do, yyyy")
 const todaysDateCalendarDay = formatDateCalendarDay(todaysDate)
 const tomorrowsDateCalendarDay = formatDateCalendarDay(tomorrowsDate)
 
@@ -33,9 +33,8 @@ const renderApp = () =>
 
 test("renders the App with the default Redux store", () => {
   renderApp()
-  expect(screen.getByText(new RegExp(todaysMonthApp, "i"))).toBeVisible() // month
+  expect(screen.getByText(new RegExp(todaysMonthApp, "i"))).toBeVisible()
   expect(screen.getByRole("button", { name: /add/i })).toBeVisible()
-  // "Add Reminder"
 })
 
 test("opens the Add Reminder modal when clicking the button", async () => {
@@ -64,11 +63,10 @@ test("opens today's agenda when clicking on today's date", async () => {
   renderApp()
   userEvent.click(screen.getByLabelText(new RegExp(todaysDateCalendarDay, "i")))
   await waitFor(() => {
-    // <AgendaDay> should be open with today's date
-    expect(screen.getByRole("button", { name: /close/i })).toBeVisible() // close button
+    expect(screen.getByRole("button", { name: /close/i })).toBeVisible()
   })
-  expect(screen.getByRole("button", { name: /add/i })).toBeVisible() // add reminder FAB
-  expect(screen.getByText(new RegExp(todaysDateAgenda, "i"))).toBeVisible() // date
+  expect(screen.getByRole("button", { name: /add/i })).toBeVisible()
+  expect(screen.getByText(new RegExp(todaysDateAgenda, "i"))).toBeVisible()
 })
 
 test("opens tomorrow's agenda when clicking on tomorrow's date", async () => {
@@ -77,10 +75,9 @@ test("opens tomorrow's agenda when clicking on tomorrow's date", async () => {
     screen.getByLabelText(new RegExp(tomorrowsDateCalendarDay, "i")),
   )
   await waitFor(() => {
-    // <AgendaDay> should be open with tomorrow's date
-    expect(screen.getByRole("button", { name: /close/i })).toBeVisible() // close button
+    expect(screen.getByRole("button", { name: /close/i })).toBeVisible()
   })
-  expect(screen.getByRole("button", { name: /add/i })).toBeVisible() // add reminder FAB
+  expect(screen.getByRole("button", { name: /add/i })).toBeVisible()
   expect(screen.getByText(new RegExp(tomorrowsDateAgenda, "i"))).toBeVisible()
 })
 
@@ -90,18 +87,14 @@ test("use current date and time when opening add reminder over today's agenda", 
   expect(
     await screen.findByText(new RegExp(todaysDateAgenda, "i")),
   ).toBeVisible()
-  // open <AddReminder> over top of today's agenda
   userEvent.click(screen.getByLabelText(/add.+\d/i))
-  // aria-label for the FAB inside <AgendaDay> "Add Reminder for July 22, 2021"
-  // <AddReminder> should have a date-picker with the current date and time
-  expect(await screen.findByLabelText(/close.+add/i)).toBeVisible() // close
+  expect(await screen.findByLabelText(/close.+add/i)).toBeVisible()
 
   expect(
     screen.getByLabelText(
       new RegExp(`(current|selected).+${todaysDateAgenda}`, "i"),
     ),
   ).toBeVisible()
-  // aria-label="Choose date and time, selected date and time is ..."
   expect(
     screen.getByLabelText(new RegExp(getCurrentTimePicker(), "i")),
   ).toBeVisible()
@@ -117,18 +110,14 @@ test("use current time and tomorrow's date when opening add reminder over tomorr
   expect(
     await screen.findByText(new RegExp(tomorrowsDateAgenda, "i")),
   ).toBeVisible()
-  // open <AddReminder> over top of tomorrow's agenda
 
   userEvent.click(screen.getByLabelText(/add.+\d/i))
-  // aria-label for the FAB inside <AgendaDay> "Add Reminder for July 22, 2021"
-  // <AddReminder> should have date-picker w/ current time and tomorrow's date
-  expect(await screen.findByLabelText(/close.+add/i)).toBeVisible() // close
+  expect(await screen.findByLabelText(/close.+add/i)).toBeVisible()
   expect(
     screen.getByLabelText(
       new RegExp(`(current|selected).+${tomorrowsDateAgenda}`, "i"),
     ),
   ).toBeVisible()
-  // aria-label="Choose date and time, selected date and time is ..."
   expect(
     screen.getByLabelText(new RegExp(getCurrentTimePicker(), "i")),
   ).toBeVisible()

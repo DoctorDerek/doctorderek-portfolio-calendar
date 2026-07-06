@@ -15,7 +15,6 @@ import KeyboardArrowRightIcon from "@material-ui/icons/KeyboardArrowRight"
 
 const formatDateAsMonthApp = (date: Date) => format(date, "LLLL yyyy")
 export default function App() {
-  // Set up the previous and next month button handlers
   const [todaysDate, setTodaysDate] = useState(new Date())
   const prevMonth = () => {
     setTodaysDate((currentDate) => subMonths(currentDate, 1))

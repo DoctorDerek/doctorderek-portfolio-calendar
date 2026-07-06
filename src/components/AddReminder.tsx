@@ -14,33 +14,26 @@ import LocalizationProvider from "@material-ui/lab/LocalizationProvider"
 
 const classNames = (...classes: string[]) => classes.join(" ")
 
-// This date mask is the same as the agenda format, i.e. with long month name
-const maskPicker = "LLLL do, yyyy hh:mm aaa" // (e.g. "July 22, 2021 09:00 am")
-// <DateTimePicker> default is "MM/dd/yyyy hh:mm aaa" (07/22/2021 09:00 am)
+const maskPicker = "LLLL do, yyyy hh:mm aaa"
 const formatDateAndTimePicker = (date: Date) => format(date, maskPicker)
 
 export default function AddReminder() {
-  // get whether the <AddReminder> dialog should be open from the redux store
   const { addReminderIsOpen } = useAppSelector(({ addReminder }) => addReminder)
-  // get the selected date from store if the agenda is also open
   const { dateISOString } = useAppSelector(({ agenda }) => agenda)
-  // use selected date from store if it exists (Redux state can't store Dates)
   const date = dateISOString ? parseISO(dateISOString) : new Date()
-  // otherwise, the default is now (today's date and the current time)
   const [selectedDateTime, setSelectedDateTime] = useState<Date | null>(date)
   useEffect(() => {
     setSelectedDateTime(dateISOString ? parseISO(dateISOString) : new Date())
-  }, [dateISOString]) // update the selected date if the Redux store changes
+  }, [dateISOString])
 
   const [selectedColor, setSelectedColor] = useState<Color>("DodgerBlue")
   const [reminder, setReminder] = useState("")
   const [savingMessage, setSavingMessage] = useState("")
-  const REMINDER_MAX_LENGTH = 30 // characters
+  const REMINDER_MAX_LENGTH = 30
   const remainingCharacters = REMINDER_MAX_LENGTH - reminder.length
   const handleReminderChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const newReminder = event.target.value
     setReminder(() => newReminder.slice(0, REMINDER_MAX_LENGTH))
-    // Create UX animation to inform user that the reminder is saved on close
     if (newReminder.length === 0) setSavingMessage(() => "")
     else if (newReminder.length < REMINDER_MAX_LENGTH) {
       setTimeout(() => {
@@ -74,7 +67,6 @@ export default function AddReminder() {
         }),
       )
     }
-    // reset local component state to default values
     setSelectedColor(() => "DodgerBlue")
     setReminder(() => "")
     setSavingMessage(() => "")

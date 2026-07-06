@@ -23,9 +23,9 @@ const renderAgendaDayDefault = () =>
 
 test("does not render anything with default Redux store", () => {
   renderAgendaDayDefault()
-  expect(screen.queryByRole("button", { name: /close/i })).toBeNull() // close button
-  expect(screen.queryByRole("button", { name: /add/i })).toBeNull() // add reminder FAB
-  expect(screen.queryByText(new RegExp(todaysDateAgenda, "i"))).toBeNull() // date
+  expect(screen.queryByRole("button", { name: /close/i })).toBeNull()
+  expect(screen.queryByRole("button", { name: /add/i })).toBeNull()
+  expect(screen.queryByText(new RegExp(todaysDateAgenda, "i"))).toBeNull()
 })
 
 const customStore = configureStore({
@@ -47,17 +47,17 @@ const renderAgendaDayOpen = () =>
 
 test("renders correctly with custom Redux store for initial state", () => {
   renderAgendaDayOpen()
-  expect(screen.getByRole("button", { name: /close/i })).toBeVisible() // close button
-  expect(screen.getByRole("button", { name: /add/i })).toBeVisible() // add reminder FAB
-  expect(screen.getByText(new RegExp(todaysDateAgenda, "i"))).toBeVisible() // date
+  expect(screen.getByRole("button", { name: /close/i })).toBeVisible()
+  expect(screen.getByRole("button", { name: /add/i })).toBeVisible()
+  expect(screen.getByText(new RegExp(todaysDateAgenda, "i"))).toBeVisible()
 })
 
 test("closes modal when clicking the close button", async () => {
   renderAgendaDayOpen()
   userEvent.click(screen.getByRole("button", { name: /close/i }))
   await waitFor(() => {
-    expect(screen.queryByRole("button", { name: /close/i })).toBeNull() // close button
-    expect(screen.queryByRole("button", { name: /add/i })).toBeNull() // add reminder FAB
+    expect(screen.queryByRole("button", { name: /close/i })).toBeNull()
+    expect(screen.queryByRole("button", { name: /add/i })).toBeNull()
     expect(screen.queryByText(new RegExp(todaysDateAgenda, "i"))).toBeNull()
   })
 })
@@ -66,8 +66,8 @@ test("closes modal when clicking outside the modal", async () => {
   renderAgendaDayOpen()
   userEvent.click(document.body)
   await waitFor(() => {
-    expect(screen.queryByRole("button", { name: /close/i })).toBeNull() // close button
-    expect(screen.queryByRole("button", { name: /add/i })).toBeNull() // add reminder FAB
-    expect(screen.queryByText(new RegExp(todaysDateAgenda, "i"))).toBeNull() // heading
+    expect(screen.queryByRole("button", { name: /close/i })).toBeNull()
+    expect(screen.queryByRole("button", { name: /add/i })).toBeNull()
+    expect(screen.queryByText(new RegExp(todaysDateAgenda, "i"))).toBeNull()
   })
 })

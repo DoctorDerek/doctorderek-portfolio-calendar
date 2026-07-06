@@ -10,22 +10,17 @@ import { Typography } from "@material-ui/core"
 import CloseIcon from "@material-ui/icons/Close"
 
 const formatDateAgenda = (date: Date) => format(date, "LLLL do, yyyy")
-const formatTimePicker = (date: Date) => format(date, "hh:mm aaa") // 08:00 am
+const formatTimePicker = (date: Date) => format(date, "hh:mm aaa")
 
 export default function AgendaDay() {
-  // Use the useAppSelector hook to get the current agenda from the Redux store
   const { agendaIsOpen, dateISOString } = useAppSelector(({ agenda }) => agenda)
-  // Redux can't store Dates directly, so we need to convert the ISO string
   const date = dateISOString ? parseISO(dateISOString) : null
 
-  // Get the entire list of reminders from the Redux store
   const { reminders } = useAppSelector(({ reminders }) => reminders)
-  // Filter the reminders to only include those for the current day's agenda
   const agendaReminders = reminders.filter((reminder) => {
     return date && isSameDay(parseISO(reminder.dateISOString), date)
   })
 
-  // Set up the dispatch actions for closing the agenda
   const dispatch = useAppDispatch()
   const onClose = () => {
     dispatch(closeAgenda())
@@ -44,14 +39,12 @@ export default function AgendaDay() {
           return (
             <Typography key={id}>
               <div
-                // light mode version
                 className="dark:hidden py-0.5 pl-3 pr-2 rounded-3xl flex items-center justify-between text-3xl"
                 style={{ backgroundColor: color }}
               >
                 <ReminderInterior />
               </div>
               <div
-                // dark mode version
                 className="hidden py-0.5 pl-2 pr-1 rounded-3xl dark:flex items-center justify-between text-3xl border-1 border-solid"
                 style={{ borderColor: color }}
               >

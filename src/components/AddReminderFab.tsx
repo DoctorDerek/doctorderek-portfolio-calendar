@@ -27,7 +27,6 @@ export default function AddReminderFab({
 
   const ariaLabel =
     "Add Reminder" + (date ? ` for ${formatDateAgenda(date as Date)}` : "")
-  // include the date in aria-label if date is provided e.g. "July 22, 2021"
 
   return (
     <Fab

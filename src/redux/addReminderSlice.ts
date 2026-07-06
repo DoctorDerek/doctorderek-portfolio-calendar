@@ -10,7 +10,6 @@ const addReminderSlice = createSlice({
   name: "addReminder",
   initialState: initialAddReminderState,
   reducers: {
-    // note: the state object is intentionally mutable in Redux Toolkit
     openAddReminder(state) {
       state.addReminderIsOpen = true
     },
