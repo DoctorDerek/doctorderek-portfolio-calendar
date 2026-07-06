@@ -18,7 +18,7 @@ const renderAgendaDayDefault = () =>
       <Provider store={store}>
         <AgendaDay />
       </Provider>
-    </MaterialUIWrapper>
+    </MaterialUIWrapper>,
   )
 
 test("does not render anything with default Redux store", () => {
@@ -42,7 +42,7 @@ const renderAgendaDayOpen = () =>
   render(
     <Provider store={customStore}>
       <AgendaDay />
-    </Provider>
+    </Provider>,
   )
 
 test("renders correctly with custom Redux store for initial state", () => {

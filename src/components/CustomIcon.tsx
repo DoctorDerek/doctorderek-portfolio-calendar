@@ -35,7 +35,7 @@ export default function CustomIcon({
         (color === "gray" &&
           "text-gray-500 border-gray-300 hover:bg-gray-300 hover:text-gray-700 hover:border-gray-500") as string,
         (color === "purple" &&
-          "text-purple-500 border-purple-300 hover:bg-purple-300 hover:text-purple-700 hover:border-purple-500") as string
+          "text-purple-500 border-purple-300 hover:bg-purple-300 hover:text-purple-700 hover:border-purple-500") as string,
       )}
       onClick={onClick}
     >

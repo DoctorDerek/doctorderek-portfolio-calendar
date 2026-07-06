@@ -72,7 +72,7 @@ export default function CalendarDay({
         "border-1 border-solid border-gray-300 cursor-pointer flex flex-wrap justify-center items-center",
         isSameMonth(selectedDate, todaysDate)
           ? "bg-gray-50 bg-opacity-40" // inside current month
-          : "bg-gray-800 bg-opacity-40" // outside current month
+          : "bg-gray-800 bg-opacity-40", // outside current month
       )}
       aria-label={ariaLabel}
       title={ariaLabel}
@@ -83,10 +83,10 @@ export default function CalendarDay({
           isToday && focused
             ? "bg-purple-600 shadow-xl border-current m-[1px] md:mx-0.5" // focused today's avatar
             : isToday
-            ? "bg-purple-400 shadow-xl border-current m-[1px] md:mx-0.5" // today's avatar
-            : focused
-            ? "bg-gray-400 shadow-xl border-current" // focused avatar for normal date
-            : "bg-transparent" // regular avatar for normal date
+              ? "bg-purple-400 shadow-xl border-current m-[1px] md:mx-0.5" // today's avatar
+              : focused
+                ? "bg-gray-400 shadow-xl border-current" // focused avatar for normal date
+                : "bg-transparent", // regular avatar for normal date
         )}
         data-testid={ariaLabel}
       >
@@ -102,7 +102,7 @@ export default function CalendarDay({
             className={classNames(
               showHours
                 ? "text-sm w-full line-clamp-1 text-left px-1 rounded-sm"
-                : "p-2 text-xl shadow-lg rounded-3xl absolute z-20 hidden group-hover:block"
+                : "p-2 text-xl shadow-lg rounded-3xl absolute z-20 hidden group-hover:block",
             )}
             style={{ backgroundColor: color }}
           >

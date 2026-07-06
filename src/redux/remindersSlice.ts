@@ -17,12 +17,12 @@ const remindersSlice = createSlice({
       action.payload.id = generateUniqueId()
       state.reminders.push(action.payload)
       state.reminders.sort((left, right) =>
-        compareAsc(parseISO(left.dateISOString), parseISO(right.dateISOString))
+        compareAsc(parseISO(left.dateISOString), parseISO(right.dateISOString)),
       ) // sort reminders in ascending order by date and time
     },
     deleteReminder(state, action: PayloadAction<string>) {
       state.reminders = state.reminders.filter(
-        (reminder) => reminder.id !== action.payload
+        (reminder) => reminder.id !== action.payload,
       )
     },
   },

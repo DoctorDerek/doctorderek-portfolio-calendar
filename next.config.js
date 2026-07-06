@@ -42,7 +42,7 @@ module.exports = {
     config.plugins.push(
       new webpack.ProvidePlugin({
         React: "react",
-      })
+      }),
     ) // Support JSX Transform per https://dev.to/rsa/speed-up-next-js-build-with-typescript-and-tailwind-css-418d
 
     return config
