@@ -20,8 +20,6 @@ export default function NextIndexWrapper() {
 }
 
 export function MaterialUIWrapper({ children }: { children: React.ReactNode }) {
-  // "Make sure to add a ThemeProvider at the root of your application,
-  // as the defaultTheme is no longer available."
   // https://next.material-ui.com/guides/migration-v4/
   const defaultTheme = createTheme()
   /**

@@ -15,7 +15,6 @@ export default function CalendarGrid({ todaysDate }: { todaysDate: Date }) {
   )
 
   function CalendarGridDaysRow() {
-    // daysArray is Sunday, Monday, ..., Saturday
     return (
       <div className="grid w-full grid-cols-7">
         {daysArray.map((day: string) => (

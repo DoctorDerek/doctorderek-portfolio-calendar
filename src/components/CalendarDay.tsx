@@ -17,10 +17,8 @@ import { Avatar } from "@material-ui/core"
 import AccessAlarmIcon from "@material-ui/icons/AccessAlarm"
 
 const classNames = (...classes: string[]) => classes.join(" ")
-// const formatDateAgenda = (date: Date) => format(date, "LLLL do, yyyy")
-// const formatDateAsDayOfWeek = (date: Date) => format(date, "EEEE")
-const formatDateCalendarDay = (date: Date) => format(date, "EEEE LLLL do, yyyy") // e.g. Thursday July 22, 2021
-const formatTimePicker = (date: Date) => format(date, "hh:mm aaa") // 08:00 am
+const formatDateCalendarDay = (date: Date) => format(date, "EEEE LLLL do, yyyy")
+const formatTimePicker = (date: Date) => format(date, "hh:mm aaa")
 
 export default function CalendarDay({
   selectedDate,
@@ -29,22 +27,16 @@ export default function CalendarDay({
   selectedDate: Date
   todaysDate: Date
 }) {
-  // set selectedDate to current time from todaysDate instead of 12:00AM
   selectedDate = setHours(selectedDate, getHours(todaysDate))
   selectedDate = setMinutes(selectedDate, getMinutes(todaysDate))
 
-  // use the useAppSelector hook to get the showHours state from the Redux store
   const { showHours } = useAppSelector(({ showHours }) => showHours)
-  // when showHours is false, only icons will be shown on the calendar, no hours
 
-  // get the entire list of reminders from the Redux store
   const { reminders } = useAppSelector(({ reminders }) => reminders)
-  // filter the reminders to only include those for the current day's agenda
   const calendarDayReminders = reminders.filter((reminder) => {
     return isSameDay(parseISO(reminder.dateISOString), selectedDate)
   })
 
-  // configure the dispatch actions to open the agenda to the correct day
   const dispatch = useAppDispatch()
   const onDayClick = (selectedDate: Date) => {
     dispatch(openAgenda(selectedDate.toISOString()))
@@ -54,10 +46,8 @@ export default function CalendarDay({
   const onMouseOut = () => setFocused(false)
   const onClick = () => onDayClick(selectedDate)
 
-  // determine isToday, which will be used to highlight today's date
   const isToday = isSameDay(selectedDate, todaysDate)
 
-  // generate the aria-label for the calendar day in long format
   const ariaLabel = formatDateCalendarDay(selectedDate)
 
   return (
@@ -71,8 +61,8 @@ export default function CalendarDay({
       className={classNames(
         "border-1 border-solid border-gray-300 cursor-pointer flex flex-wrap justify-center items-center",
         isSameMonth(selectedDate, todaysDate)
-          ? "bg-gray-50 bg-opacity-40" // inside current month
-          : "bg-gray-800 bg-opacity-40", // outside current month
+          ? "bg-gray-50 bg-opacity-40"
+          : "bg-gray-800 bg-opacity-40",
       )}
       aria-label={ariaLabel}
       title={ariaLabel}
@@ -85,8 +75,8 @@ export default function CalendarDay({
             : isToday
               ? "bg-purple-400 shadow-xl border-current m-[1px] md:mx-0.5" // today's avatar
               : focused
-                ? "bg-gray-400 shadow-xl border-current" // focused avatar for normal date
-                : "bg-transparent", // regular avatar for normal date
+                ? "bg-gray-400 shadow-xl border-current"
+                : "bg-transparent",
         )}
         data-testid={ariaLabel}
       >

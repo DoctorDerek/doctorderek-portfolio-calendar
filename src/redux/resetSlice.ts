@@ -7,7 +7,6 @@ const resetSlice = createSlice({
   name: "reset",
   initialState: initialResetState,
   reducers: {
-    // note: the state object is intentionally mutable in Redux Toolkit
     resetReduxStore(state) {
       state = {}
     },

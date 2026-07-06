@@ -30,7 +30,6 @@ const store = configureStore({
   // Note: The Redux DevTools extension is now on by default in Redux Toolkit.
 })
 
-// Export the `RootState` and `AppDispatch` types from the Redux store itself
 export type RootState = ReturnType<typeof rootReducer>
 export type AppDispatch = typeof store.dispatch
 
