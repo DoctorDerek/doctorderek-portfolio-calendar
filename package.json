@@ -88,7 +88,8 @@
     "jest-snapshot-serializer-raw": "^1",
     "jest-watch-typeahead": "^0.6.4",
     "postcss": "^8",
-    "prettier": "^2",
+    "prettier": "^3",
+    "prettier-plugin-tailwindcss": "^0.8.0",
     "react-test-renderer": "^17",
     "stylelint-config-recommended": "^5",
     "tailwindcss": "^2"

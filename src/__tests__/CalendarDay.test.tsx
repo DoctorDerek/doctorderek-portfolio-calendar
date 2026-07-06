@@ -26,7 +26,7 @@ const renderCalendarDay = () =>
       <Provider store={store}>
         <CalendarDay todaysDate={todaysDate} selectedDate={todaysDate} />
       </Provider>
-    </MaterialUIWrapper>
+    </MaterialUIWrapper>,
   )
 
 test("renders correctly with today's date as selectedDate prop", () => {
@@ -34,10 +34,12 @@ test("renders correctly with today's date as selectedDate prop", () => {
   expect(screen.getByText(String(todaysDayAsNumber))).toBeVisible()
   // the day (e.g. 23) itself is a button
   expect(
-    screen.getByRole("button", { name: new RegExp(todaysDateAgenda, "i") })
+    screen.getByRole("button", { name: new RegExp(todaysDateAgenda, "i") }),
   ).toBeVisible() // its aria-label is the full date  (e.g. July 22, 2021)
   expect(
-    screen.getByRole("button", { name: new RegExp(todaysDateAsDayOfWeek, "i") })
+    screen.getByRole("button", {
+      name: new RegExp(todaysDateAsDayOfWeek, "i"),
+    }),
   ).toBeVisible() // its aria-label also has the day of the week (e.g. Thursday)
 })
 
@@ -47,7 +49,7 @@ const renderYesterdaysCalendarDay = () =>
       <Provider store={store}>
         <CalendarDay todaysDate={todaysDate} selectedDate={yesterdaysDate} />
       </Provider>
-    </MaterialUIWrapper>
+    </MaterialUIWrapper>,
   )
 
 test("renders correctly with yesterdays's date as selectedDate props", () => {
@@ -57,14 +59,14 @@ test("renders correctly with yesterdays's date as selectedDate props", () => {
   expect(
     screen.getByRole("button", {
       name: new RegExp(yesterdaysDateAgenda, "i"),
-    })
+    }),
   ).toBeVisible() // its aria-label is the full date (e.g. July 22, 2021)
 })
 
 test("updates the Redux store when clicking the button", async () => {
   renderCalendarDay()
   userEvent.click(
-    screen.getByRole("button", { name: new RegExp(todaysDateAgenda, "i") })
+    screen.getByRole("button", { name: new RegExp(todaysDateAgenda, "i") }),
   )
   // "Use .toMatchObject to check that a JavaScript object matches a subset of
   // the properties of an object. It will match received objects with
@@ -76,7 +78,7 @@ test("updates the Redux store when clicking the button", async () => {
         agendaIsOpen: true,
         dateISOString: todaysDate.toISOString(),
       },
-    })
+    }),
   )
   // Note: This is a fragile test, as it tests the implementation details of
   // the state of the store directly, not the functionality of the component.
@@ -93,7 +95,7 @@ test("updates the Redux store when using the keyboard", async () => {
         agendaIsOpen: true,
         dateISOString: todaysDate.toISOString(),
       },
-    })
+    }),
   ) // Note: This is a fragile test, as it tests the implementation details.
 })
 
@@ -101,27 +103,27 @@ test("has a CSS hover effect when hovered over with the mouse", async () => {
   renderCalendarDay()
   // CSS classes are applied to the inner MUI Avatar, not the button (day cell)
   const classNameBeforeFocus = screen.getByTestId(
-    new RegExp(todaysDateAgenda, "i")
+    new RegExp(todaysDateAgenda, "i"),
   ).className
 
   userEvent.hover(
-    screen.getByRole("button", { name: new RegExp(todaysDateAgenda, "i") })
+    screen.getByRole("button", { name: new RegExp(todaysDateAgenda, "i") }),
   )
   // place the focus on the button
   await waitFor(() =>
     expect(
-      screen.getByTestId(new RegExp(todaysDateAgenda, "i")).className
-    ).not.toEqual(classNameBeforeFocus)
+      screen.getByTestId(new RegExp(todaysDateAgenda, "i")).className,
+    ).not.toEqual(classNameBeforeFocus),
   )
 
   userEvent.unhover(
-    screen.getByRole("button", { name: new RegExp(todaysDateAgenda, "i") })
+    screen.getByRole("button", { name: new RegExp(todaysDateAgenda, "i") }),
   )
   // remove focus from the button
   await waitFor(() =>
     expect(
-      screen.getByTestId(new RegExp(todaysDateAgenda, "i")).className
-    ).toEqual(classNameBeforeFocus)
+      screen.getByTestId(new RegExp(todaysDateAgenda, "i")).className,
+    ).toEqual(classNameBeforeFocus),
   )
 })
 
@@ -129,21 +131,21 @@ test("has a CSS hover effect when focused using the keyboard", async () => {
   renderCalendarDay()
   // CSS classes are applied to the inner MUI Avatar, not the button (day cell)
   const classNameBeforeFocus = screen.getByTestId(
-    new RegExp(todaysDateAgenda, "i")
+    new RegExp(todaysDateAgenda, "i"),
   ).className
 
   userEvent.tab() // place the focus on the button
   await waitFor(() =>
     expect(
-      screen.getByTestId(new RegExp(todaysDateAgenda, "i")).className
-    ).not.toEqual(classNameBeforeFocus)
+      screen.getByTestId(new RegExp(todaysDateAgenda, "i")).className,
+    ).not.toEqual(classNameBeforeFocus),
   )
 
   userEvent.tab() // remove focus from the button
   await waitFor(() =>
     expect(
-      screen.getByTestId(new RegExp(todaysDateAgenda, "i")).className
-    ).toEqual(classNameBeforeFocus)
+      screen.getByTestId(new RegExp(todaysDateAgenda, "i")).className,
+    ).toEqual(classNameBeforeFocus),
   )
 })
 
@@ -153,7 +155,7 @@ const renderTomorrowsCalendarDay = () =>
       <Provider store={store}>
         <CalendarDay todaysDate={todaysDate} selectedDate={tomorrowsDate} />
       </Provider>
-    </MaterialUIWrapper>
+    </MaterialUIWrapper>,
   )
 
 test("has a CSS hover effect on hover for a date that is not today", async () => {
@@ -161,27 +163,27 @@ test("has a CSS hover effect on hover for a date that is not today", async () =>
   renderTomorrowsCalendarDay()
   // CSS classes are applied to the inner MUI Avatar, not the button (day cell)
   const classNameTomorrowBeforeFocus = screen.getByTestId(
-    new RegExp(tomorrowsDateAgenda, "i")
+    new RegExp(tomorrowsDateAgenda, "i"),
   ).className
 
   userEvent.hover(
-    screen.getByRole("button", { name: new RegExp(tomorrowsDateAgenda, "i") })
+    screen.getByRole("button", { name: new RegExp(tomorrowsDateAgenda, "i") }),
   ) // place the focus on tomorrow's button
   await waitFor(() => {
     expect(
-      screen.getByTestId(new RegExp(tomorrowsDateAgenda, "i")).className
+      screen.getByTestId(new RegExp(tomorrowsDateAgenda, "i")).className,
     ).not.toEqual(classNameTomorrowBeforeFocus)
   })
 
   userEvent.unhover(
     screen.getByRole("button", {
       name: new RegExp(tomorrowsDateAgenda, "i"),
-    })
+    }),
   ) // remove focus from the button
   await waitFor(() =>
     expect(
-      screen.getByTestId(new RegExp(tomorrowsDateAgenda, "i")).className
-    ).toEqual(classNameTomorrowBeforeFocus)
+      screen.getByTestId(new RegExp(tomorrowsDateAgenda, "i")).className,
+    ).toEqual(classNameTomorrowBeforeFocus),
   )
 })
 
@@ -189,7 +191,7 @@ test("has a CSS effect highlighting today's date compared to tomorrow", async ()
   renderCalendarDay()
   // CSS classes are applied to the inner MUI Avatar, not the button (day cell)
   const classNameSameDate = screen.getByTestId(
-    new RegExp(todaysDateAgenda, "i")
+    new RegExp(todaysDateAgenda, "i"),
   ).className
 
   cleanup()
@@ -198,7 +200,7 @@ test("has a CSS effect highlighting today's date compared to tomorrow", async ()
   // the className should be different, as it is not highlighting the date
   await waitFor(() =>
     expect(
-      screen.getByTestId(new RegExp(tomorrowsDateAgenda, "i")).className
-    ).not.toEqual(classNameSameDate)
+      screen.getByTestId(new RegExp(tomorrowsDateAgenda, "i")).className,
+    ).not.toEqual(classNameSameDate),
   )
 })

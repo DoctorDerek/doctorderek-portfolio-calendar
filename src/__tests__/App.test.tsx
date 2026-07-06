@@ -28,7 +28,7 @@ const renderApp = () =>
       <Provider store={store}>
         <App />
       </Provider>
-    </MaterialUIWrapper>
+    </MaterialUIWrapper>,
   )
 
 test("renders the App with the default Redux store", () => {
@@ -48,7 +48,7 @@ test("shows the next month when clicking the button", async () => {
   renderApp()
   userEvent.click(screen.getByLabelText(/next.+month/i))
   await waitFor(() =>
-    expect(screen.getByText(new RegExp(nextMonthApp, "i"))).toBeVisible()
+    expect(screen.getByText(new RegExp(nextMonthApp, "i"))).toBeVisible(),
   )
 })
 
@@ -56,7 +56,7 @@ test("shows the previous month when clicking the button", async () => {
   renderApp()
   userEvent.click(screen.getByLabelText(/(prev|last).+month/i))
   await waitFor(() =>
-    expect(screen.getByText(new RegExp(previousMonthApp, "i"))).toBeVisible()
+    expect(screen.getByText(new RegExp(previousMonthApp, "i"))).toBeVisible(),
   )
 })
 
@@ -74,7 +74,7 @@ test("opens today's agenda when clicking on today's date", async () => {
 test("opens tomorrow's agenda when clicking on tomorrow's date", async () => {
   renderApp()
   userEvent.click(
-    screen.getByLabelText(new RegExp(tomorrowsDateCalendarDay, "i"))
+    screen.getByLabelText(new RegExp(tomorrowsDateCalendarDay, "i")),
   )
   await waitFor(() => {
     // <AgendaDay> should be open with tomorrow's date
@@ -88,7 +88,7 @@ test("use current date and time when opening add reminder over today's agenda", 
   renderApp()
   userEvent.click(screen.getByLabelText(new RegExp(todaysDateCalendarDay, "i"))) // open today's agenda
   expect(
-    await screen.findByText(new RegExp(todaysDateAgenda, "i"))
+    await screen.findByText(new RegExp(todaysDateAgenda, "i")),
   ).toBeVisible()
   // open <AddReminder> over top of today's agenda
   userEvent.click(screen.getByLabelText(/add.+\d/i))
@@ -98,12 +98,12 @@ test("use current date and time when opening add reminder over today's agenda", 
 
   expect(
     screen.getByLabelText(
-      new RegExp(`(current|selected).+${todaysDateAgenda}`, "i")
-    )
+      new RegExp(`(current|selected).+${todaysDateAgenda}`, "i"),
+    ),
   ).toBeVisible()
   // aria-label="Choose date and time, selected date and time is ..."
   expect(
-    screen.getByLabelText(new RegExp(getCurrentTimePicker(), "i"))
+    screen.getByLabelText(new RegExp(getCurrentTimePicker(), "i")),
   ).toBeVisible()
   // Note: this test is fragile if the time changes between the two renders
 })
@@ -111,11 +111,11 @@ test("use current date and time when opening add reminder over today's agenda", 
 test("use current time and tomorrow's date when opening add reminder over tomorrow's agenda", async () => {
   renderApp()
   userEvent.click(
-    screen.getByLabelText(new RegExp(tomorrowsDateCalendarDay, "i"))
+    screen.getByLabelText(new RegExp(tomorrowsDateCalendarDay, "i")),
   ) // open tomorrow's agenda
 
   expect(
-    await screen.findByText(new RegExp(tomorrowsDateAgenda, "i"))
+    await screen.findByText(new RegExp(tomorrowsDateAgenda, "i")),
   ).toBeVisible()
   // open <AddReminder> over top of tomorrow's agenda
 
@@ -125,12 +125,12 @@ test("use current time and tomorrow's date when opening add reminder over tomorr
   expect(await screen.findByLabelText(/close.+add/i)).toBeVisible() // close
   expect(
     screen.getByLabelText(
-      new RegExp(`(current|selected).+${tomorrowsDateAgenda}`, "i")
-    )
+      new RegExp(`(current|selected).+${tomorrowsDateAgenda}`, "i"),
+    ),
   ).toBeVisible()
   // aria-label="Choose date and time, selected date and time is ..."
   expect(
-    screen.getByLabelText(new RegExp(getCurrentTimePicker(), "i"))
+    screen.getByLabelText(new RegExp(getCurrentTimePicker(), "i")),
   ).toBeVisible()
   // Note: this test is fragile if the time changes between the two renders
 })

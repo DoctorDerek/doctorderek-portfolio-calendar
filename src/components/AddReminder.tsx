@@ -71,7 +71,7 @@ export default function AddReminder() {
           dateISOString: selectedDateTime.toISOString(),
           color: selectedColor,
           text: reminder,
-        })
+        }),
       )
     }
     // reset local component state to default values
@@ -124,7 +124,7 @@ export default function AddReminder() {
           <span
             className={classNames(
               "text-3xl flex justify-between italic",
-              remainingCharacters < 5 ? "text-red-600" : "text-gray-800"
+              remainingCharacters < 5 ? "text-red-600" : "text-gray-800",
             )}
           >
             {remainingCharacters} characters {reminder ? "remaining" : "max"}
@@ -175,7 +175,7 @@ function ColorPicker({
           <button
             className={classNames(
               "w-16 h-16 m-4 border-black border-solid rounded",
-              color === selectedColor ? "border-2" : "border-1"
+              color === selectedColor ? "border-2" : "border-1",
             )}
             key={color}
             onClick={() => handleChange(color)}

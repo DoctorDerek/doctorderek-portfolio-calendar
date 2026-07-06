@@ -22,7 +22,7 @@ const renderAddReminder = () =>
       <Provider store={store}>
         <AddReminder />
       </Provider>
-    </MaterialUIWrapper>
+    </MaterialUIWrapper>,
   )
 
 test("does not render anything with default Redux store", () => {
@@ -46,7 +46,7 @@ const renderAddReminderOpen = () =>
       <Provider store={customStore}>
         <AddReminder />
       </Provider>
-    </MaterialUIWrapper>
+    </MaterialUIWrapper>,
   )
 
 test("renders correctly with custom Redux store for open initial state", () => {
@@ -72,7 +72,7 @@ test("renders a color picker", () => {
 test("date-time picker starts with value of current time", () => {
   renderAddReminderOpen()
   expect(
-    screen.getByLabelText(new RegExp(getCurrentTimePicker(), "i"))
+    screen.getByLabelText(new RegExp(getCurrentTimePicker(), "i")),
   ).toBeVisible()
   // Note: this test is fragile if the time changes between the two renders
 })
@@ -88,7 +88,7 @@ test("closes modal when clicking the close button", async () => {
   renderAddReminderOpen()
   userEvent.click(screen.getByRole("button", { name: /close/i }))
   await waitFor(() =>
-    expect(screen.queryByRole("button", { name: /close/i })).toBeNull()
+    expect(screen.queryByRole("button", { name: /close/i })).toBeNull(),
   )
   await waitFor(() => expect(screen.queryByText(/add reminder/i)).toBeNull())
 })
@@ -97,7 +97,7 @@ test("closes modal when clicking outside the modal", async () => {
   renderAddReminderOpen()
   userEvent.click(document.body)
   await waitFor(() =>
-    expect(screen.queryByRole("button", { name: /close/i })).toBeNull()
+    expect(screen.queryByRole("button", { name: /close/i })).toBeNull(),
   )
   await waitFor(() => expect(screen.queryByText(/add reminder/i)).toBeNull())
 })
@@ -121,7 +121,7 @@ const renderAddReminderOpenAgendaOpen = () =>
       <Provider store={customStoreAddReminderOpenAgendaOpen}>
         <AddReminder />
       </Provider>
-    </MaterialUIWrapper>
+    </MaterialUIWrapper>,
   )
 
 test("renders w/ custom Redux store with add reminder open over agenda", () => {
@@ -134,10 +134,10 @@ test("renders w/ custom Redux store with add reminder open over agenda", () => {
 test("date-time picker uses selected date (tomorrow) with custom store", () => {
   renderAddReminderOpenAgendaOpen()
   expect(
-    customStoreAddReminderOpenAgendaOpen.getState().agenda.dateISOString
+    customStoreAddReminderOpenAgendaOpen.getState().agenda.dateISOString,
   ).toBe(tomorrowsDate.toISOString())
   expect(
-    screen.getByLabelText(new RegExp(tomorrowsDateAgenda, "i"))
+    screen.getByLabelText(new RegExp(tomorrowsDateAgenda, "i")),
   ).toBeVisible()
   // Note: This is a fragile test, as it tests the implementation details of
   // the state of the store directly, not the functionality of the component.
@@ -146,7 +146,7 @@ test("date-time picker uses selected date (tomorrow) with custom store", () => {
 test("date-time picker uses current time with custom Redux store", () => {
   renderAddReminderOpenAgendaOpen()
   expect(
-    screen.getByLabelText(new RegExp(getCurrentTimePicker(), "i"))
+    screen.getByLabelText(new RegExp(getCurrentTimePicker(), "i")),
   ).toBeVisible()
   // Note: this test is fragile if the time changes between the two renders
 })

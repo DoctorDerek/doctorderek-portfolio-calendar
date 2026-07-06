@@ -34,7 +34,7 @@ export default function AddReminderFab({
       aria-label={ariaLabel}
       className={classNames(
         "w-16 h-16 text-white bg-green-600 fill-current bottom-4 right-4 hover:bg-green-800",
-        position
+        position,
       )}
       onClick={onFabAddClick}
     >

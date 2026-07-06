@@ -10,7 +10,7 @@ import dynamic from "next/dynamic"
 // below removed
 const NextIndexWrapper = dynamic(
   () => import("../components/NextIndexWrapper"),
-  { ssr: false }
+  { ssr: false },
 )
 
 export default function Page(props: any) {
