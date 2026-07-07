@@ -1,4 +1,4 @@
-import { format, isSameDay, parseISO } from "date-fns"
+import dayjs from "dayjs"
 
 import AddReminderFab from "@/src/components/AddReminderFab"
 import CustomDialog from "@/src/components/CustomDialog"
@@ -9,16 +9,16 @@ import { deleteReminder } from "@/src/redux/remindersSlice"
 import { Typography } from "@mui/material"
 import CloseIcon from "@mui/icons-material/Close"
 
-const formatDateAgenda = (date: Date) => format(date, "LLLL do, yyyy")
-const formatTimePicker = (date: Date) => format(date, "hh:mm aaa")
+const formatDateAgenda = (date: Date) => dayjs(date).format("MMMM D, YYYY")
+const formatTimePicker = (date: Date) => dayjs(date).format("h:mm A")
 
 export default function AgendaDay() {
   const { agendaIsOpen, dateISOString } = useAppSelector(({ agenda }) => agenda)
-  const date = dateISOString ? parseISO(dateISOString) : null
+  const date = dateISOString ? dayjs(dateISOString).toDate() : null
 
   const { reminders } = useAppSelector(({ reminders }) => reminders)
   const agendaReminders = reminders.filter((reminder) => {
-    return date && isSameDay(parseISO(reminder.dateISOString), date)
+    return date && dayjs(reminder.dateISOString).isSame(date, "day")
   })
 
   const dispatch = useAppDispatch()
@@ -35,7 +35,7 @@ export default function AgendaDay() {
     <CustomDialog title={dialogTitle} open={agendaIsOpen} onClose={onClose}>
       <div className="flex flex-col space-y-1">
         {agendaReminders.map(({ id, dateISOString, color, text }) => {
-          const time = formatTimePicker(parseISO(dateISOString))
+          const time = formatTimePicker(dayjs(dateISOString).toDate())
           return (
             <Typography key={id}>
               <div

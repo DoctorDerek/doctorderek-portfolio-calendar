@@ -1,4 +1,4 @@
-import { addMonths, format, subMonths } from "date-fns"
+import dayjs from "dayjs"
 import Image from "next/image"
 import { useState } from "react"
 
@@ -13,14 +13,16 @@ import Paper from "@mui/material/Paper"
 import KeyboardArrowLeftIcon from "@mui/icons-material/KeyboardArrowLeft"
 import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight"
 
-const formatDateAsMonthApp = (date: Date) => format(date, "LLLL yyyy")
+const formatDateAsMonthApp = (date: Date) => dayjs(date).format("MMMM YYYY")
 export default function App() {
   const [todaysDate, setTodaysDate] = useState(new Date())
   const prevMonth = () => {
-    setTodaysDate((currentDate) => subMonths(currentDate, 1))
+    setTodaysDate((currentDate) =>
+      dayjs(currentDate).subtract(1, "month").toDate(),
+    )
   }
   const nextMonth = () => {
-    setTodaysDate((currentDate) => addMonths(currentDate, 1))
+    setTodaysDate((currentDate) => dayjs(currentDate).add(1, "month").toDate())
   }
 
   return (

@@ -1,14 +1,4 @@
-import {
-  format,
-  getDate,
-  getHours,
-  getMinutes,
-  isSameDay,
-  isSameMonth,
-  parseISO,
-  setHours,
-  setMinutes,
-} from "date-fns"
+import dayjs from "dayjs"
 import { useState } from "react"
 
 import { openAgenda } from "@/src/redux/agendaSlice"
@@ -17,8 +7,9 @@ import { Avatar } from "@mui/material"
 import AccessAlarmIcon from "@mui/icons-material/AccessAlarm"
 
 const classNames = (...classes: string[]) => classes.join(" ")
-const formatDateCalendarDay = (date: Date) => format(date, "EEEE LLLL do, yyyy")
-const formatTimePicker = (date: Date) => format(date, "hh:mm aaa")
+const formatDateCalendarDay = (date: Date) =>
+  dayjs(date).format("dddd MMMM D, YYYY")
+const formatTimePicker = (date: Date) => dayjs(date).format("h:mm A")
 
 export default function CalendarDay({
   selectedDate,
@@ -27,14 +18,14 @@ export default function CalendarDay({
   selectedDate: Date
   todaysDate: Date
 }) {
-  selectedDate = setHours(selectedDate, getHours(todaysDate))
-  selectedDate = setMinutes(selectedDate, getMinutes(todaysDate))
+  selectedDate = dayjs(selectedDate).hour(dayjs(todaysDate).hour()).toDate()
+  selectedDate = dayjs(selectedDate).minute(dayjs(todaysDate).minute()).toDate()
 
   const { showHours } = useAppSelector(({ showHours }) => showHours)
 
   const { reminders } = useAppSelector(({ reminders }) => reminders)
   const calendarDayReminders = reminders.filter((reminder) => {
-    return isSameDay(parseISO(reminder.dateISOString), selectedDate)
+    return dayjs(reminder.dateISOString).isSame(selectedDate, "day")
   })
 
   const dispatch = useAppDispatch()
@@ -46,7 +37,7 @@ export default function CalendarDay({
   const onMouseOut = () => setFocused(false)
   const onClick = () => onDayClick(selectedDate)
 
-  const isToday = isSameDay(selectedDate, todaysDate)
+  const isToday = dayjs(selectedDate).isSame(todaysDate, "day")
 
   const ariaLabel = formatDateCalendarDay(selectedDate)
 
@@ -60,7 +51,7 @@ export default function CalendarDay({
       onKeyDown={(event) => event.key === "Enter" && onClick()}
       className={classNames(
         "border-1 border-solid border-gray-300 cursor-pointer flex flex-wrap justify-center items-center",
-        isSameMonth(selectedDate, todaysDate)
+        dayjs(selectedDate).isSame(todaysDate, "month")
           ? "bg-gray-50 bg-opacity-40"
           : "bg-gray-800 bg-opacity-40",
       )}
@@ -80,7 +71,7 @@ export default function CalendarDay({
         )}
         data-testid={ariaLabel}
       >
-        {getDate(selectedDate)}
+        {dayjs(selectedDate).date()}
       </Avatar>
       {calendarDayReminders.map(({ id, dateISOString, color, text }) => (
         <div
@@ -97,7 +88,7 @@ export default function CalendarDay({
             style={{ backgroundColor: color }}
           >
             <span className="font-medium">
-              {formatTimePicker(parseISO(dateISOString))}
+              {formatTimePicker(dayjs(dateISOString).toDate())}
             </span>{" "}
             {text}
           </div>

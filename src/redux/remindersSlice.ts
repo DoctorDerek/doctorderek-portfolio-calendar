@@ -1,4 +1,4 @@
-import { compareAsc, parseISO } from "date-fns"
+import dayjs from "dayjs"
 
 import { createSlice, PayloadAction } from "@reduxjs/toolkit"
 
@@ -16,7 +16,7 @@ const remindersSlice = createSlice({
       action.payload.id = generateUniqueId()
       state.reminders.push(action.payload)
       state.reminders.sort((left, right) =>
-        compareAsc(parseISO(left.dateISOString), parseISO(right.dateISOString)),
+        dayjs(left.dateISOString).diff(dayjs(right.dateISOString)),
       )
     },
     deleteReminder(state, action: PayloadAction<string>) {
