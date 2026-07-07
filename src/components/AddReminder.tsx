@@ -1,4 +1,4 @@
-import { format, parseISO } from "date-fns"
+import dayjs, { Dayjs } from "dayjs"
 import { useEffect, useState } from "react"
 
 import CustomDialog from "@/src/components/CustomDialog"
@@ -8,22 +8,22 @@ import { addNewReminder } from "@/src/redux/remindersSlice"
 import { TextField } from "@mui/material"
 import Typography from "@mui/material/Typography"
 import CheckIcon from "@mui/icons-material/Check"
-import AdapterDateFns from "@material-ui/lab/AdapterDateFns"
-import DateTimePicker from "@material-ui/lab/DateTimePicker"
-import LocalizationProvider from "@material-ui/lab/LocalizationProvider"
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs"
+import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker"
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider"
 
 const classNames = (...classes: string[]) => classes.join(" ")
 
-const maskPicker = "LLLL do, yyyy hh:mm aaa"
-const formatDateAndTimePicker = (date: Date) => format(date, maskPicker)
+const maskPicker = "MMMM D, YYYY h:mm A"
+const formatDateAndTimePicker = (date: Dayjs) => date.format(maskPicker)
 
 export default function AddReminder() {
   const { addReminderIsOpen } = useAppSelector(({ addReminder }) => addReminder)
   const { dateISOString } = useAppSelector(({ agenda }) => agenda)
-  const date = dateISOString ? parseISO(dateISOString) : new Date()
-  const [selectedDateTime, setSelectedDateTime] = useState<Date | null>(date)
+  const date = dateISOString ? dayjs(dateISOString) : dayjs()
+  const [selectedDateTime, setSelectedDateTime] = useState<Dayjs | null>(date)
   useEffect(() => {
-    setSelectedDateTime(dateISOString ? parseISO(dateISOString) : new Date())
+    setSelectedDateTime(dateISOString ? dayjs(dateISOString) : dayjs())
   }, [dateISOString])
 
   const [selectedColor, setSelectedColor] = useState<Color>("DodgerBlue")
@@ -83,25 +83,23 @@ export default function AddReminder() {
           Select the date and time for the reminder:
         </Typography>
         <div className="w-full text-3xl">
-          <LocalizationProvider dateAdapter={AdapterDateFns}>
+          <LocalizationProvider dateAdapter={AdapterDayjs}>
             <DateTimePicker
               value={selectedDateTime}
               onChange={setSelectedDateTime}
-              getOpenDialogAriaText={(value) =>
-                `Choose date and time, selected date and time is ${
-                  value && formatDateAndTimePicker(value as Date)
-                }`
-              }
-              renderInput={(props) => (
-                <TextField
-                  {...props}
-                  inputProps={{
-                    className: "text-3xl bg-gray-200",
-                    ...props.inputProps,
-                  }}
-                  fullWidth={true}
-                />
-              )}
+              slotProps={{
+                textField: {
+                  className: "text-3xl bg-gray-200",
+                  fullWidth: true,
+                  inputProps: {
+                    "aria-label": `Choose date and time, selected date and time is ${
+                      selectedDateTime
+                        ? formatDateAndTimePicker(selectedDateTime)
+                        : ""
+                    }`,
+                  },
+                },
+              }}
             />
           </LocalizationProvider>
         </div>
