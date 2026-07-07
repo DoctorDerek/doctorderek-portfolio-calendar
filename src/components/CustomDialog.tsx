@@ -1,6 +1,6 @@
 import CustomIcon from "@/src/components/CustomIcon"
 import { Dialog, DialogContent, DialogTitle, Divider } from "@mui/material"
-import CloseIcon from "@material-ui/icons/Close"
+import CloseIcon from "@mui/icons-material/Close"
 
 export default function CustomDialog({
   title,

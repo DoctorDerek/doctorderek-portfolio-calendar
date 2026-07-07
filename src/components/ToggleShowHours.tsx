@@ -6,8 +6,8 @@ import {
   hideHoursOnCalendar,
   showHoursOnCalendar,
 } from "@/src/redux/showHoursSlice"
-import AccessAlarmIcon from "@material-ui/icons/AccessAlarm"
-import QueryBuilderIcon from "@material-ui/icons/QueryBuilder"
+import AccessAlarmIcon from "@mui/icons-material/AccessAlarm"
+import QueryBuilderIcon from "@mui/icons-material/QueryBuilder"
 
 const classNames = (...classes: string[]) => classes.join(" ")
 export default function ToggleShowHours() {

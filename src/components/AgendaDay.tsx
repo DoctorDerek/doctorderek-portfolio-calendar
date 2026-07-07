@@ -7,7 +7,7 @@ import { closeAgenda } from "@/src/redux/agendaSlice"
 import { useAppDispatch, useAppSelector } from "@/src/redux/hooks"
 import { deleteReminder } from "@/src/redux/remindersSlice"
 import { Typography } from "@mui/material"
-import CloseIcon from "@material-ui/icons/Close"
+import CloseIcon from "@mui/icons-material/Close"
 
 const formatDateAgenda = (date: Date) => format(date, "LLLL do, yyyy")
 const formatTimePicker = (date: Date) => format(date, "hh:mm aaa")

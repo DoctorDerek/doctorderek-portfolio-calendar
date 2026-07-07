@@ -10,8 +10,8 @@ import CustomIcon from "@/src/components/CustomIcon"
 import ToggleDarkMode from "@/src/components/ToggleDarkMode"
 import ToggleShowHours from "@/src/components/ToggleShowHours"
 import Paper from "@mui/material/Paper"
-import KeyboardArrowLeftIcon from "@material-ui/icons/KeyboardArrowLeft"
-import KeyboardArrowRightIcon from "@material-ui/icons/KeyboardArrowRight"
+import KeyboardArrowLeftIcon from "@mui/icons-material/KeyboardArrowLeft"
+import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight"
 
 const formatDateAsMonthApp = (date: Date) => format(date, "LLLL yyyy")
 export default function App() {

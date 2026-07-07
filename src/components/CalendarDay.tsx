@@ -14,7 +14,7 @@ import { useState } from "react"
 import { openAgenda } from "@/src/redux/agendaSlice"
 import { useAppDispatch, useAppSelector } from "@/src/redux/hooks"
 import { Avatar } from "@mui/material"
-import AccessAlarmIcon from "@material-ui/icons/AccessAlarm"
+import AccessAlarmIcon from "@mui/icons-material/AccessAlarm"
 
 const classNames = (...classes: string[]) => classes.join(" ")
 const formatDateCalendarDay = (date: Date) => format(date, "EEEE LLLL do, yyyy")

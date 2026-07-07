@@ -3,7 +3,7 @@ import { format } from "date-fns"
 import { openAddReminder } from "@/src/redux/addReminderSlice"
 import { useAppDispatch } from "@/src/redux/hooks"
 import { Fab } from "@mui/material"
-import AddIcon from "@material-ui/icons/Add"
+import AddIcon from "@mui/icons-material/Add"
 
 const classNames = (...classes: string[]) => classes.join(" ")
 const formatDateAgenda = (date: Date) => format(date, "LLLL do, yyyy")
