@@ -49,21 +49,14 @@ Below you will find a complete feature set, description of technologies, and tec
 
 ## Local Development
 
-> **Note:** There will be a LIVE deployment, but for local development, this repository strictly requires `pnpm` (v11) and Node `v24`.
+Use [fnm](https://github.com/Schniz/fnm) for Node version management and [pnpm](https://pnpm.io/) as the package manager:
 
-1. **Install fnm & Corepack:**
-   ```powershell
-   fnm use
-   corepack enable pnpm
-   ```
-2. **Install Dependencies:**
-   ```powershell
-   pnpm install
-   ```
-3. **Run Development Server:**
-   ```powershell
-   pnpm dev
-   ```
+```bash
+fnm use
+corepack enable pnpm
+pnpm install
+pnpm dev
+```
 
 ## Test Coverage Report - Jest & React Testing Library
 
