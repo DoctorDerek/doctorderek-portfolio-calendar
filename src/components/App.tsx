@@ -9,7 +9,7 @@ import CalendarGrid from "@/src/components/CalendarGrid"
 import CustomIcon from "@/src/components/CustomIcon"
 import ToggleDarkMode from "@/src/components/ToggleDarkMode"
 import ToggleShowHours from "@/src/components/ToggleShowHours"
-import Paper from "@material-ui/core/Paper"
+import Paper from "@mui/material/Paper"
 import KeyboardArrowLeftIcon from "@material-ui/icons/KeyboardArrowLeft"
 import KeyboardArrowRightIcon from "@material-ui/icons/KeyboardArrowRight"
 

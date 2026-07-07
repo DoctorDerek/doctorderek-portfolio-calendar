@@ -6,7 +6,7 @@ import CustomIcon from "@/src/components/CustomIcon"
 import { closeAgenda } from "@/src/redux/agendaSlice"
 import { useAppDispatch, useAppSelector } from "@/src/redux/hooks"
 import { deleteReminder } from "@/src/redux/remindersSlice"
-import { Typography } from "@material-ui/core"
+import { Typography } from "@mui/material"
 import CloseIcon from "@material-ui/icons/Close"
 
 const formatDateAgenda = (date: Date) => format(date, "LLLL do, yyyy")

@@ -13,7 +13,7 @@ import { useState } from "react"
 
 import { openAgenda } from "@/src/redux/agendaSlice"
 import { useAppDispatch, useAppSelector } from "@/src/redux/hooks"
-import { Avatar } from "@material-ui/core"
+import { Avatar } from "@mui/material"
 import AccessAlarmIcon from "@material-ui/icons/AccessAlarm"
 
 const classNames = (...classes: string[]) => classes.join(" ")

@@ -2,7 +2,7 @@ import { format } from "date-fns"
 
 import { openAddReminder } from "@/src/redux/addReminderSlice"
 import { useAppDispatch } from "@/src/redux/hooks"
-import { Fab } from "@material-ui/core"
+import { Fab } from "@mui/material"
 import AddIcon from "@material-ui/icons/Add"
 
 const classNames = (...classes: string[]) => classes.join(" ")
