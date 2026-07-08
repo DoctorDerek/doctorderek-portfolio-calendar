@@ -1,11 +1,4 @@
-import {
-  addDays,
-  endOfMonth,
-  getDay,
-  getDaysInMonth,
-  startOfMonth,
-  subDays,
-} from "date-fns"
+import dayjs from "dayjs"
 
 export const daysArray = [
   "Sunday",
@@ -31,18 +24,15 @@ export const monthsArray = [
   "December",
 ]
 
-/**
- * @return an array of Date objects, not "dateObjects" {date: Date}
- */
 export function getMonthCells(todaysDate: Date) {
   const totalCells = 42
 
-  const today = todaysDate
+  const today = dayjs(todaysDate)
 
-  const daysInMonth = getDaysInMonth(today)
-  const firstOfMonth = startOfMonth(today)
-  const lastOfMonth = endOfMonth(today)
-  const firstDayOfMonth = getDay(firstOfMonth)
+  const daysInMonth = today.daysInMonth()
+  const firstOfMonth = today.startOf("month")
+  const lastOfMonth = today.endOf("month")
+  const firstDayOfMonth = firstOfMonth.day()
   const daysAfter = totalCells - (daysInMonth + firstDayOfMonth)
 
   const prevMonthArray = []
@@ -50,15 +40,15 @@ export function getMonthCells(todaysDate: Date) {
   const nextMonthArray = []
 
   for (let i = firstDayOfMonth; i > 0; i--) {
-    prevMonthArray.push(subDays(firstOfMonth, i))
+    prevMonthArray.push(firstOfMonth.subtract(i, "day").toDate())
   }
 
   for (let i = 0; i < daysInMonth; i++) {
-    monthArray.push(addDays(firstOfMonth, i))
+    monthArray.push(firstOfMonth.add(i, "day").toDate())
   }
 
   for (let i = 0; i < daysAfter; i++) {
-    nextMonthArray.push(addDays(lastOfMonth, i + 1))
+    nextMonthArray.push(lastOfMonth.add(i + 1, "day").toDate())
   }
 
   const calendarArray = [...prevMonthArray, ...monthArray, ...nextMonthArray]

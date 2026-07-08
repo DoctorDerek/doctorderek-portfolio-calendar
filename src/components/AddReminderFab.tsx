@@ -1,12 +1,12 @@
-import { format } from "date-fns"
+import dayjs from "dayjs"
 
 import { openAddReminder } from "@/src/redux/addReminderSlice"
 import { useAppDispatch } from "@/src/redux/hooks"
-import { Fab } from "@material-ui/core"
-import AddIcon from "@material-ui/icons/Add"
+import { Fab } from "@mui/material"
+import AddIcon from "@mui/icons-material/Add"
 
 const classNames = (...classes: string[]) => classes.join(" ")
-const formatDateAgenda = (date: Date) => format(date, "LLLL do, yyyy")
+const formatDateAgenda = (date: Date) => dayjs(date).format("MMMM D, YYYY")
 
 /**
  * The FAB is the floating button that allows the user to add a new reminder.

@@ -7,7 +7,7 @@ import {
   createTheme,
   StyledEngineProvider,
   ThemeProvider as MaterialThemeProvider,
-} from "@material-ui/core/styles"
+} from "@mui/material/styles"
 
 export default function NextIndexWrapper() {
   return (

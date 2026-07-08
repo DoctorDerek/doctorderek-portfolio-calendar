@@ -1,6 +1,6 @@
 import CalendarDay from "@/src/components/CalendarDay"
 import { daysArray, getMonthCells } from "@/src/utils/dateUtils"
-import Typography from "@material-ui/core/Typography"
+import Typography from "@mui/material/Typography"
 
 export default function CalendarGrid({ todaysDate }: { todaysDate: Date }) {
   const calendarCells = getMonthCells(todaysDate)
