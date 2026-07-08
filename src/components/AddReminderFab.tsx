@@ -1,9 +1,8 @@
+import AddIcon from "@mui/icons-material/Add"
+import { Fab } from "@mui/material"
 import dayjs from "dayjs"
-
 import { openAddReminder } from "@/src/redux/addReminderSlice"
 import { useAppDispatch } from "@/src/redux/hooks"
-import { Fab } from "@mui/material"
-import AddIcon from "@mui/icons-material/Add"
 
 const classNames = (...classes: string[]) => classes.join(" ")
 const formatDateAgenda = (date: Date) => dayjs(date).format("MMMM D, YYYY")
@@ -32,13 +31,13 @@ export default function AddReminderFab({
     <Fab
       aria-label={ariaLabel}
       className={classNames(
-        "w-16 h-16 text-white bg-green-600 fill-current bottom-4 right-4 hover:bg-green-800",
+        "bottom-4 right-4 h-16 w-16 bg-green-600 fill-current text-white hover:bg-green-800",
         position,
       )}
       onClick={onFabAddClick}
     >
       {/* note: sizes here should be the same as in <CustomIcon> */}
-      <AddIcon className="w-12 h-12" />
+      <AddIcon className="h-12 w-12" />
     </Fab>
   )
 }

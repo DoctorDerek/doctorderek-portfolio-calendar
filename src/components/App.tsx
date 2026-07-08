@@ -1,7 +1,9 @@
+import KeyboardArrowLeftIcon from "@mui/icons-material/KeyboardArrowLeft"
+import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight"
+import Paper from "@mui/material/Paper"
 import dayjs from "dayjs"
 import Image from "next/image"
 import { useState } from "react"
-
 import AddReminder from "@/src/components/AddReminder"
 import AddReminderFab from "@/src/components/AddReminderFab"
 import AgendaDay from "@/src/components/AgendaDay"
@@ -9,9 +11,6 @@ import CalendarGrid from "@/src/components/CalendarGrid"
 import CustomIcon from "@/src/components/CustomIcon"
 import ToggleDarkMode from "@/src/components/ToggleDarkMode"
 import ToggleShowHours from "@/src/components/ToggleShowHours"
-import Paper from "@mui/material/Paper"
-import KeyboardArrowLeftIcon from "@mui/icons-material/KeyboardArrowLeft"
-import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight"
 
 const formatDateAsMonthApp = (date: Date) => dayjs(date).format("MMMM YYYY")
 export default function App() {
@@ -27,14 +26,14 @@ export default function App() {
 
   return (
     <>
-      <div className="relative z-10 flex items-center justify-center w-full">
+      <div className="relative z-10 flex w-full items-center justify-center">
         <Paper
-          className="flex flex-col items-center justify-center w-full h-full p-3 m-6 rounded-3xl"
+          className="m-6 flex h-full w-full flex-col items-center justify-center rounded-3xl p-3"
           classes={{
             root: "backdrop-filter backdrop-grayscale backdrop-blur bg-[rgba(255,255,255,0.3)] dark:bg-[rgba(0,0,0,0.3)]",
           }}
         >
-          <header className="flex items-center justify-between w-full my-10">
+          <header className="my-10 flex w-full items-center justify-between">
             <CustomIcon
               ariaLabel="Previous Month"
               onClick={prevMonth}
@@ -42,7 +41,7 @@ export default function App() {
               Icon={KeyboardArrowLeftIcon}
             />
             <ToggleDarkMode />
-            <div className="mb-2 font-bold text-gray-800 text-7xl dark:text-gray-300 drop-shadow-xl">
+            <div className="mb-2 text-7xl font-bold text-gray-800 drop-shadow-xl dark:text-gray-300">
               {formatDateAsMonthApp(todaysDate)}
             </div>
             <ToggleShowHours />
@@ -59,7 +58,7 @@ export default function App() {
         <AgendaDay />
         <AddReminder />
       </div>
-      <div className="fixed inset-0 z-0 w-full h-full">
+      <div className="fixed inset-0 z-0 h-full w-full">
         {/* background image */}
         <Image
           src="/benjamin-patin-dOzoyaYjCbM-unsplash.jpg"
@@ -67,7 +66,7 @@ export default function App() {
           layout="fill"
           className="object-cover"
         />
-        <div className="absolute backdrop-filter backdrop-brightness-50 opacity-0 dark:opacity-100 transition-all duration-500 dark:bg-[rgba(0,0,0,0.3)] inset-0 z-0 w-full h-full">
+        <div className="absolute inset-0 z-0 h-full w-full opacity-0 backdrop-brightness-50 backdrop-filter transition-all duration-500 dark:bg-[rgba(0,0,0,0.3)] dark:opacity-100">
           {/* dark mode filter for background image */}
         </div>
       </div>

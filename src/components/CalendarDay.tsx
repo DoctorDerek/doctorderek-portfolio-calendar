@@ -1,10 +1,9 @@
+import AccessAlarmIcon from "@mui/icons-material/AccessAlarm"
+import { Avatar } from "@mui/material"
 import dayjs from "dayjs"
 import { useState } from "react"
-
 import { openAgenda } from "@/src/redux/agendaSlice"
 import { useAppDispatch, useAppSelector } from "@/src/redux/hooks"
-import { Avatar } from "@mui/material"
-import AccessAlarmIcon from "@mui/icons-material/AccessAlarm"
 
 const classNames = (...classes: string[]) => classes.join(" ")
 const formatDateCalendarDay = (date: Date) =>
@@ -50,7 +49,7 @@ export default function CalendarDay({
       onClick={onClick}
       onKeyDown={(event) => event.key === "Enter" && onClick()}
       className={classNames(
-        "border-1 border-solid border-gray-300 cursor-pointer flex flex-wrap justify-center items-center",
+        "flex cursor-pointer flex-wrap items-center justify-center border-1 border-solid border-gray-300",
         dayjs(selectedDate).isSame(todaysDate, "month")
           ? "bg-gray-50 bg-opacity-40"
           : "bg-gray-800 bg-opacity-40",
@@ -60,13 +59,13 @@ export default function CalendarDay({
     >
       <Avatar
         className={classNames(
-          "text-gray-800 dark:text-gray-200 border-transparent border-1 border-solid",
+          "border-1 border-solid border-transparent text-gray-800 dark:text-gray-200",
           isToday && focused
-            ? "bg-purple-600 shadow-xl border-current m-[1px] md:mx-0.5" // focused today's avatar
+            ? "m-[1px] border-current bg-purple-600 shadow-xl md:mx-0.5" // focused today's avatar
             : isToday
-              ? "bg-purple-400 shadow-xl border-current m-[1px] md:mx-0.5" // today's avatar
+              ? "m-[1px] border-current bg-purple-400 shadow-xl md:mx-0.5" // today's avatar
               : focused
-                ? "bg-gray-400 shadow-xl border-current"
+                ? "border-current bg-gray-400 shadow-xl"
                 : "bg-transparent",
         )}
         data-testid={ariaLabel}
@@ -75,15 +74,15 @@ export default function CalendarDay({
       </Avatar>
       {calendarDayReminders.map(({ id, dateISOString, color, text }) => (
         <div
-          className={classNames("flex group", showHours ? "w-full" : "w-auto")}
+          className={classNames("group flex", showHours ? "w-full" : "w-auto")}
           key={id}
         >
           {!showHours && <CustomAvatar color={color} />}
           <div
             className={classNames(
               showHours
-                ? "text-sm w-full line-clamp-1 text-left px-1 rounded-sm"
-                : "p-2 text-xl shadow-lg rounded-3xl absolute z-20 hidden group-hover:block",
+                ? "w-full rounded-sm px-1 text-left text-sm line-clamp-1"
+                : "absolute z-20 hidden rounded-3xl p-2 text-xl shadow-lg group-hover:block",
             )}
             style={{ backgroundColor: color }}
           >
@@ -101,9 +100,9 @@ export default function CalendarDay({
     return (
       <Avatar
         style={{ backgroundColor: color }}
-        className="w-5 h-5 m-[1px] md:mx-0.5 border-1 border-solid border-gray-300"
+        className="m-[1px] h-5 w-5 border-1 border-solid border-gray-300 md:mx-0.5"
       >
-        <AccessAlarmIcon className="w-4 h-4" />
+        <AccessAlarmIcon className="h-4 w-4" />
       </Avatar>
     )
   }
