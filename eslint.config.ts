@@ -1,9 +1,8 @@
-import js from "@eslint/js";
-import gitignore from "eslint-config-flat-gitignore";
-import reactPlugin from "eslint-plugin-react";
-import tseslint from "typescript-eslint";
-
-import onlyWarn from "eslint-plugin-only-warn";
+import js from "@eslint/js"
+import gitignore from "eslint-config-flat-gitignore"
+import onlyWarn from "eslint-plugin-only-warn"
+import reactPlugin from "eslint-plugin-react"
+import tseslint from "typescript-eslint"
 
 export default tseslint.config(
   gitignore(),
@@ -13,6 +12,7 @@ export default tseslint.config(
   reactPlugin.configs.flat["jsx-runtime"],
   {
     plugins: {
+      // @ts-expect-error - eslint-plugin-only-warn lacks flat config types
       "only-warn": onlyWarn,
     },
     settings: {
@@ -24,5 +24,5 @@ export default tseslint.config(
       "react/prop-types": "off",
       "react/no-unescaped-entities": "off",
     },
-  }
-);
+  },
+)
