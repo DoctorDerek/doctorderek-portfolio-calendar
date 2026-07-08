@@ -3,7 +3,7 @@ import IconButton from "@mui/material/IconButton"
 import { OverridableComponent } from "@mui/material/OverridableComponent"
 
 /** Easier-to-read version of the Material UI icon type */
-type MUIIcon = OverridableComponent<SvgIconTypeMap<{}, "svg">> & {
+type MUIIcon = OverridableComponent<SvgIconTypeMap<Record<string, unknown>, "svg">> & {
   muiName: string
 }
 
