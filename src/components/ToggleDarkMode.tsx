@@ -34,7 +34,7 @@ export default function ToggleDarkMode() {
       >
         <mask
           id="mask0"
-          maskType="alpha"
+          style={{ maskType: "alpha" }}
           maskUnits="userSpaceOnUse"
           x="0"
           y="0"
