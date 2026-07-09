@@ -1,5 +1,9 @@
+packages:
+  - "."
+
 allowBuilds:
-  core-js: true
-  esbuild: true
-  sharp: true
-  unrs-resolver: true
+  '0': core-js
+  '1': sharp
+  '2': unrs-resolver
+  sharp: set this to true or false
+  unrs-resolver: set this to true or false
