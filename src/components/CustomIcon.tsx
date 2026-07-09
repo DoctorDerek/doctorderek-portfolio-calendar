@@ -28,9 +28,9 @@ export default function CustomIcon({
       aria-label={ariaLabel}
       title={ariaLabel}
       className={classNames(
-        "border-1 border-solid fill-current transition-all duration-500",
+        "border border-solid fill-current transition-all duration-500",
         size === "small" ? "h-8 w-8" : "h-16 w-16",
-        "bg-gray-100 dark:bg-opacity-80",
+        "dark:bg-opacity-80 bg-gray-100",
         (color === "blue" &&
           "border-blue-300 text-blue-500 hover:border-blue-500 hover:bg-blue-300 hover:text-blue-700") as string,
         (color === "gray" &&

@@ -38,13 +38,13 @@ export default function AgendaDay() {
           return (
             <Typography key={id}>
               <div
-                className="flex items-center justify-between rounded-3xl py-0.5 pl-3 pr-2 text-3xl dark:hidden"
+                className="flex items-center justify-between rounded-3xl py-0.5 pr-2 pl-3 text-3xl dark:hidden"
                 style={{ backgroundColor: color }}
               >
                 <ReminderInterior />
               </div>
               <div
-                className="hidden items-center justify-between rounded-3xl border-1 border-solid py-0.5 pl-2 pr-1 text-3xl dark:flex"
+                className="hidden items-center justify-between rounded-3xl border border-solid py-0.5 pr-1 pl-2 text-3xl dark:flex"
                 style={{ borderColor: color }}
               >
                 <ReminderInterior />

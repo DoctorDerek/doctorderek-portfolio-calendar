@@ -119,7 +119,7 @@ export default function AddReminder() {
           >
             {remainingCharacters} characters {reminder ? "remaining" : "max"}
           </span>
-          <span className={"absolute right-20 top-6 text-4xl text-green-500"}>
+          <span className={"absolute top-6 right-20 text-4xl text-green-500"}>
             {savingMessage}
           </span>
         </Typography>
@@ -160,12 +160,12 @@ function ColorPicker({
       <Typography className="text-3xl">
         Select a color for the reminder:
       </Typography>
-      <div className="flex rounded border-1 border-solid border-gray-400 bg-gray-200">
+      <div className="flex rounded border border-solid border-gray-400 bg-gray-200">
         {COLORS.map((color) => (
           <button
             className={classNames(
               "m-4 h-16 w-16 rounded border-solid border-black",
-              color === selectedColor ? "border-2" : "border-1",
+              color === selectedColor ? "border-2" : "border",
             )}
             key={color}
             onClick={() => handleChange(color)}
