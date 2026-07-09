@@ -1,9 +1,8 @@
 packages:
   - "."
 
-allowBuilds:
-  '0': core-js
-  '1': sharp
-  '2': unrs-resolver
-  sharp: set this to true or false
-  unrs-resolver: set this to true or false
+settings:
+  onlyBuiltDependencies:
+    - core-js
+    - sharp
+    - unrs-resolver
