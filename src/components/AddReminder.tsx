@@ -1,16 +1,15 @@
+import CheckIcon from "@mui/icons-material/Check"
+import { TextField } from "@mui/material"
+import Typography from "@mui/material/Typography"
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs"
+import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker"
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider"
 import dayjs, { Dayjs } from "dayjs"
 import { useEffect, useState } from "react"
-
 import CustomDialog from "@/src/components/CustomDialog"
 import { closeAddReminder } from "@/src/redux/addReminderSlice"
 import { useAppDispatch, useAppSelector } from "@/src/redux/hooks"
 import { addNewReminder } from "@/src/redux/remindersSlice"
-import { TextField } from "@mui/material"
-import Typography from "@mui/material/Typography"
-import CheckIcon from "@mui/icons-material/Check"
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs"
-import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker"
-import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider"
 
 const classNames = (...classes: string[]) => classes.join(" ")
 
@@ -23,6 +22,7 @@ export default function AddReminder() {
   const date = dateISOString ? dayjs(dateISOString) : dayjs()
   const [selectedDateTime, setSelectedDateTime] = useState<Dayjs | null>(date)
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setSelectedDateTime(dateISOString ? dayjs(dateISOString) : dayjs())
   }, [dateISOString])
 
@@ -113,13 +113,13 @@ export default function AddReminder() {
           Enter your reminder here:
           <span
             className={classNames(
-              "text-3xl flex justify-between italic",
+              "flex justify-between text-3xl italic",
               remainingCharacters < 5 ? "text-red-600" : "text-gray-800",
             )}
           >
             {remainingCharacters} characters {reminder ? "remaining" : "max"}
           </span>
-          <span className={"absolute text-4xl text-green-500 top-6 right-20"}>
+          <span className={"absolute right-20 top-6 text-4xl text-green-500"}>
             {savingMessage}
           </span>
         </Typography>
@@ -160,11 +160,11 @@ function ColorPicker({
       <Typography className="text-3xl">
         Select a color for the reminder:
       </Typography>
-      <div className="flex bg-gray-200 border-gray-400 border-solid rounded border-1">
+      <div className="flex rounded border-1 border-solid border-gray-400 bg-gray-200">
         {COLORS.map((color) => (
           <button
             className={classNames(
-              "w-16 h-16 m-4 border-black border-solid rounded",
+              "m-4 h-16 w-16 rounded border-solid border-black",
               color === selectedColor ? "border-2" : "border-1",
             )}
             key={color}
@@ -178,7 +178,7 @@ function ColorPicker({
             {color === selectedColor ? (
               <CheckIcon
                 aria-label={color + " is selected"}
-                className="w-12 h-12"
+                className="h-12 w-12"
               />
             ) : null}
           </button>

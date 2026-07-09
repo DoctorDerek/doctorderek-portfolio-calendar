@@ -1,13 +1,12 @@
+import AccessAlarmIcon from "@mui/icons-material/AccessAlarm"
+import QueryBuilderIcon from "@mui/icons-material/QueryBuilder"
 import { motion } from "framer-motion"
-
 import CustomIcon from "@/src/components/CustomIcon"
 import { useAppDispatch, useAppSelector } from "@/src/redux/hooks"
 import {
   hideHoursOnCalendar,
   showHoursOnCalendar,
 } from "@/src/redux/showHoursSlice"
-import AccessAlarmIcon from "@mui/icons-material/AccessAlarm"
-import QueryBuilderIcon from "@mui/icons-material/QueryBuilder"
 
 const classNames = (...classes: string[]) => classes.join(" ")
 export default function ToggleShowHours() {
@@ -30,17 +29,17 @@ export default function ToggleShowHours() {
       aria-label={ariaLabel}
       title={ariaLabel}
       className={classNames(
-        "relative text-lg font-bold rounded-full transition-all duration-500  bg-transparent backdrop-filter backdrop-blur w-24 h-8",
+        "relative h-8 w-24 rounded-full bg-transparent text-lg font-bold backdrop-blur backdrop-filter transition-all duration-500",
         (color === "gray" &&
-          "text-gray-500 border-gray-300 hover:bg-gray-300 hover:text-gray-700 hover:border-gray-500") as string,
+          "border-gray-300 text-gray-500 hover:border-gray-500 hover:bg-gray-300 hover:text-gray-700") as string,
         (color === "purple" &&
-          "text-purple-500 border-purple-300 hover:bg-purple-300 hover:text-purple-700 hover:border-purple-500") as string,
+          "border-purple-300 text-purple-500 hover:border-purple-500 hover:bg-purple-300 hover:text-purple-700") as string,
       )}
     >
       {showHours ? (
-        <span className="absolute top-0.5 right-2">Hours</span>
+        <span className="absolute right-2 top-0.5">Hours</span>
       ) : (
-        <span className="absolute top-0.5 left-3">Icons</span>
+        <span className="absolute left-3 top-0.5">Icons</span>
       )}
       <motion.div
         className="w-16 rounded-full"

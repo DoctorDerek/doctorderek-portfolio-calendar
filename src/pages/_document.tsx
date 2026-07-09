@@ -3,7 +3,7 @@ import Document, { Head, Html, Main, NextScript } from "next/document"
 class MyDocument extends Document {
   render() {
     return (
-      <Html lang="en" className="w-full h-full">
+      <Html lang="en" className="h-full w-full">
         <Head>
           <meta charSet="utf-8" />
           <link
@@ -27,12 +27,12 @@ class MyDocument extends Document {
           <link rel="manifest" href="/favicon-io/site.webmanifest" />
           <link
             rel="stylesheet"
-            href="https://fonts.googleapis.com/css?family=Roboto:300,400,500"
+            href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap"
           />
           <noscript>You need to enable JavaScript to run this app.</noscript>
         </Head>
 
-        <body className="w-full h-full subpixel-antialiased">
+        <body className="h-full w-full subpixel-antialiased">
           <Main />
           <NextScript />
         </body>

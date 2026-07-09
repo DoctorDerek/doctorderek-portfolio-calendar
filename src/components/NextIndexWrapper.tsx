@@ -1,13 +1,12 @@
-import { ThemeProvider as NextThemeProvider } from "next-themes"
-import { Provider } from "react-redux"
-
-import App from "@/src/components/App"
-import store from "@/src/redux/store"
 import {
   createTheme,
-  StyledEngineProvider,
   ThemeProvider as MaterialThemeProvider,
+  StyledEngineProvider,
 } from "@mui/material/styles"
+import { ThemeProvider as NextThemeProvider } from "next-themes"
+import { Provider } from "react-redux"
+import App from "@/src/components/App"
+import store from "@/src/redux/store"
 
 export default function NextIndexWrapper() {
   return (

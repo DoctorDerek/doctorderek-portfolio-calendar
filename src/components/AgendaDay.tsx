@@ -1,13 +1,12 @@
+import CloseIcon from "@mui/icons-material/Close"
+import { Typography } from "@mui/material"
 import dayjs from "dayjs"
-
 import AddReminderFab from "@/src/components/AddReminderFab"
 import CustomDialog from "@/src/components/CustomDialog"
 import CustomIcon from "@/src/components/CustomIcon"
 import { closeAgenda } from "@/src/redux/agendaSlice"
 import { useAppDispatch, useAppSelector } from "@/src/redux/hooks"
 import { deleteReminder } from "@/src/redux/remindersSlice"
-import { Typography } from "@mui/material"
-import CloseIcon from "@mui/icons-material/Close"
 
 const formatDateAgenda = (date: Date) => dayjs(date).format("MMMM D, YYYY")
 const formatTimePicker = (date: Date) => dayjs(date).format("h:mm A")
@@ -39,13 +38,13 @@ export default function AgendaDay() {
           return (
             <Typography key={id}>
               <div
-                className="dark:hidden py-0.5 pl-3 pr-2 rounded-3xl flex items-center justify-between text-3xl"
+                className="flex items-center justify-between rounded-3xl py-0.5 pl-3 pr-2 text-3xl dark:hidden"
                 style={{ backgroundColor: color }}
               >
                 <ReminderInterior />
               </div>
               <div
-                className="hidden py-0.5 pl-2 pr-1 rounded-3xl dark:flex items-center justify-between text-3xl border-1 border-solid"
+                className="hidden items-center justify-between rounded-3xl border-1 border-solid py-0.5 pl-2 pr-1 text-3xl dark:flex"
                 style={{ borderColor: color }}
               >
                 <ReminderInterior />
@@ -58,7 +57,7 @@ export default function AgendaDay() {
               <>
                 <div className="flex items-center justify-center">
                   <div
-                    className="hidden w-4 h-4 mr-2 rounded-full dark:block"
+                    className="mr-2 hidden h-4 w-4 rounded-full dark:block"
                     style={{ backgroundColor: color }}
                   />
                   <span className="mr-2 font-medium">{time}</span>
