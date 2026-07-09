@@ -22,6 +22,7 @@ export default function AddReminder() {
   const date = dateISOString ? dayjs(dateISOString) : dayjs()
   const [selectedDateTime, setSelectedDateTime] = useState<Dayjs | null>(date)
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setSelectedDateTime(dateISOString ? dayjs(dateISOString) : dayjs())
   }, [dateISOString])
 

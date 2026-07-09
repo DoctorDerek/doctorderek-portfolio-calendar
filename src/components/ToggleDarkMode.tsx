@@ -7,6 +7,7 @@ export default function ToggleDarkMode() {
   const { resolvedTheme, setTheme } = useTheme()
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     if (resolvedTheme === "dark") setInProp(true)
   }, [resolvedTheme])
 
