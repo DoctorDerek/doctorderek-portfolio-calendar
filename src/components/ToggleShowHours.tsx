@@ -1,6 +1,6 @@
 import AccessAlarmIcon from "@mui/icons-material/AccessAlarm"
 import QueryBuilderIcon from "@mui/icons-material/QueryBuilder"
-import { motion } from "framer-motion"
+import { motion } from "motion/react"
 import CustomIcon from "@/src/components/CustomIcon"
 import { useAppDispatch, useAppSelector } from "@/src/redux/hooks"
 import {
