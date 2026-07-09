@@ -37,9 +37,9 @@ export default function ToggleShowHours() {
       )}
     >
       {showHours ? (
-        <span className="absolute right-2 top-0.5">Hours</span>
+        <span className="absolute top-0.5 right-2">Hours</span>
       ) : (
-        <span className="absolute left-3 top-0.5">Icons</span>
+        <span className="absolute top-0.5 left-3">Icons</span>
       )}
       <motion.div
         className="w-16 rounded-full"

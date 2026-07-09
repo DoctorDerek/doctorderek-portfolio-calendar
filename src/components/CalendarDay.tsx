@@ -49,21 +49,21 @@ export default function CalendarDay({
       onClick={onClick}
       onKeyDown={(event) => event.key === "Enter" && onClick()}
       className={classNames(
-        "flex cursor-pointer flex-wrap items-center justify-center border-1 border-solid border-gray-300",
+        "flex cursor-pointer flex-wrap items-center justify-center border border-solid border-gray-300",
         dayjs(selectedDate).isSame(todaysDate, "month")
-          ? "bg-gray-50 bg-opacity-40"
-          : "bg-gray-800 bg-opacity-40",
+          ? "bg-opacity-40 bg-gray-50"
+          : "bg-opacity-40 bg-gray-800",
       )}
       aria-label={ariaLabel}
       title={ariaLabel}
     >
       <Avatar
         className={classNames(
-          "border-1 border-solid border-transparent text-gray-800 dark:text-gray-200",
+          "border border-solid border-transparent text-gray-800 dark:text-gray-200",
           isToday && focused
-            ? "m-[1px] border-current bg-purple-600 shadow-xl md:mx-0.5" // focused today's avatar
+            ? "m-px border-current bg-purple-600 shadow-xl md:mx-0.5" // focused today's avatar
             : isToday
-              ? "m-[1px] border-current bg-purple-400 shadow-xl md:mx-0.5" // today's avatar
+              ? "m-px border-current bg-purple-400 shadow-xl md:mx-0.5" // today's avatar
               : focused
                 ? "border-current bg-gray-400 shadow-xl"
                 : "bg-transparent",
@@ -81,7 +81,7 @@ export default function CalendarDay({
           <div
             className={classNames(
               showHours
-                ? "w-full rounded-sm px-1 text-left text-sm line-clamp-1"
+                ? "line-clamp-1 w-full rounded-sm px-1 text-left text-sm"
                 : "absolute z-20 hidden rounded-3xl p-2 text-xl shadow-lg group-hover:block",
             )}
             style={{ backgroundColor: color }}
@@ -100,7 +100,7 @@ export default function CalendarDay({
     return (
       <Avatar
         style={{ backgroundColor: color }}
-        className="m-[1px] h-5 w-5 border-1 border-solid border-gray-300 md:mx-0.5"
+        className="m-px h-5 w-5 border border-solid border-gray-300 md:mx-0.5"
       >
         <AccessAlarmIcon className="h-4 w-4" />
       </Avatar>
