@@ -27,7 +27,7 @@ class MyDocument extends Document {
           <link rel="manifest" href="/favicon-io/site.webmanifest" />
           <link
             rel="stylesheet"
-            href="https://fonts.googleapis.com/css?family=Roboto:300,400,500"
+            href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap"
           />
           <noscript>You need to enable JavaScript to run this app.</noscript>
         </Head>
