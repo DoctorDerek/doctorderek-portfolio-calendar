@@ -22,7 +22,12 @@
       ]
     },
     "incremental": true,
-    "target": "ES2017"
+    "target": "esnext",
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ]
   },
   "include": [
     "next-env.d.ts",
