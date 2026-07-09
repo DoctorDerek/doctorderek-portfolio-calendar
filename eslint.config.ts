@@ -11,6 +11,12 @@ export default [
     plugins: {
       "only-warn": onlyWarn,
     },
+    languageOptions: {
+      parserOptions: {
+        project: null,
+        projectService: false,
+      },
+    },
   },
   eslintConfigPrettier,
 ]
