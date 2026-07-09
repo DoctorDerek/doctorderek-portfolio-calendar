@@ -11,9 +11,11 @@ import eslintConfigPrettier from "eslint-config-prettier"
 import gitignore from "eslint-config-flat-gitignore"
 import onlyWarn from "eslint-plugin-only-warn"
 
-export default [
+import type { Linter } from "eslint"
+
+const eslintConfig: Linter.Config[] = [
   gitignore(),
-  ...nextCoreWebVitals,
+  ...(nextCoreWebVitals as Linter.Config[]),
   {
     plugins: {
       "only-warn": onlyWarn,
@@ -21,3 +23,5 @@ export default [
   },
   eslintConfigPrettier,
 ]
+
+export default eslintConfig
