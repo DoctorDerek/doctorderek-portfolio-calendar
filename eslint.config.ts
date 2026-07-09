@@ -1,43 +1,27 @@
-import js from "@eslint/js"
+import { createRequire } from "module"
+import path from "path"
+import { FlatCompat } from "@eslint/eslintrc"
 import gitignore from "eslint-config-flat-gitignore"
 import eslintConfigPrettier from "eslint-config-prettier"
-import jsxA11y from "eslint-plugin-jsx-a11y"
 import onlyWarn from "eslint-plugin-only-warn"
-import reactPlugin from "eslint-plugin-react"
-// @ts-expect-error - react-hooks lacks flat config types
-import reactHooks from "eslint-plugin-react-hooks"
-import globals from "globals"
-import tseslint from "typescript-eslint"
 
-export default tseslint.config(
+const require = createRequire(import.meta.url)
+
+const compat = new FlatCompat({
+  baseDirectory: __dirname,
+  resolvePluginsRelativeTo: path.dirname(
+    require.resolve("eslint-config-next/package.json"),
+  ),
+})
+
+export default [
   gitignore(),
-  js.configs.recommended,
-  ...tseslint.configs.recommended,
-  reactPlugin.configs.flat.recommended,
-  reactPlugin.configs.flat["jsx-runtime"],
-  jsxA11y.flatConfigs.recommended,
+  ...compat.extends("next/core-web-vitals"),
   {
     plugins: {
       // @ts-expect-error - eslint-plugin-only-warn lacks flat config types
       "only-warn": onlyWarn,
-      "react-hooks": reactHooks,
-    },
-    languageOptions: {
-      globals: {
-        ...globals.browser,
-        ...globals.node,
-      },
-    },
-    settings: {
-      react: {
-        version: "detect",
-      },
-    },
-    rules: {
-      "react/prop-types": "off",
-      "react/no-unescaped-entities": "off",
-      ...reactHooks.configs.recommended.rules,
     },
   },
   eslintConfigPrettier,
-)
+]
