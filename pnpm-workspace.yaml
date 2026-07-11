@@ -2,6 +2,6 @@ packages:
   - "."
 
 allowBuilds:
-  - core-js
-  - sharp
-  - unrs-resolver
+  core-js: true
+  sharp: true
+  unrs-resolver: true
