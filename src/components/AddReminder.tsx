@@ -6,10 +6,10 @@ import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker"
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider"
 import dayjs, { Dayjs } from "dayjs"
 import { useEffect, useState } from "react"
-import CustomDialog from "@/src/components/CustomDialog"
-import { closeAddReminder } from "@/src/redux/addReminderSlice"
-import { useAppDispatch, useAppSelector } from "@/src/redux/hooks"
-import { addNewReminder } from "@/src/redux/remindersSlice"
+import CustomDialog from "@/components/CustomDialog"
+import { closeAddReminder } from "@/redux/addReminderSlice"
+import { useAppDispatch, useAppSelector } from "@/redux/hooks"
+import { addNewReminder } from "@/redux/remindersSlice"
 
 const classNames = (...classes: string[]) => classes.join(" ")
 

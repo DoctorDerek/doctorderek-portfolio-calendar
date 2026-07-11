@@ -1,8 +1,8 @@
 import AddIcon from "@mui/icons-material/Add"
 import { Fab } from "@mui/material"
 import dayjs from "dayjs"
-import { openAddReminder } from "@/src/redux/addReminderSlice"
-import { useAppDispatch } from "@/src/redux/hooks"
+import { openAddReminder } from "@/redux/addReminderSlice"
+import { useAppDispatch } from "@/redux/hooks"
 
 const classNames = (...classes: string[]) => classes.join(" ")
 const formatDateAgenda = (date: Date) => dayjs(date).format("MMMM D, YYYY")
