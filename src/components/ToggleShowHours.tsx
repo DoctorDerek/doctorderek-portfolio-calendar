@@ -1,12 +1,12 @@
 import AccessAlarmIcon from "@mui/icons-material/AccessAlarm"
 import QueryBuilderIcon from "@mui/icons-material/QueryBuilder"
 import { motion } from "motion/react"
-import CustomIcon from "@/src/components/CustomIcon"
-import { useAppDispatch, useAppSelector } from "@/src/redux/hooks"
+import CustomIcon from "@/components/CustomIcon"
+import { useAppDispatch, useAppSelector } from "@/redux/hooks"
 import {
   hideHoursOnCalendar,
   showHoursOnCalendar,
-} from "@/src/redux/showHoursSlice"
+} from "@/redux/showHoursSlice"
 
 const classNames = (...classes: string[]) => classes.join(" ")
 export default function ToggleShowHours() {

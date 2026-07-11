@@ -1,12 +1,12 @@
 import CloseIcon from "@mui/icons-material/Close"
 import { Typography } from "@mui/material"
 import dayjs from "dayjs"
-import AddReminderFab from "@/src/components/AddReminderFab"
-import CustomDialog from "@/src/components/CustomDialog"
-import CustomIcon from "@/src/components/CustomIcon"
-import { closeAgenda } from "@/src/redux/agendaSlice"
-import { useAppDispatch, useAppSelector } from "@/src/redux/hooks"
-import { deleteReminder } from "@/src/redux/remindersSlice"
+import AddReminderFab from "@/components/AddReminderFab"
+import CustomDialog from "@/components/CustomDialog"
+import CustomIcon from "@/components/CustomIcon"
+import { closeAgenda } from "@/redux/agendaSlice"
+import { useAppDispatch, useAppSelector } from "@/redux/hooks"
+import { deleteReminder } from "@/redux/remindersSlice"
 
 const formatDateAgenda = (date: Date) => dayjs(date).format("MMMM D, YYYY")
 const formatTimePicker = (date: Date) => dayjs(date).format("h:mm A")

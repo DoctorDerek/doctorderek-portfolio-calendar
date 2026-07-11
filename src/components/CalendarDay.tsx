@@ -2,8 +2,8 @@ import AccessAlarmIcon from "@mui/icons-material/AccessAlarm"
 import { Avatar } from "@mui/material"
 import dayjs from "dayjs"
 import { useState } from "react"
-import { openAgenda } from "@/src/redux/agendaSlice"
-import { useAppDispatch, useAppSelector } from "@/src/redux/hooks"
+import { openAgenda } from "@/redux/agendaSlice"
+import { useAppDispatch, useAppSelector } from "@/redux/hooks"
 
 const classNames = (...classes: string[]) => classes.join(" ")
 const formatDateCalendarDay = (date: Date) =>

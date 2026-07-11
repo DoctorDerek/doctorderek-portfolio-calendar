@@ -1,10 +1,10 @@
 import { configureStore } from "@reduxjs/toolkit"
 import { combineReducers } from "redux"
-import addReminder from "@/src/redux/addReminderSlice"
-import agenda from "@/src/redux/agendaSlice"
-import reminders from "@/src/redux/remindersSlice"
-import reset from "@/src/redux/resetSlice"
-import showHours from "@/src/redux/showHoursSlice"
+import addReminder from "@/redux/addReminderSlice"
+import agenda from "@/redux/agendaSlice"
+import reminders from "@/redux/remindersSlice"
+import reset from "@/redux/resetSlice"
+import showHours from "@/redux/showHoursSlice"
 
 /** combineReducers | Redux https://redux.js.org/api/combinereducers
  * "The combineReducers helper function turns an object whose values are
