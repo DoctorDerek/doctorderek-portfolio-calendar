@@ -1,31 +1,43 @@
+"use client"
+
 import { useTheme } from "next-themes"
 import { useEffect, useState } from "react"
-import { CSSTransition } from "react-transition-group"
+
+const classNames = (...args: string[]) => args.filter(Boolean).join(" ")
 
 export default function ToggleDarkMode() {
-  const [inProp, setInProp] = useState(false)
+  const [mounted, setMounted] = useState(false)
   const { resolvedTheme, setTheme } = useTheme()
 
   useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    if (resolvedTheme === "dark") setInProp(true)
-  }, [resolvedTheme])
+    const timer = setTimeout(() => {
+      setMounted(true)
+    }, 0)
+    return () => clearTimeout(timer)
+  }, [])
 
-  // SVG source: https://codesandbox.io/s/dark-mode-toggle-si6k2 by @bartkozal
+  if (!mounted) return null
+
+  const isDarkTheme = resolvedTheme === "dark"
+
   return (
-    <CSSTransition
-      aria-label="Toggle Dark Mode"
+    <button
       type="button"
-      className="mr-1 ml-1 h-12 bg-transparent p-1 text-gray-900"
+      aria-label={
+        isDarkTheme ? "Switch to light theme" : "Switch to dark theme"
+      }
+      className={classNames(
+        "absolute top-10 right-0 z-20 h-10 bg-transparent text-gray-900",
+        "cursor-pointer rounded-[35px] border-0 p-0 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500",
+        isDarkTheme ? "theme-toggle--dark" : "theme-toggle--light",
+      )}
       onClick={() => {
-        setTheme(resolvedTheme === "dark" ? "light" : "dark")
-        setInProp(inProp ? false : true)
+        setTheme(isDarkTheme ? "light" : "dark")
       }}
-      in={inProp}
-      classNames="switch"
-      timeout={0}
     >
       <svg
+        aria-hidden="true"
+        focusable="false"
         width="170"
         height="70"
         viewBox="0 0 170 70"
@@ -228,6 +240,6 @@ export default function ToggleDarkMode() {
           </radialGradient>
         </defs>
       </svg>
-    </CSSTransition>
+    </button>
   )
 }
