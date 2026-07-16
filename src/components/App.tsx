@@ -59,7 +59,6 @@ export default function App() {
         <AddReminder />
       </div>
       <div className="fixed inset-0 z-0 h-full w-full">
-        {/* background image */}
         <Image
           src="/benjamin-patin-dOzoyaYjCbM-unsplash.jpg"
           alt="Ocean waves breaking by Benjamin Patin on Unsplash"
@@ -67,7 +66,6 @@ export default function App() {
           className="object-cover"
         />
         <div className="absolute inset-0 z-0 h-full w-full opacity-0 backdrop-brightness-50 backdrop-filter transition-all duration-500 dark:bg-[rgba(0,0,0,0.3)] dark:opacity-100">
-          {/* dark mode filter for background image */}
         </div>
       </div>
     </>

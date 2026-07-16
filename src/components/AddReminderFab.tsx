@@ -7,11 +7,6 @@ import { useAppDispatch } from "@/redux/hooks"
 const classNames = (...classes: string[]) => classes.join(" ")
 const formatDateAgenda = (date: Date) => dayjs(date).format("MMMM D, YYYY")
 
-/**
- * The FAB is the floating button that allows the user to add a new reminder.
- * It optionally takes a "date" prop when called from <AgendaDay> in order to
- * provide a better aria-label with the selected date from the open agenda.
- */
 export default function AddReminderFab({
   date,
   position,
@@ -36,7 +31,6 @@ export default function AddReminderFab({
       )}
       onClick={onFabAddClick}
     >
-      {/* note: sizes here should be the same as in <CustomIcon> */}
       <AddIcon className="h-12 w-12" />
     </Fab>
   )

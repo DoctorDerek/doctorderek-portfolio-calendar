@@ -143,7 +143,6 @@ function ColorPicker({
   selectedColor: Color
   handleChange: React.Dispatch<React.SetStateAction<Color>>
 }) {
-  /** HTML colors for the color picker */
   const COLORS = [
     "DodgerBlue",
     "Gray",

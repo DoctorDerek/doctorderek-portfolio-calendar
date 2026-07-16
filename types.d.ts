@@ -4,7 +4,6 @@ declare module "*.svg" {
   export default content
 }
 
-/** HTML colors for the color picker */
 type Color =
   | "DodgerBlue"
   | "Gray"
@@ -15,7 +14,6 @@ type Color =
   | "Tomato"
   | "Violet"
 
-/** Reminder type to hold the reminder data */
 type Reminder = {
   id: string
   dateISOString: string

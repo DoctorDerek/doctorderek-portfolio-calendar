@@ -61,9 +61,9 @@ export default function CalendarDay({
         className={classNames(
           "border border-solid border-transparent text-gray-800 dark:text-gray-200",
           isToday && focused
-            ? "m-px border-current bg-purple-600 shadow-xl md:mx-0.5" // focused today's avatar
+            ? "m-px border-current bg-purple-600 shadow-xl md:mx-0.5"
             : isToday
-              ? "m-px border-current bg-purple-400 shadow-xl md:mx-0.5" // today's avatar
+              ? "m-px border-current bg-purple-400 shadow-xl md:mx-0.5"
               : focused
                 ? "border-current bg-gray-400 shadow-xl"
                 : "bg-transparent",
