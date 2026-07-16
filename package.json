@@ -27,9 +27,8 @@
     "test": "vitest",
     "test:e2e": "playwright test",
     "test:e2e:ui": "playwright test --ui",
-    "format": "prettier --write src"
+    "format": "prettier --write ."
   },
-
   "browserslist": [
     ">0.2%",
     "not dead",
