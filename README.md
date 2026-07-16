@@ -1,4 +1,4 @@
-[![Vercel](https://therealsujitk-vercel-badge.vercel.app/?app=calendar-appointments)](https://calendar-appointments.vercel.app/?app=calendar-appointments) [![codecov](https://codecov.io/gh/DoctorDerek/calendar-appointments/branch/master/graph/badge.svg?token=7VDUW7TGZN)](https://codecov.io/gh/DoctorDerek/calendar-appointments) [![Build Status](https://travis-ci.com/DoctorDerek/calendar-appointments.svg?branch=master)](https://travis-ci.com/DoctorDerek/calendar-appointments)
+[![Vercel](https://therealsujitk-vercel-badge.vercel.app/?app=calendar-appointments)](https://calendar-appointments.vercel.app/?app=calendar-appointments) [![Codecov](https://codecov.io/gh/DoctorDerek/doctorderek-portfolio-calendar/graph/badge.svg)](https://app.codecov.io/gh/DoctorDerek/doctorderek-portfolio-calendar) [![Build Status](https://travis-ci.com/DoctorDerek/calendar-appointments.svg?branch=master)](https://travis-ci.com/DoctorDerek/calendar-appointments)
 
 # 📆 Calendar App - React-Redux w/ TypeScript + Material UI v5 + Tailwind CSS + Next.js 11 + React 17
 
