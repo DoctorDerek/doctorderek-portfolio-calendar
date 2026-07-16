@@ -29,14 +29,6 @@ const remindersSlice = createSlice({
 export const { addNewReminder, deleteReminder } = remindersSlice.actions
 export default remindersSlice.reducer
 
-/**
- * Generate a 36-digit unique id.
- *
- * @remarks Per the birthday problem, there is a low chance of hash collision
- * as long as the number of hash keys is significantly less than the square
- * root of the number of bits. In this case, the square root of 10^36 is 10^18.
- * Reference: https://en.wikipedia.org/wiki/Birthday_problem
- * */
 function generateUniqueId() {
   return (
     String(Math.random() * 1000000000000000000) +
