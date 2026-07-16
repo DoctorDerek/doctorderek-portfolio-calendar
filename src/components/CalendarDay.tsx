@@ -4,6 +4,7 @@ import dayjs from "dayjs"
 import { useState } from "react"
 import { openAgenda } from "@/redux/agendaSlice"
 import { useAppDispatch, useAppSelector } from "@/redux/hooks"
+import type { ReminderColor } from "@/reminderTypes"
 
 const classNames = (...classes: string[]) => classes.join(" ")
 const formatDateCalendarDay = (date: Date) =>
@@ -96,7 +97,7 @@ export default function CalendarDay({
     </button>
   )
 
-  function CustomAvatar({ color }: { color: Color }) {
+  function CustomAvatar({ color }: { color: ReminderColor }) {
     return (
       <Avatar
         style={{ backgroundColor: color }}
