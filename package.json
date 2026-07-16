@@ -29,7 +29,6 @@
     "test:e2e:ui": "playwright test --ui",
     "format": "prettier --write ."
   },
-
   "browserslist": [
     ">0.2%",
     "not dead",
