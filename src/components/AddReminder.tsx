@@ -10,6 +10,7 @@ import CustomDialog from "@/components/CustomDialog"
 import { closeAddReminder } from "@/redux/addReminderSlice"
 import { useAppDispatch, useAppSelector } from "@/redux/hooks"
 import { addNewReminder } from "@/redux/remindersSlice"
+import { REMINDER_COLORS, type ReminderColor } from "@/reminderTypes"
 
 const classNames = (...classes: string[]) => classes.join(" ")
 
@@ -26,7 +27,8 @@ export default function AddReminder() {
     setSelectedDateTime(dateISOString ? dayjs(dateISOString) : dayjs())
   }, [dateISOString])
 
-  const [selectedColor, setSelectedColor] = useState<Color>("DodgerBlue")
+  const [selectedColor, setSelectedColor] =
+    useState<ReminderColor>("DodgerBlue")
   const [reminder, setReminder] = useState("")
   const [savingMessage, setSavingMessage] = useState("")
   const REMINDER_MAX_LENGTH = 30
@@ -140,27 +142,16 @@ function ColorPicker({
   selectedColor,
   handleChange,
 }: {
-  selectedColor: Color
-  handleChange: React.Dispatch<React.SetStateAction<Color>>
+  selectedColor: ReminderColor
+  handleChange: React.Dispatch<React.SetStateAction<ReminderColor>>
 }) {
-  const COLORS = [
-    "DodgerBlue",
-    "Gray",
-    "LightGray",
-    "MediumSeaGreen",
-    "Orange",
-    "SlateBlue",
-    "Tomato",
-    "Violet",
-  ] as readonly Color[]
-
   return (
     <div className="space-y-2">
       <Typography className="text-3xl">
         Select a color for the reminder:
       </Typography>
       <div className="flex rounded border border-solid border-gray-400 bg-gray-200">
-        {COLORS.map((color) => (
+        {REMINDER_COLORS.map((color) => (
           <button
             className={classNames(
               "m-4 h-16 w-16 rounded border-solid border-black",

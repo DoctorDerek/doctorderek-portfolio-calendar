@@ -1,5 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit"
 import dayjs from "dayjs"
+import type { Reminder } from "@/reminderTypes"
 
 const initialRemindersState: {
   reminders: Reminder[]
