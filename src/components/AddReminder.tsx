@@ -13,6 +13,7 @@ import { addNewReminder } from "@/redux/remindersSlice"
 import { REMINDER_COLORS, type ReminderColor } from "@/reminderTypes"
 
 const classNames = (...classes: string[]) => classes.join(" ")
+const REMINDER_MAX_LENGTH = 30
 
 const maskPicker = "MMMM D, YYYY h:mm A"
 const formatDateAndTimePicker = (date: Dayjs) => date.format(maskPicker)
@@ -30,7 +31,6 @@ export default function AddReminder() {
   const [selectedColor, setSelectedColor] =
     useState<ReminderColor>("DodgerBlue")
   const [reminder, setReminder] = useState("")
-  const REMINDER_MAX_LENGTH = 30
   const remainingCharacters = REMINDER_MAX_LENGTH - reminder.length
   const handleReminderChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const newReminder = event.target.value
