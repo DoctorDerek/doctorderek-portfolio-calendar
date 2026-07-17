@@ -49,7 +49,8 @@ export default function AddReminder() {
     dispatch(closeAddReminder())
     resetReminderForm()
   }
-  const saveReminder = () => {
+  const saveReminder = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault()
     if (!selectedDateTime || !normalizedReminder) return
 
     dispatch(
@@ -70,71 +71,77 @@ export default function AddReminder() {
       open={addReminderIsOpen}
       onClose={cancelReminder}
     >
-      <div className="space-y-2">
-        <Typography className="text-3xl">
-          Select the date and time for the reminder:
-        </Typography>
-        <div className="w-full text-3xl">
-          <LocalizationProvider dateAdapter={AdapterDayjs}>
-            <DateTimePicker
-              value={selectedDateTime}
-              onChange={setSelectedDateTime}
-              slotProps={{
-                textField: {
-                  className: "text-3xl bg-gray-200",
-                  fullWidth: true,
-                  inputProps: {
-                    "aria-label": `Choose date and time, selected date and time is ${
-                      selectedDateTime
-                        ? formatDateAndTimePicker(selectedDateTime)
-                        : ""
-                    }`,
+      <form
+        aria-label="Reminder details"
+        className="flex flex-col space-y-6"
+        onSubmit={saveReminder}
+      >
+        <div className="space-y-2">
+          <Typography className="text-3xl">
+            Select the date and time for the reminder:
+          </Typography>
+          <div className="w-full text-3xl">
+            <LocalizationProvider dateAdapter={AdapterDayjs}>
+              <DateTimePicker
+                value={selectedDateTime}
+                onChange={setSelectedDateTime}
+                slotProps={{
+                  textField: {
+                    className: "text-3xl bg-gray-200",
+                    fullWidth: true,
+                    inputProps: {
+                      "aria-label": `Choose date and time, selected date and time is ${
+                        selectedDateTime
+                          ? formatDateAndTimePicker(selectedDateTime)
+                          : ""
+                      }`,
+                    },
                   },
-                },
-              }}
-            />
-          </LocalizationProvider>
+                }}
+              />
+            </LocalizationProvider>
+          </div>
         </div>
-      </div>
-      <ColorPicker
-        selectedColor={selectedColor}
-        handleChange={setSelectedColor}
-      />
-      <div className="space-y-2">
-        <Typography className="flex justify-between text-3xl">
-          Enter your reminder here:
-          <span
-            className={classNames(
-              "flex justify-between text-3xl italic",
-              remainingCharacters < 5 ? "text-red-600" : "text-gray-800",
-            )}
-          >
-            {remainingCharacters} characters {reminder ? "remaining" : "max"}
-          </span>
-        </Typography>
-        <TextField
-          inputProps={{
-            "aria-label": "Reminder",
-            className: "text-3xl bg-gray-200",
-          }}
-          fullWidth={true}
-          value={reminder}
-          onChange={handleReminderChange}
+        <ColorPicker
+          selectedColor={selectedColor}
+          handleChange={setSelectedColor}
         />
-      </div>
-      <div className="flex justify-end gap-4">
-        <Button color="inherit" onClick={cancelReminder}>
-          Cancel
-        </Button>
-        <Button
-          color="success"
-          disabled={!reminderCanBeSaved}
-          onClick={saveReminder}
-          variant="contained"
-        >
-          Save Reminder
-        </Button>
-      </div>
+        <div className="space-y-2">
+          <Typography className="flex justify-between text-3xl">
+            Enter your reminder here:
+            <span
+              className={classNames(
+                "flex justify-between text-3xl italic",
+                remainingCharacters < 5 ? "text-red-600" : "text-gray-800",
+              )}
+            >
+              {remainingCharacters} characters {reminder ? "remaining" : "max"}
+            </span>
+          </Typography>
+          <TextField
+            inputProps={{
+              "aria-label": "Reminder",
+              className: "text-3xl bg-gray-200",
+            }}
+            fullWidth={true}
+            value={reminder}
+            onChange={handleReminderChange}
+          />
+        </div>
+        <div className="flex justify-end gap-4">
+          <Button color="inherit" onClick={cancelReminder} type="button">
+            Cancel
+          </Button>
+          <Button
+            color="success"
+            disabled={!reminderCanBeSaved}
+            type="submit"
+            variant="contained"
+          >
+            Save Reminder
+          </Button>
+        </div>
+      </form>
     </CustomDialog>
   )
 }
