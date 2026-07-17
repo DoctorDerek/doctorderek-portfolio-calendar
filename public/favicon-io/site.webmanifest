@@ -1,6 +1,6 @@
 {
-  "name": "",
-  "short_name": "",
+  "name": "Calendar",
+  "short_name": "Calendar",
   "icons": [
     {
       "src": "/favicon-io/android-chrome-192x192.png",
