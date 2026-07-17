@@ -1,0 +1,45 @@
+import { fireEvent, screen } from "@testing-library/react"
+import { describe, expect, it } from "vitest"
+import AddReminder from "@/components/AddReminder"
+import type { RootState } from "@/redux/store"
+import { renderWithProviders } from "@/test/renderWithProviders"
+
+const openReminderFormState: RootState = {
+  addReminder: { addReminderIsOpen: true },
+  agenda: {
+    agendaIsOpen: false,
+    dateISOString: "2026-07-15T12:00:00",
+  },
+  reminders: { reminders: [] },
+  reset: {},
+  showHours: { showHours: false },
+}
+
+describe("reminder form controls", () => {
+  it("limits reminder text to the visible 30-character allowance", () => {
+    renderWithProviders(<AddReminder />, openReminderFormState)
+
+    const reminderTextField = screen.getByRole("textbox", {
+      name: "Reminder",
+    })
+    fireEvent.change(reminderTextField, {
+      target: { value: "12345678901234567890123456789012345" },
+    })
+
+    expect(reminderTextField).toHaveValue("123456789012345678901234567890")
+    expect(screen.getByText("0 characters remaining")).toBeInTheDocument()
+  })
+
+  it("selects a reminder color through its named control", () => {
+    renderWithProviders(<AddReminder />, openReminderFormState)
+
+    fireEvent.click(screen.getByRole("button", { name: "Select color Tomato" }))
+
+    expect(
+      screen.getByRole("button", { name: "Selected color is Tomato" }),
+    ).toBeInTheDocument()
+    expect(
+      screen.getByRole("button", { name: "Select color DodgerBlue" }),
+    ).toBeInTheDocument()
+  })
+})
