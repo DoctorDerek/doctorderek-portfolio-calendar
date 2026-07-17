@@ -11,13 +11,6 @@
 /* ToggleDarkMode SVG animation by @bartkozal -- used with permission */
 /* Source: https://codesandbox.io/s/dark-mode-toggle-si6k2?file=/src/DarkModeToggle.js */
 
-.switch {
-  cursor: pointer;
-  width: 180px;
-  height: 74px;
-  margin: 80px;
-}
-
 .button {
   transition: transform 0.5s;
 }

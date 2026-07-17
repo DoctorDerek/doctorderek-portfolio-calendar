@@ -29,7 +29,7 @@ export default function ToggleDarkMode() {
         isDarkTheme ? "Switch to light theme" : "Switch to dark theme"
       }
       className={classNames(
-        "absolute top-10 right-0 z-20 h-10 bg-transparent text-gray-900",
+        "flex min-h-11 w-14 shrink-0 items-center justify-center bg-transparent text-gray-900 sm:w-28 lg:w-[170px]",
         "cursor-pointer rounded-[35px] border-0 p-0 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500",
         isDarkTheme ? "theme-toggle--dark" : "theme-toggle--light",
       )}
@@ -45,7 +45,7 @@ export default function ToggleDarkMode() {
         viewBox="0 0 170 70"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
-        className="switch"
+        className="h-auto w-full"
       >
         <mask
           id="mask0"
