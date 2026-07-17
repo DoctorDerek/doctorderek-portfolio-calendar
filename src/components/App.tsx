@@ -28,29 +28,37 @@ export default function App() {
     <>
       <div className="relative z-10 flex w-full items-center justify-center">
         <Paper
-          className="m-6 flex h-full w-full flex-col items-center justify-center rounded-3xl p-3"
+          className="m-2 flex h-full w-full flex-col items-center justify-center rounded-3xl p-3 sm:m-6"
           classes={{
             root: "backdrop-filter backdrop-grayscale backdrop-blur bg-[rgba(255,255,255,0.3)] dark:bg-[rgba(0,0,0,0.3)]",
           }}
         >
-          <header className="my-10 flex w-full items-center justify-between">
-            <CustomIcon
-              ariaLabel="Previous Month"
-              onClick={prevMonth}
-              color="blue"
-              Icon={KeyboardArrowLeftIcon}
-            />
-            <ToggleDarkMode />
-            <div className="mb-2 text-7xl font-bold text-gray-800 drop-shadow-xl dark:text-gray-300">
+          <header className="my-6 grid w-full grid-cols-2 items-center gap-y-4 md:my-10 md:grid-cols-[auto_auto_minmax(0,1fr)_auto_auto] md:gap-3 lg:gap-4">
+            <div className="col-start-1 row-start-3 justify-self-start md:col-start-1 md:row-start-1">
+              <CustomIcon
+                ariaLabel="Previous Month"
+                onClick={prevMonth}
+                color="blue"
+                Icon={KeyboardArrowLeftIcon}
+              />
+            </div>
+            <div className="col-start-1 row-start-2 justify-self-end pr-2 md:col-start-2 md:row-start-1 md:pr-0">
+              <ToggleDarkMode />
+            </div>
+            <div className="col-span-2 col-start-1 row-start-1 mb-2 min-w-0 text-center text-3xl font-bold text-gray-800 drop-shadow-xl sm:text-5xl md:col-span-1 md:col-start-3 md:row-start-1 lg:text-7xl dark:text-gray-300">
               {formatDateAsMonthApp(todaysDate)}
             </div>
-            <ToggleShowHours />
-            <CustomIcon
-              ariaLabel="Next Month"
-              onClick={nextMonth}
-              color="blue"
-              Icon={KeyboardArrowRightIcon}
-            />
+            <div className="col-start-2 row-start-2 justify-self-start pl-2 md:col-start-4 md:row-start-1 md:pl-0">
+              <ToggleShowHours />
+            </div>
+            <div className="col-start-2 row-start-3 justify-self-end md:col-start-5 md:row-start-1">
+              <CustomIcon
+                ariaLabel="Next Month"
+                onClick={nextMonth}
+                color="blue"
+                Icon={KeyboardArrowRightIcon}
+              />
+            </div>
           </header>
           <CalendarGrid todaysDate={todaysDate} />
         </Paper>
