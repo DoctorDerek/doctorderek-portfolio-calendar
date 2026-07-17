@@ -43,12 +43,12 @@ export default function CalendarDay({
 
   return (
     <button
+      type="button"
       onMouseOver={onMouseOver}
       onFocus={onMouseOver}
       onMouseOut={onMouseOut}
       onBlur={onMouseOut}
       onClick={onClick}
-      onKeyDown={(event) => event.key === "Enter" && onClick()}
       className={classNames(
         "flex cursor-pointer flex-wrap items-center justify-center border border-solid border-gray-300",
         dayjs(selectedDate).isSame(todaysDate, "month")
@@ -69,7 +69,6 @@ export default function CalendarDay({
                 ? "border-current bg-gray-400 shadow-xl"
                 : "bg-transparent",
         )}
-        data-testid={ariaLabel}
       >
         {dayjs(selectedDate).date()}
       </Avatar>
