@@ -127,6 +127,7 @@ export default function AddReminder() {
         </Typography>
         <TextField
           inputProps={{
+            "aria-label": "Reminder",
             className: "text-3xl bg-gray-200",
           }}
           fullWidth={true}
