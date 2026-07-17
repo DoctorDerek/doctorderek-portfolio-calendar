@@ -20,6 +20,8 @@ export default function ToggleDarkMode() {
 
   const isDarkTheme = resolvedTheme === "dark"
 
+  // SVG source: https://codesandbox.io/s/dark-mode-toggle-si6k2 by @bartkozal
+  // used with permission
   return (
     <button
       type="button"
