@@ -30,30 +30,11 @@ export default function AddReminder() {
   const [selectedColor, setSelectedColor] =
     useState<ReminderColor>("DodgerBlue")
   const [reminder, setReminder] = useState("")
-  const [savingMessage, setSavingMessage] = useState("")
   const REMINDER_MAX_LENGTH = 30
   const remainingCharacters = REMINDER_MAX_LENGTH - reminder.length
   const handleReminderChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const newReminder = event.target.value
     setReminder(() => newReminder.slice(0, REMINDER_MAX_LENGTH))
-    if (newReminder.length === 0) setSavingMessage(() => "")
-    else if (newReminder.length < REMINDER_MAX_LENGTH) {
-      setTimeout(() => {
-        if (reminder) setSavingMessage(() => "Saving")
-      }, 200)
-      setTimeout(() => {
-        if (reminder) setSavingMessage(() => "Saving.")
-      }, 400)
-      setTimeout(() => {
-        if (reminder) setSavingMessage(() => "Saving..")
-      }, 600)
-      setTimeout(() => {
-        if (reminder) setSavingMessage(() => "Saving...")
-      }, 800)
-      setTimeout(() => {
-        if (reminder) setSavingMessage(() => "Saved!")
-      }, 1000)
-    }
   }
 
   const dispatch = useAppDispatch()
@@ -71,7 +52,6 @@ export default function AddReminder() {
     }
     setSelectedColor(() => "DodgerBlue")
     setReminder(() => "")
-    setSavingMessage(() => "")
   }
 
   return (
@@ -120,9 +100,6 @@ export default function AddReminder() {
             )}
           >
             {remainingCharacters} characters {reminder ? "remaining" : "max"}
-          </span>
-          <span className={"absolute top-6 right-20 text-4xl text-green-500"}>
-            {savingMessage}
           </span>
         </Typography>
         <TextField
