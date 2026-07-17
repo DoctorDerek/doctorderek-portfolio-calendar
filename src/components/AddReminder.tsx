@@ -154,6 +154,7 @@ function ColorPicker({
       <div className="flex rounded border border-solid border-gray-400 bg-gray-200">
         {REMINDER_COLORS.map((color) => (
           <button
+            type="button"
             className={classNames(
               "m-4 h-16 w-16 rounded border-solid border-black",
               color === selectedColor ? "border-2" : "border",
