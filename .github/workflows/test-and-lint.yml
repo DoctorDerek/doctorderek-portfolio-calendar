@@ -36,12 +36,19 @@ jobs:
 
       - name: Run Lint and Capture Output
         id: lint
+        continue-on-error: true
         run: |
-          OUTPUT=$(pnpm lint || true)
+          if OUTPUT=$(pnpm lint); then
+            LINT_EXIT_CODE=0
+          else
+            LINT_EXIT_CODE=$?
+          fi
 
           echo "LINT_OUTPUT<<EOF" >> $GITHUB_ENV
           echo "$OUTPUT" >> $GITHUB_ENV
           echo "EOF" >> $GITHUB_ENV
+
+          exit "$LINT_EXIT_CODE"
 
       - name: Post PR Comment
         continue-on-error: true
@@ -82,6 +89,10 @@ jobs:
                 body: body
               });
             }
+
+      - name: Enforce Lint Result
+        if: steps.lint.outcome == 'failure'
+        run: exit 1
 
       - name: Run Vitest (Coverage)
         run: pnpm vitest run --coverage --passWithNoTests
