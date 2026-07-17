@@ -1,55 +1,37 @@
-[![Vercel](https://therealsujitk-vercel-badge.vercel.app/?app=calendar-appointments)](https://calendar-appointments.vercel.app/?app=calendar-appointments) [![Codecov](https://codecov.io/gh/DoctorDerek/doctorderek-portfolio-calendar/graph/badge.svg)](https://app.codecov.io/gh/DoctorDerek/doctorderek-portfolio-calendar) [![Build Status](https://travis-ci.com/DoctorDerek/calendar-appointments.svg?branch=master)](https://travis-ci.com/DoctorDerek/calendar-appointments)
+[![Vercel](https://therealsujitk-vercel-badge.vercel.app/?app=calendar-appointments)](https://calendar-appointments.vercel.app/) [![Codecov](https://codecov.io/gh/DoctorDerek/doctorderek-portfolio-calendar/graph/badge.svg)](https://app.codecov.io/gh/DoctorDerek/doctorderek-portfolio-calendar)
 
-# 📆 Calendar App - React-Redux w/ TypeScript + Material UI v5 + Tailwind CSS + Next.js 11 + React 17
+# Calendar & Appointments
 
-# ✅ Code Extended to Add and Display Reminders by Dr. Derek Austin
+A responsive TypeScript calendar for creating, color-coding, reviewing, and deleting reminders.
 
-# 👀 View Production Build at https://calendar-appointments.vercel.app
+[Open the production application →](https://calendar-appointments.vercel.app/)
 
-I extended [this React-Redux calendar app](https://github.com/AmTote/calendar-appointments) to include the ability to add and display reminders or appointments.
+## Product highlights
 
-Additionally, I added 10 other major features, including best practices and extensive test coverage.
+- Navigate a responsive six-week monthly calendar.
+- Create reminders with a selected date, time, color, and maximum 30-character description.
+- Keep reminders chronologically ordered and review or delete them from a daily agenda.
+- Switch calendar entries between compact icons and visible appointment times.
+- Choose an explicit light or dark theme independently of the operating-system preference.
+- Keep theme, display-mode, and navigation controls separated across mobile and desktop headers.
 
-Below you will find a complete feature set, description of technologies, and technical journal.
+## Technology
 
-## Required Features
+| Domain                 | Implementation                                                       |
+| ---------------------- | -------------------------------------------------------------------- |
+| Application            | Next.js 16 and React 19                                              |
+| State                  | Redux Toolkit 2 and React Redux 9                                    |
+| Interface              | Material UI 6, MUI X 7, Tailwind CSS 4, and Emotion 11               |
+| Interaction            | Motion 12 and next-themes 0.4                                        |
+| Dates                  | Day.js 1                                                             |
+| Tooling                | TypeScript 6, ESLint 9, Prettier 3, Node.js 24, and pnpm 11          |
+| Quality infrastructure | Vitest 4, Playwright 1, GitHub Actions, Vercel previews, and Codecov |
 
-1. ✅ Added the ability to add new reminders for a user-entered date and time
-2. ✅ Limited reminders to no more than a maximum of 30 characters.
-3. ✅ Allowed the user to select a color when creating a reminder and display it appropriately.
-4. ✅ Displayed reminders on the calendar view in the correct time order.
-5. ✅ Properly handled overflow when multiple reminders appear on the same date.
+Production builds run strict TypeScript validation. Pull requests run ESLint and Vitest coverage, while Playwright is connected to successful Vercel preview deployments. Test infrastructure is configured, but the current repository does not yet contain test or spec files; rebuilding high-value integration and end-to-end coverage remains active work.
 
-## Additional Features
+## Local development
 
-1. ✅ Deployed production build of Next.js `11.0.2@latest` with CI/CD
-2. ✅ Upgraded React `v16.8` to `v17.0.2` and added Redux Toolkit (RTK)
-3. ✅ Migrated Material UI `v3` to `v5`, including upgraded `<DateTimePicker>`
-4. ✅ Installed Tailwind CSS `v2.2.4` with [Just-in-Time](https://tailwindcss.com/docs/just-in-time-mode) JIT mode with PostCSS `autoprefixer`
-5. ✅ Established engineering best practices:
-   - Prettier, ESLint, Husky (Git Hooks), `tsconfig.json`, TypeScript Import Sorter, `.gitattributes`
-6. ✅ Crafted unit tests for new code features (TDD / Test Driven Development)
-   - Jest + React Testing Library with React Test Renderer
-7. ✅ Wrote unit testing for existing code (0% ➡ 100% test coverage)
-8. ✅ Refactored stateful `App.tsx` React.Component to function component
-9. ✅ Refactored existing code to use Tailwind CSS and Redux Toolkit "slices"
-10. ✅ Developed mobile-first, responsive UX design with Tailwind CSS
-
-## Technologies Used
-
-- React `v17.0.2` (upgraded from a React `v16.8` project bootstrapped with [Create React App](https://github.com/facebook/create-react-app)).
-
-- React Hooks for React state and lifecycle features.
-
-- Redux for state management plus Redux Toolkit (RTK) for type safety.
-
-- Other:
-  - Material UI `v5` (upgraded from Material UI `v3`) as a React component library wotj Tailwind CSS for maintainability.
-  - date-fns `v2.22.1` (upgraded from `v2.0.0.alpha-27`) for date and time utility functions.
-
-## Local Development
-
-Use [fnm](https://github.com/Schniz/fnm) for Node version management and [pnpm](https://pnpm.io/) as the package manager:
+The repository pins Node.js 24 in `.node-version` and pnpm 11 in `package.json`.
 
 ```bash
 fnm use
@@ -58,34 +40,30 @@ pnpm install
 pnpm dev
 ```
 
-## Test Coverage Report - Jest & React Testing Library
+Open [http://localhost:3000](http://localhost:3000).
 
-### `pnpm test`
+## Verification
 
-Launches the test runner and generates code coverage report.
+Run the project’s current quality gates before submitting changes:
 
-### `npm test:watch`
+```bash
+pnpm build
+pnpm lint
+pnpm format
+pnpm exec tsc --noEmit
+git diff --check
+```
 
-Launches the test runner in the interactive watch mode.
+The repository also exposes `pnpm test`, `pnpm test:e2e`, and `pnpm test:e2e:ui` for its configured Vitest and Playwright environments.
 
-## Technical Journal
+## Project history and provenance
 
-- `0.1.0` Existing codebase: Create React App v16.8 + Material UI v3
-- `0.1.1` First commit by Dr. Derek Austin: `chore: delete yarn.lock`
-- `0.2.0` Upgraded all dependencies and established best practices
-- `0.2.1` Developed first working development build in Next.js
-- `0.2.2` Deployed production build to Vercel using CI/CD and Husky
-- `0.3.0` Corrected CSS to match design and redirected `/` to `/calendar`
-- `0.3.1` Replaced `index.css` & `App.css` w/ Tailwind CSS in `_document.tsx`
-- `0.3.2` Destructured separate `props` objects for improved readability
-- `0.4.0` Refactored React-Redux `connect` API to the new hooks API
-- `0.4.1` Flattened `@/components/**/*` to `@/components/*` for organization
-- `0.4.2` Replaced bug-prone indices in React key props with unique IDs
-- `0.4.3` Enabled Jest support for TypeScript `.tsx` files with `babel-jest`
-- `0.5.0` Wrote unit and integration test coverage for the existing code
-- `0.6.0` Added tests for Next pages, bringing initial test coverage to 100%
-- `0.7.0` Improved UX by placing second Add Reminder FAB within `<AddAgenda>`
-- `0.8.0` Refactored to use Tailwind CSS and Redux Toolkit (RTK) `createSlice`
-- `0.9.0` Implemented feature to add reminders to the calendar using RTK
-- `0.9.1` Designed animated motion toggle to switch between icons and hours
-- `0.9.2` Created dark mode for app using Tailwind CSS plus SVG animation toggle
+[AmTote](https://github.com/AmTote/calendar-appointments) supplied the original React and Redux calendar as a take-home exercise and instructed candidates to fork it and submit a completed repository link. This portfolio edition preserves that provenance while documenting Dr. Derek Austin’s substantial modernization and product work, including the reminder workflow, Redux Toolkit state, strict TypeScript architecture, Next.js migration, responsive interface, theme system, continuous integration, and Vercel delivery.
+
+## License and credits
+
+Copyright © 2026 Dr. Derek Austin. All rights reserved. See [LICENSE.txt](LICENSE.txt).
+
+- Background photograph by Benjamin Patin via [Unsplash](https://unsplash.com/).
+- Animated theme control by [@bartkozal](https://codesandbox.io/s/dark-mode-toggle-si6k2?file=/src/DarkModeToggle.js), used with permission.
+- Spiral-calendar favicon generated from Twitter Twemoji under CC BY 4.0; see the complete [favicon attribution](public/favicon-io/about.txt).
