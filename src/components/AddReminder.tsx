@@ -31,6 +31,9 @@ export default function AddReminder() {
   const [selectedColor, setSelectedColor] =
     useState<ReminderColor>("DodgerBlue")
   const [reminder, setReminder] = useState("")
+  const normalizedReminder = reminder.trim()
+  const reminderCanBeSaved =
+    selectedDateTime !== null && normalizedReminder.length > 0
   const remainingCharacters = REMINDER_MAX_LENGTH - reminder.length
   const handleReminderChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const newReminder = event.target.value
@@ -47,14 +50,14 @@ export default function AddReminder() {
     resetReminderForm()
   }
   const saveReminder = () => {
-    if (!selectedDateTime || !reminder) return
+    if (!selectedDateTime || !normalizedReminder) return
 
     dispatch(
       addNewReminder({
         id: "ID is generated automatically",
         dateISOString: selectedDateTime.toISOString(),
         color: selectedColor,
-        text: reminder,
+        text: normalizedReminder,
       }),
     )
     dispatch(closeAddReminder())
@@ -125,7 +128,7 @@ export default function AddReminder() {
         </Button>
         <Button
           color="success"
-          disabled={!selectedDateTime || !reminder}
+          disabled={!reminderCanBeSaved}
           onClick={saveReminder}
           variant="contained"
         >
