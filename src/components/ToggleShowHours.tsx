@@ -1,7 +1,6 @@
 import AccessAlarmIcon from "@mui/icons-material/AccessAlarm"
 import QueryBuilderIcon from "@mui/icons-material/QueryBuilder"
 import { motion } from "motion/react"
-import CustomIcon from "@/components/CustomIcon"
 import { useAppDispatch, useAppSelector } from "@/redux/hooks"
 import {
   hideHoursOnCalendar,
@@ -20,16 +19,18 @@ export default function ToggleShowHours() {
   }
 
   const ariaLabel = showHours
-    ? "Currently showing hours on the calendar"
-    : "Currently showing icons on the calendar"
+    ? "Show reminder icons on the calendar"
+    : "Show reminder hours on the calendar"
 
   return (
-    <motion.div
-      onTap={toggleShowHours}
+    <motion.button
+      type="button"
+      onClick={toggleShowHours}
       aria-label={ariaLabel}
+      aria-pressed={showHours}
       title={ariaLabel}
       className={classNames(
-        "relative h-8 w-24 rounded-full bg-transparent text-lg font-bold backdrop-blur backdrop-filter transition-all duration-500",
+        "relative h-8 w-24 rounded-full border-0 bg-transparent p-0 text-lg font-bold backdrop-blur backdrop-filter transition-all duration-500 focus:outline-none focus-visible:ring-2 focus-visible:ring-purple-500",
         (color === "gray" &&
           "border-gray-300 text-gray-500 hover:border-gray-500 hover:bg-gray-300 hover:text-gray-700") as string,
         (color === "purple" &&
@@ -42,27 +43,21 @@ export default function ToggleShowHours() {
         <span className="absolute top-0.5 left-3">Icons</span>
       )}
       <motion.div
-        className="w-16 rounded-full"
+        className={classNames(
+          "dark:bg-opacity-80 flex h-8 w-8 items-center justify-center rounded-full border border-solid bg-gray-100 fill-current transition-all duration-500",
+          (color === "gray" &&
+            "border-gray-300 text-gray-500 hover:border-gray-500 hover:bg-gray-300 hover:text-gray-700") as string,
+          (color === "purple" &&
+            "border-purple-300 text-purple-500 hover:border-purple-500 hover:bg-purple-300 hover:text-purple-700") as string,
+        )}
         animate={{ x: showHours ? "0rem" : "4rem" }}
       >
         {showHours ? (
-          <CustomIcon
-            ariaLabel={ariaLabel}
-            color={color}
-            Icon={QueryBuilderIcon}
-            onClick={() => {}}
-            size="small"
-          />
+          <QueryBuilderIcon aria-hidden="true" className="h-6 w-6" />
         ) : (
-          <CustomIcon
-            ariaLabel={ariaLabel}
-            color={color}
-            Icon={AccessAlarmIcon}
-            onClick={() => {}}
-            size="small"
-          />
+          <AccessAlarmIcon aria-hidden="true" className="h-6 w-6" />
         )}
       </motion.div>
-    </motion.div>
+    </motion.button>
   )
 }
