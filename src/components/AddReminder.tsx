@@ -13,6 +13,7 @@ import { addNewReminder } from "@/redux/remindersSlice"
 import { REMINDER_COLORS, type ReminderColor } from "@/reminderTypes"
 
 const classNames = (...classes: string[]) => classes.join(" ")
+const REMINDER_CHARACTER_COUNT_ID = "reminder-character-count"
 const REMINDER_MAX_LENGTH = 30
 
 const maskPicker = "MMMM D, YYYY h:mm A"
@@ -110,16 +111,19 @@ export default function AddReminder() {
           <Typography className="flex justify-between text-3xl">
             Enter your reminder here:
             <span
+              aria-live="polite"
               className={classNames(
                 "flex justify-between text-3xl italic",
                 remainingCharacters < 5 ? "text-red-600" : "text-gray-800",
               )}
+              id={REMINDER_CHARACTER_COUNT_ID}
             >
               {remainingCharacters} characters {reminder ? "remaining" : "max"}
             </span>
           </Typography>
           <TextField
             inputProps={{
+              "aria-describedby": REMINDER_CHARACTER_COUNT_ID,
               "aria-label": "Reminder",
               className: "text-3xl bg-gray-200",
             }}
