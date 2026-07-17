@@ -1,6 +1,6 @@
 [![Vercel](https://therealsujitk-vercel-badge.vercel.app/?app=calendar-appointments)](https://calendar-appointments.vercel.app/) [![Codecov](https://codecov.io/gh/DoctorDerek/doctorderek-portfolio-calendar/graph/badge.svg)](https://app.codecov.io/gh/DoctorDerek/doctorderek-portfolio-calendar)
 
-# Calendar & Appointments
+# Calendar
 
 A responsive TypeScript calendar for creating, color-coding, reviewing, and deleting reminders.
 
