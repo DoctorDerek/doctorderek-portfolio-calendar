@@ -95,7 +95,7 @@ jobs:
         run: exit 1
 
       - name: Run Vitest (Coverage)
-        run: pnpm vitest run --coverage --passWithNoTests
+        run: pnpm vitest run --coverage
 
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@04b047e8bb82a0c002c8312c1c880fbc6a999d45 # v5
