@@ -1,5 +1,5 @@
 import CheckIcon from "@mui/icons-material/Check"
-import { TextField } from "@mui/material"
+import { Button, TextField } from "@mui/material"
 import Typography from "@mui/material/Typography"
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs"
 import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker"
@@ -38,27 +38,34 @@ export default function AddReminder() {
   }
 
   const dispatch = useAppDispatch()
-  const onClose = () => {
-    dispatch(closeAddReminder())
-    if (selectedDateTime && selectedColor && reminder) {
-      dispatch(
-        addNewReminder({
-          id: "ID is generated automatically",
-          dateISOString: selectedDateTime.toISOString(),
-          color: selectedColor,
-          text: reminder,
-        }),
-      )
-    }
+  const resetReminderForm = () => {
     setSelectedColor(() => "DodgerBlue")
     setReminder(() => "")
+  }
+  const cancelReminder = () => {
+    dispatch(closeAddReminder())
+    resetReminderForm()
+  }
+  const saveReminder = () => {
+    if (!selectedDateTime || !reminder) return
+
+    dispatch(
+      addNewReminder({
+        id: "ID is generated automatically",
+        dateISOString: selectedDateTime.toISOString(),
+        color: selectedColor,
+        text: reminder,
+      }),
+    )
+    dispatch(closeAddReminder())
+    resetReminderForm()
   }
 
   return (
     <CustomDialog
       title="Add Reminder"
       open={addReminderIsOpen}
-      onClose={onClose}
+      onClose={cancelReminder}
     >
       <div className="space-y-2">
         <Typography className="text-3xl">
@@ -111,6 +118,19 @@ export default function AddReminder() {
           value={reminder}
           onChange={handleReminderChange}
         />
+      </div>
+      <div className="flex justify-end gap-4">
+        <Button color="inherit" onClick={cancelReminder}>
+          Cancel
+        </Button>
+        <Button
+          color="success"
+          disabled={!selectedDateTime || !reminder}
+          onClick={saveReminder}
+          variant="contained"
+        >
+          Save Reminder
+        </Button>
       </div>
     </CustomDialog>
   )
