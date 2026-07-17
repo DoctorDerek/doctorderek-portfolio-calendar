@@ -27,7 +27,7 @@ A responsive TypeScript calendar for creating, color-coding, reviewing, and dele
 | Tooling                | TypeScript 6, ESLint 9, Prettier 3, Node.js 24, and pnpm 11          |
 | Quality infrastructure | Vitest 4, Playwright 1, GitHub Actions, Vercel previews, and Codecov |
 
-Production builds run strict TypeScript validation. Pull requests run ESLint and Vitest coverage, while Playwright is connected to successful Vercel preview deployments. Test infrastructure is configured, but the current repository does not yet contain test or spec files; rebuilding high-value integration and end-to-end coverage remains active work.
+Production builds run strict TypeScript validation. Pull requests run ESLint and Vitest coverage, while Playwright is connected to successful Vercel preview deployments. Vitest now covers calendar month navigation through the application UI, chronological reminder state transitions, and agenda reminder deletion through the application UI; expanding end-to-end coverage remains active work.
 
 ## Local development
 
