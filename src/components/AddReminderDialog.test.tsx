@@ -38,4 +38,21 @@ describe("reminder dialog interactions", () => {
     })
     expect(screen.queryByText("Cancelled reminder")).not.toBeInTheDocument()
   })
+
+  it("dismisses typed reminder text without adding it to the calendar", async () => {
+    renderWithProviders(<App />)
+
+    fireEvent.click(screen.getByRole("button", { name: "Add Reminder" }))
+    fireEvent.change(screen.getByRole("textbox", { name: "Reminder" }), {
+      target: { value: "Dismissed reminder" },
+    })
+    fireEvent.click(screen.getByRole("button", { name: "Close Add Reminder" }))
+
+    await waitFor(() => {
+      expect(
+        screen.queryByRole("dialog", { name: "Add Reminder" }),
+      ).not.toBeInTheDocument()
+    })
+    expect(screen.queryByText("Dismissed reminder")).not.toBeInTheDocument()
+  })
 })
