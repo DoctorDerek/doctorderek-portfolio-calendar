@@ -42,4 +42,27 @@ describe("reminder form controls", () => {
       screen.getByRole("button", { name: "Select color DodgerBlue" }),
     ).toBeInTheDocument()
   })
+
+  it("keeps saving disabled until reminder text contains content", () => {
+    renderWithProviders(<AddReminder />, openReminderFormState)
+
+    const reminderTextField = screen.getByRole("textbox", {
+      name: "Reminder",
+    })
+    const saveReminderButton = screen.getByRole("button", {
+      name: "Save Reminder",
+    })
+
+    expect(saveReminderButton).toBeDisabled()
+
+    fireEvent.change(reminderTextField, { target: { value: "   " } })
+
+    expect(saveReminderButton).toBeDisabled()
+
+    fireEvent.change(reminderTextField, {
+      target: { value: "Portfolio review" },
+    })
+
+    expect(saveReminderButton).toBeEnabled()
+  })
 })
