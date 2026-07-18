@@ -158,7 +158,7 @@ function ColorPicker({
   handleChange: React.Dispatch<React.SetStateAction<ReminderColor>>
 }) {
   return (
-    <div className="space-y-2">
+    <div aria-label="Reminder color" className="space-y-2" role="group">
       <Typography className="text-3xl">
         Select a color for the reminder:
       </Typography>
