@@ -72,4 +72,24 @@ describe("reminder dialog interactions", () => {
     })
     expect(screen.getByText("Portfolio review")).toBeInTheDocument()
   })
+
+  it("normalizes reminder text submitted through the named form", async () => {
+    const { store } = renderWithProviders(<App />)
+
+    fireEvent.click(screen.getByRole("button", { name: "Add Reminder" }))
+    fireEvent.change(screen.getByRole("textbox", { name: "Reminder" }), {
+      target: { value: "   Planning session   " },
+    })
+    fireEvent.submit(screen.getByRole("form", { name: "Reminder details" }))
+
+    await waitFor(() => {
+      expect(
+        screen.queryByRole("dialog", { name: "Add Reminder" }),
+      ).not.toBeInTheDocument()
+    })
+    expect(screen.getByText("Planning session")).toBeInTheDocument()
+    expect(store.getState().reminders.reminders[0].text).toBe(
+      "Planning session",
+    )
+  })
 })
