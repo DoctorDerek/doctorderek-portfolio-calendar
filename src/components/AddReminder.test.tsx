@@ -1,4 +1,4 @@
-import { fireEvent, screen } from "@testing-library/react"
+import { fireEvent, screen, within } from "@testing-library/react"
 import { describe, expect, it } from "vitest"
 import AddReminder from "@/components/AddReminder"
 import type { RootState } from "@/redux/store"
@@ -39,13 +39,25 @@ describe("reminder form controls", () => {
   it("selects a reminder color through its named control", () => {
     renderWithProviders(<AddReminder />, openReminderFormState)
 
-    fireEvent.click(screen.getByRole("button", { name: "Select color Tomato" }))
+    const reminderColorGroup = screen.getByRole("group", {
+      name: "Reminder color",
+    })
+
+    fireEvent.click(
+      within(reminderColorGroup).getByRole("button", {
+        name: "Select color Tomato",
+      }),
+    )
 
     expect(
-      screen.getByRole("button", { name: "Selected color is Tomato" }),
+      within(reminderColorGroup).getByRole("button", {
+        name: "Selected color is Tomato",
+      }),
     ).toBeInTheDocument()
     expect(
-      screen.getByRole("button", { name: "Select color DodgerBlue" }),
+      within(reminderColorGroup).getByRole("button", {
+        name: "Select color DodgerBlue",
+      }),
     ).toBeInTheDocument()
   })
 
