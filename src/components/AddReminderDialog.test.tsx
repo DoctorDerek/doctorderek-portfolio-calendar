@@ -21,4 +21,21 @@ describe("reminder dialog interactions", () => {
       ).not.toBeInTheDocument()
     })
   })
+
+  it("cancels typed reminder text without adding it to the calendar", async () => {
+    renderWithProviders(<App />)
+
+    fireEvent.click(screen.getByRole("button", { name: "Add Reminder" }))
+    fireEvent.change(screen.getByRole("textbox", { name: "Reminder" }), {
+      target: { value: "Cancelled reminder" },
+    })
+    fireEvent.click(screen.getByRole("button", { name: "Cancel" }))
+
+    await waitFor(() => {
+      expect(
+        screen.queryByRole("dialog", { name: "Add Reminder" }),
+      ).not.toBeInTheDocument()
+    })
+    expect(screen.queryByText("Cancelled reminder")).not.toBeInTheDocument()
+  })
 })
