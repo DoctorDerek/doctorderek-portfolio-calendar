@@ -22,12 +22,18 @@ describe("reminder form controls", () => {
     const reminderTextField = screen.getByRole("textbox", {
       name: "Reminder",
     })
+
+    expect(reminderTextField).toHaveAccessibleDescription("30 characters max")
+
     fireEvent.change(reminderTextField, {
       target: { value: "12345678901234567890123456789012345" },
     })
 
     expect(reminderTextField).toHaveValue("123456789012345678901234567890")
     expect(screen.getByText("0 characters remaining")).toBeInTheDocument()
+    expect(reminderTextField).toHaveAccessibleDescription(
+      "0 characters remaining",
+    )
   })
 
   it("selects a reminder color through its named control", () => {
