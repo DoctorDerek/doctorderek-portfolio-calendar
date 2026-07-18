@@ -55,4 +55,21 @@ describe("reminder dialog interactions", () => {
     })
     expect(screen.queryByText("Dismissed reminder")).not.toBeInTheDocument()
   })
+
+  it("adds reminder text to the calendar through the explicit save action", async () => {
+    renderWithProviders(<App />)
+
+    fireEvent.click(screen.getByRole("button", { name: "Add Reminder" }))
+    fireEvent.change(screen.getByRole("textbox", { name: "Reminder" }), {
+      target: { value: "Portfolio review" },
+    })
+    fireEvent.click(screen.getByRole("button", { name: "Save Reminder" }))
+
+    await waitFor(() => {
+      expect(
+        screen.queryByRole("dialog", { name: "Add Reminder" }),
+      ).not.toBeInTheDocument()
+    })
+    expect(screen.getByText("Portfolio review")).toBeInTheDocument()
+  })
 })
