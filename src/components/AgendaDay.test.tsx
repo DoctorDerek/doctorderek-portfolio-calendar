@@ -1,4 +1,4 @@
-import { fireEvent, screen } from "@testing-library/react"
+import { fireEvent, screen, within } from "@testing-library/react"
 import { describe, expect, it } from "vitest"
 import AgendaDay from "@/components/AgendaDay"
 import type { RootState } from "@/redux/store"
@@ -32,15 +32,24 @@ describe("agenda reminder interactions", () => {
     expect(
       screen.getByRole("dialog", { name: "Agenda: July 15, 2026" }),
     ).toBeInTheDocument()
-    expect(screen.getByText("9:00 AM")).toBeInTheDocument()
-    expect(screen.getByText("Portfolio review")).toBeInTheDocument()
+    const reminderList = screen.getByRole("list", {
+      name: "Reminders for July 15, 2026",
+    })
+    expect(within(reminderList).getAllByRole("listitem")).toHaveLength(1)
+    expect(within(reminderList).getByText("9:00 AM")).toBeInTheDocument()
+    expect(
+      within(reminderList).getByText("Portfolio review"),
+    ).toBeInTheDocument()
 
     const deleteReminderButton = screen.getByRole("button", {
       name: "Delete reminder 9:00 AM Portfolio review",
     })
     fireEvent.click(deleteReminderButton)
 
-    expect(screen.getByText("No reminders yet.")).toBeInTheDocument()
+    expect(
+      screen.queryByRole("list", { name: "Reminders for July 15, 2026" }),
+    ).not.toBeInTheDocument()
+    expect(screen.getByRole("status")).toHaveTextContent("No reminders yet.")
     expect(screen.queryByText("Portfolio review")).not.toBeInTheDocument()
   })
 
