@@ -5,7 +5,10 @@ import type { RootState } from "@/redux/store"
 import { renderWithProviders } from "@/test/renderWithProviders"
 
 const openReminderFormState: RootState = {
-  addReminder: { addReminderIsOpen: true },
+  addReminder: {
+    addReminderIsOpen: true,
+    dateISOString: "2026-07-15T12:00:00",
+  },
   agenda: {
     agendaIsOpen: false,
     dateISOString: "2026-07-15T12:00:00",

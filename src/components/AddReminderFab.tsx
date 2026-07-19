@@ -16,11 +16,11 @@ export default function AddReminderFab({
 }) {
   const dispatch = useAppDispatch()
   const onFabAddClick = () => {
-    dispatch(openAddReminder())
+    dispatch(openAddReminder((date ?? new Date()).toISOString()))
   }
 
   const ariaLabel =
-    "Add Reminder" + (date ? ` for ${formatDateAgenda(date as Date)}` : "")
+    "Add Reminder" + (date ? ` for ${formatDateAgenda(date)}` : "")
 
   return (
     <Fab

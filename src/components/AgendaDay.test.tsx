@@ -7,7 +7,7 @@ import { renderWithProviders } from "@/test/renderWithProviders"
 describe("agenda reminder interactions", () => {
   it("presents the selected day reminder and deletes it through the UI", () => {
     const preloadedState: RootState = {
-      addReminder: { addReminderIsOpen: false },
+      addReminder: { addReminderIsOpen: false, dateISOString: "" },
       agenda: {
         agendaIsOpen: true,
         dateISOString: "2026-07-15T12:00:00",
