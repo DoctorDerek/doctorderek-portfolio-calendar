@@ -5,7 +5,7 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs"
 import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker"
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider"
 import dayjs, { Dayjs } from "dayjs"
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import CustomDialog from "@/components/CustomDialog"
 import { closeAddReminder } from "@/redux/addReminderSlice"
 import { useAppDispatch, useAppSelector } from "@/redux/hooks"
@@ -23,13 +23,14 @@ export default function AddReminder() {
   const { addReminderIsOpen, dateISOString } = useAppSelector(
     ({ addReminder }) => addReminder,
   )
+  if (!addReminderIsOpen) return null
+
+  return <ReminderForm dateISOString={dateISOString} />
+}
+
+function ReminderForm({ dateISOString }: { dateISOString: string }) {
   const date = dateISOString ? dayjs(dateISOString) : dayjs()
   const [selectedDateTime, setSelectedDateTime] = useState<Dayjs | null>(date)
-  useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    setSelectedDateTime(dateISOString ? dayjs(dateISOString) : dayjs())
-  }, [dateISOString])
-
   const [selectedColor, setSelectedColor] =
     useState<ReminderColor>("DodgerBlue")
   const [reminder, setReminder] = useState("")
@@ -43,13 +44,8 @@ export default function AddReminder() {
   }
 
   const dispatch = useAppDispatch()
-  const resetReminderForm = () => {
-    setSelectedColor(() => "DodgerBlue")
-    setReminder(() => "")
-  }
-  const cancelReminder = () => {
+  const closeReminder = () => {
     dispatch(closeAddReminder())
-    resetReminderForm()
   }
   const saveReminder = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
@@ -64,14 +60,13 @@ export default function AddReminder() {
       }),
     )
     dispatch(closeAddReminder())
-    resetReminderForm()
   }
 
   return (
     <CustomDialog
       title="Add Reminder"
-      open={addReminderIsOpen}
-      onClose={cancelReminder}
+      open={true}
+      onClose={closeReminder}
     >
       <form
         aria-label="Reminder details"
@@ -134,7 +129,7 @@ export default function AddReminder() {
           />
         </div>
         <div className="flex justify-end gap-4">
-          <Button color="inherit" onClick={cancelReminder} type="button">
+          <Button color="inherit" onClick={closeReminder} type="button">
             Cancel
           </Button>
           <Button
