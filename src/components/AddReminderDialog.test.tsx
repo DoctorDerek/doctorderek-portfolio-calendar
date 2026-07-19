@@ -1,6 +1,7 @@
 import { fireEvent, screen, waitFor } from "@testing-library/react"
 import { describe, expect, it } from "vitest"
 import App from "@/components/App"
+import type { RootState } from "@/redux/store"
 import { renderWithProviders } from "@/test/renderWithProviders"
 
 describe("reminder dialog interactions", () => {
@@ -20,6 +21,36 @@ describe("reminder dialog interactions", () => {
         screen.queryByRole("dialog", { name: "Add Reminder" }),
       ).not.toBeInTheDocument()
     })
+  })
+
+  it("requests the current date instead of stale agenda context globally", () => {
+    const previousAgendaDateISOString = "2025-01-10T09:00:00.000Z"
+    const preloadedState: RootState = {
+      addReminder: { addReminderIsOpen: false, dateISOString: "" },
+      agenda: {
+        agendaIsOpen: false,
+        dateISOString: previousAgendaDateISOString,
+      },
+      reminders: { reminders: [] },
+      reset: {},
+      showHours: { showHours: false },
+    }
+    const { store } = renderWithProviders(<App />, preloadedState)
+    const earliestRequestedTimestamp = Date.now()
+
+    fireEvent.click(screen.getByRole("button", { name: "Add Reminder" }))
+
+    const latestRequestedTimestamp = Date.now()
+    const requestedTimestamp = new Date(
+      store.getState().addReminder.dateISOString,
+    ).getTime()
+    expect(requestedTimestamp).toBeGreaterThanOrEqual(
+      earliestRequestedTimestamp,
+    )
+    expect(requestedTimestamp).toBeLessThanOrEqual(latestRequestedTimestamp)
+    expect(store.getState().addReminder.dateISOString).not.toBe(
+      previousAgendaDateISOString,
+    )
   })
 
   it("cancels typed reminder text without adding it to the calendar", async () => {
