@@ -67,4 +67,30 @@ describe("agenda reminder interactions", () => {
       dateISOString: new Date(selectedAgendaDateISOString).toISOString(),
     })
   })
+
+  it("presents reminders in chronological list order", () => {
+    const chronologicalAgendaState: RootState = {
+      ...preloadedAgendaState,
+      reminders: {
+        reminders: [
+          ...preloadedAgendaState.reminders.reminders,
+          {
+            id: "architecture-review",
+            dateISOString: "2026-07-15T13:30:00",
+            color: "Tomato",
+            text: "Architecture review",
+          },
+        ],
+      },
+    }
+    renderWithProviders(<AgendaDay />, chronologicalAgendaState)
+
+    const reminderItems = within(
+      screen.getByRole("list", { name: "Reminders for July 15, 2026" }),
+    ).getAllByRole("listitem")
+
+    expect(reminderItems).toHaveLength(2)
+    expect(reminderItems[0]).toHaveTextContent("9:00 AMPortfolio review")
+    expect(reminderItems[1]).toHaveTextContent("1:30 PMArchitecture review")
+  })
 })
