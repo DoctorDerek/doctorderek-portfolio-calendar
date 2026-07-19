@@ -33,19 +33,25 @@ export default function AgendaDay() {
   }
 
   const dialogTitle = date ? "Agenda: " + formatDateAgenda(date) : "Closing"
+  const reminderListLabel = date
+    ? "Reminders for " + formatDateAgenda(date)
+    : "Reminders"
 
   return (
     <CustomDialog title={dialogTitle} open={agendaIsOpen} onClose={onClose}>
-      <div className="flex flex-col space-y-1">
-        {agendaReminders.map((reminder) => (
-          <AgendaReminder
-            key={reminder.id}
-            reminder={reminder}
-            onDeleteReminder={deleteReminderOnClick}
-          />
-        ))}
-        {agendaReminders.length === 0 && "No reminders yet."}
-      </div>
+      {agendaReminders.length > 0 ? (
+        <ul aria-label={reminderListLabel} className="flex flex-col space-y-1">
+          {agendaReminders.map((reminder) => (
+            <AgendaReminder
+              key={reminder.id}
+              reminder={reminder}
+              onDeleteReminder={deleteReminderOnClick}
+            />
+          ))}
+        </ul>
+      ) : (
+        "No reminders yet."
+      )}
       <AddReminderFab date={date} position="absolute" />
     </CustomDialog>
   )
@@ -64,7 +70,7 @@ function AgendaReminder({
     "--agenda-reminder-color": color,
   }
   return (
-    <div
+    <li
       className="flex items-center justify-between rounded-3xl border-0 border-solid bg-[var(--agenda-reminder-color)] py-0.5 pr-2 pl-3 text-3xl dark:border dark:border-[var(--agenda-reminder-color)] dark:bg-transparent dark:pr-1 dark:pl-2"
       style={reminderColorStyle}
     >
@@ -73,7 +79,7 @@ function AgendaReminder({
         time={time}
         onDelete={() => onDeleteReminder(id)}
       />
-    </div>
+    </li>
   )
 }
 
