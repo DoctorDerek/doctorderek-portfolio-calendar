@@ -63,11 +63,7 @@ function ReminderForm({ dateISOString }: { dateISOString: string }) {
   }
 
   return (
-    <CustomDialog
-      title="Add Reminder"
-      open={true}
-      onClose={closeReminder}
-    >
+    <CustomDialog title="Add Reminder" open={true} onClose={closeReminder}>
       <form
         aria-label="Reminder details"
         className="flex flex-col space-y-6"

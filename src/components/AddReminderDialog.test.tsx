@@ -101,9 +101,10 @@ describe("reminder dialog interactions", () => {
         target: { value: "Discard this draft" },
       })
       fireEvent.click(
-        within(
-          screen.getByRole("group", { name: "Reminder color" }),
-        ).getByRole("button", { name: "Select color Tomato" }),
+        within(screen.getByRole("group", { name: "Reminder color" })).getByRole(
+          "button",
+          { name: "Select color Tomato" },
+        ),
       )
       fireEvent.click(screen.getByRole("button", { name: "Cancel" }))
 
@@ -116,13 +117,12 @@ describe("reminder dialog interactions", () => {
       vi.setSystemTime(secondSessionDate)
       fireEvent.click(screen.getByRole("button", { name: "Add Reminder" }))
 
-      expect(screen.getByRole("textbox", { name: "Reminder" })).toHaveValue(
-        "",
-      )
+      expect(screen.getByRole("textbox", { name: "Reminder" })).toHaveValue("")
       expect(
-        within(
-          screen.getByRole("group", { name: "Reminder color" }),
-        ).getByRole("button", { name: "Selected color is DodgerBlue" }),
+        within(screen.getByRole("group", { name: "Reminder color" })).getByRole(
+          "button",
+          { name: "Selected color is DodgerBlue" },
+        ),
       ).toBeInTheDocument()
       expect(
         screen.getByRole("button", { name: "Save Reminder" }),

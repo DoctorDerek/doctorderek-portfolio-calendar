@@ -1,7 +1,5 @@
 import { describe, expect, it } from "vitest"
-import addReminderReducer, {
-  openAddReminder,
-} from "@/redux/addReminderSlice"
+import addReminderReducer, { openAddReminder } from "@/redux/addReminderSlice"
 
 describe("add reminder state", () => {
   it("opens with the date requested by the initiating control", () => {
