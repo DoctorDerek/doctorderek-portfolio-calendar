@@ -53,7 +53,6 @@ function ReminderForm({ dateISOString }: { dateISOString: string }) {
 
     dispatch(
       addNewReminder({
-        id: "ID is generated automatically",
         dateISOString: selectedDateTime.toISOString(),
         color: selectedColor,
         text: normalizedReminder,
