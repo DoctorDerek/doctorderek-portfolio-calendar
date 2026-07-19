@@ -17,3 +17,5 @@ export type Reminder = {
   color: ReminderColor
   text: string
 }
+
+export type NewReminder = Omit<Reminder, "id">
