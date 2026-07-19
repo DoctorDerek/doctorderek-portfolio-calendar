@@ -1,6 +1,6 @@
 import CloseIcon from "@mui/icons-material/Close"
-import { Typography } from "@mui/material"
 import dayjs from "dayjs"
+import type { CSSProperties } from "react"
 import AddReminderFab from "@/components/AddReminderFab"
 import CustomDialog from "@/components/CustomDialog"
 import CustomIcon from "@/components/CustomIcon"
@@ -11,6 +11,9 @@ import type { Reminder, ReminderColor } from "@/reminderTypes"
 
 const formatDateAgenda = (date: Date) => dayjs(date).format("MMMM D, YYYY")
 const formatTimePicker = (date: Date) => dayjs(date).format("h:mm A")
+type AgendaReminderColorStyle = CSSProperties & {
+  "--agenda-reminder-color": ReminderColor
+}
 
 export default function AgendaDay() {
   const { agendaIsOpen, dateISOString } = useAppSelector(({ agenda }) => agenda)
@@ -57,41 +60,28 @@ function AgendaReminder({
 }) {
   const { id, dateISOString, color, text } = reminder
   const time = formatTimePicker(dayjs(dateISOString).toDate())
+  const reminderColorStyle: AgendaReminderColorStyle = {
+    "--agenda-reminder-color": color,
+  }
   return (
-    <Typography>
-      <div
-        className="flex items-center justify-between rounded-3xl py-0.5 pr-2 pl-3 text-3xl dark:hidden"
-        style={{ backgroundColor: color }}
-      >
-        <ReminderInterior
-          color={color}
-          text={text}
-          time={time}
-          onDelete={() => onDeleteReminder(id)}
-        />
-      </div>
-      <div
-        className="hidden items-center justify-between rounded-3xl border border-solid py-0.5 pr-1 pl-2 text-3xl dark:flex"
-        style={{ borderColor: color }}
-      >
-        <ReminderInterior
-          color={color}
-          text={text}
-          time={time}
-          onDelete={() => onDeleteReminder(id)}
-        />
-      </div>
-    </Typography>
+    <div
+      className="flex items-center justify-between rounded-3xl border-0 border-solid bg-[var(--agenda-reminder-color)] py-0.5 pr-2 pl-3 text-3xl dark:border dark:border-[var(--agenda-reminder-color)] dark:bg-transparent dark:pr-1 dark:pl-2"
+      style={reminderColorStyle}
+    >
+      <ReminderInterior
+        text={text}
+        time={time}
+        onDelete={() => onDeleteReminder(id)}
+      />
+    </div>
   )
 }
 
 function ReminderInterior({
-  color,
   text,
   time,
   onDelete,
 }: {
-  color: ReminderColor
   text: string
   time: string
   onDelete: () => void
@@ -100,8 +90,7 @@ function ReminderInterior({
     <>
       <div className="flex items-center justify-center">
         <div
-          className="mr-2 hidden h-4 w-4 rounded-full dark:block"
-          style={{ backgroundColor: color }}
+          className="mr-2 hidden h-4 w-4 rounded-full bg-[var(--agenda-reminder-color)] dark:block"
         />
         <span className="mr-2 font-medium">{time}</span>
         <span>{text}</span>

@@ -32,13 +32,13 @@ describe("agenda reminder interactions", () => {
     expect(
       screen.getByRole("dialog", { name: "Agenda: July 15, 2026" }),
     ).toBeInTheDocument()
-    expect(screen.getAllByText("9:00 AM")).toHaveLength(2)
-    expect(screen.getAllByText("Portfolio review")).toHaveLength(2)
+    expect(screen.getByText("9:00 AM")).toBeInTheDocument()
+    expect(screen.getByText("Portfolio review")).toBeInTheDocument()
 
-    const deleteReminderButtons = screen.getAllByRole("button", {
+    const deleteReminderButton = screen.getByRole("button", {
       name: "Delete reminder 9:00 AM Portfolio review",
     })
-    fireEvent.click(deleteReminderButtons[0])
+    fireEvent.click(deleteReminderButton)
 
     expect(screen.getByText("No reminders yet.")).toBeInTheDocument()
     expect(screen.queryByText("Portfolio review")).not.toBeInTheDocument()
