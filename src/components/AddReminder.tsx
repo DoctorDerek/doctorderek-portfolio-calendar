@@ -20,8 +20,9 @@ const maskPicker = "MMMM D, YYYY h:mm A"
 const formatDateAndTimePicker = (date: Dayjs) => date.format(maskPicker)
 
 export default function AddReminder() {
-  const { addReminderIsOpen } = useAppSelector(({ addReminder }) => addReminder)
-  const { dateISOString } = useAppSelector(({ agenda }) => agenda)
+  const { addReminderIsOpen, dateISOString } = useAppSelector(
+    ({ addReminder }) => addReminder,
+  )
   const date = dateISOString ? dayjs(dateISOString) : dayjs()
   const [selectedDateTime, setSelectedDateTime] = useState<Dayjs | null>(date)
   useEffect(() => {
