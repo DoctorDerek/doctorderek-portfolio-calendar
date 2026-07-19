@@ -95,9 +95,7 @@ function ReminderInterior({
   return (
     <>
       <div className="flex items-center justify-center">
-        <div
-          className="mr-2 hidden h-4 w-4 rounded-full bg-[var(--agenda-reminder-color)] dark:block"
-        />
+        <div className="mr-2 hidden h-4 w-4 rounded-full bg-[var(--agenda-reminder-color)] dark:block" />
         <span className="mr-2 font-medium">{time}</span>
         <span>{text}</span>
       </div>
