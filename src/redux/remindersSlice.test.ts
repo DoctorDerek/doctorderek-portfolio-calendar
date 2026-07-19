@@ -6,6 +6,23 @@ import remindersReducer, {
 import type { NewReminder } from "@/reminderTypes"
 
 describe("reminder state transitions", () => {
+  it("prepares distinct identities without mutating the source draft", () => {
+    const reminderDraft: NewReminder = {
+      dateISOString: "2026-07-15T09:00:00.000Z",
+      color: "MediumSeaGreen",
+      text: "Immutable reminder draft",
+    }
+    const originalReminderDraft = { ...reminderDraft }
+
+    const firstPreparedReminder = addNewReminder(reminderDraft).payload
+    const secondPreparedReminder = addNewReminder(reminderDraft).payload
+
+    expect(reminderDraft).toEqual(originalReminderDraft)
+    expect(firstPreparedReminder).toMatchObject(reminderDraft)
+    expect(firstPreparedReminder.id).not.toBe("")
+    expect(secondPreparedReminder.id).not.toBe(firstPreparedReminder.id)
+  })
+
   it("orders new reminders chronologically and deletes the selected reminder", () => {
     const laterReminder: NewReminder = {
       dateISOString: "2026-07-15T15:00:00.000Z",
