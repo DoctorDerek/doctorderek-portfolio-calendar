@@ -1,5 +1,5 @@
-import { fireEvent, screen, waitFor } from "@testing-library/react"
-import { describe, expect, it } from "vitest"
+import { fireEvent, screen, waitFor, within } from "@testing-library/react"
+import { describe, expect, it, vi } from "vitest"
 import App from "@/components/App"
 import type { RootState } from "@/redux/store"
 import { renderWithProviders } from "@/test/renderWithProviders"
@@ -85,6 +85,55 @@ describe("reminder dialog interactions", () => {
       ).not.toBeInTheDocument()
     })
     expect(screen.queryByText("Dismissed reminder")).not.toBeInTheDocument()
+  })
+
+  it("starts a clean draft whenever the dialog reopens", async () => {
+    const firstSessionDate = new Date("2026-07-18T16:00:00.000Z")
+    const secondSessionDate = new Date("2026-07-19T17:30:00.000Z")
+    vi.useFakeTimers({ toFake: ["Date"] })
+
+    try {
+      vi.setSystemTime(firstSessionDate)
+      const { store } = renderWithProviders(<App />)
+
+      fireEvent.click(screen.getByRole("button", { name: "Add Reminder" }))
+      fireEvent.change(screen.getByRole("textbox", { name: "Reminder" }), {
+        target: { value: "Discard this draft" },
+      })
+      fireEvent.click(
+        within(
+          screen.getByRole("group", { name: "Reminder color" }),
+        ).getByRole("button", { name: "Select color Tomato" }),
+      )
+      fireEvent.click(screen.getByRole("button", { name: "Cancel" }))
+
+      await waitFor(() => {
+        expect(
+          screen.queryByRole("dialog", { name: "Add Reminder" }),
+        ).not.toBeInTheDocument()
+      })
+
+      vi.setSystemTime(secondSessionDate)
+      fireEvent.click(screen.getByRole("button", { name: "Add Reminder" }))
+
+      expect(screen.getByRole("textbox", { name: "Reminder" })).toHaveValue(
+        "",
+      )
+      expect(
+        within(
+          screen.getByRole("group", { name: "Reminder color" }),
+        ).getByRole("button", { name: "Selected color is DodgerBlue" }),
+      ).toBeInTheDocument()
+      expect(
+        screen.getByRole("button", { name: "Save Reminder" }),
+      ).toBeDisabled()
+      expect(store.getState().addReminder).toEqual({
+        addReminderIsOpen: true,
+        dateISOString: secondSessionDate.toISOString(),
+      })
+    } finally {
+      vi.useRealTimers()
+    }
   })
 
   it("adds reminder text to the calendar through the explicit save action", async () => {
