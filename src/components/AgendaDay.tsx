@@ -50,7 +50,7 @@ export default function AgendaDay() {
           ))}
         </ul>
       ) : (
-        "No reminders yet."
+        <p role="status">No reminders yet.</p>
       )}
       <AddReminderFab date={date} position="absolute" />
     </CustomDialog>
