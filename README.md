@@ -1,4 +1,4 @@
-[![Vercel](https://therealsujitk-vercel-badge.vercel.app/?app=doctorderek-portfolio-calendar)](https://portfolio-calendar.DoctorDerek.com) [![Codecov](https://codecov.io/gh/DoctorDerek/doctorderek-portfolio-calendar/graph/badge.svg)](https://app.codecov.io/gh/DoctorDerek/doctorderek-portfolio-calendar)
+[![Vercel](https://therealsujitk-vercel-badge.vercel.app/?app=doctorderek-portfolio-calendar)](https://portfolio-calendar.DoctorDerek.com) [![Codecov](https://codecov.io/gh/DoctorDerek/doctorderek-portfolio-calendar/graph/badge.svg)](https://app.codecov.io/gh/DoctorDerek/doctorderek-portfolio-calendar) [![Test and Lint](https://github.com/DoctorDerek/doctorderek-portfolio-calendar/actions/workflows/test-and-lint.yml/badge.svg)](https://github.com/DoctorDerek/doctorderek-portfolio-calendar/actions/workflows/test-and-lint.yml) [![Playwright E2E](https://github.com/DoctorDerek/doctorderek-portfolio-calendar/actions/workflows/playwright.yml/badge.svg)](https://github.com/DoctorDerek/doctorderek-portfolio-calendar/actions/workflows/playwright.yml)
 
 # Calendar
 
