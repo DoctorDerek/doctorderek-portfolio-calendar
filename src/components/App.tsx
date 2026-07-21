@@ -48,7 +48,7 @@ export default function App() {
             <div className="col-start-1 row-start-2 justify-self-start md:col-start-2 md:row-start-1">
               <ToggleDarkMode />
             </div>
-            <h1 className="col-start-2 row-start-1 min-w-0 text-center text-2xl font-bold text-gray-900 drop-shadow-lg sm:text-4xl lg:text-5xl dark:text-gray-100">
+            <h1 className="col-start-2 row-start-1 min-w-0 text-center text-2xl font-bold text-gray-900 drop-shadow-lg sm:text-4xl md:col-start-3 lg:text-5xl dark:text-gray-100">
               {formatDateAsMonthApp(visibleMonth)}
             </h1>
             <div className="col-start-3 row-start-2 justify-self-end md:col-start-4 md:row-start-1">
