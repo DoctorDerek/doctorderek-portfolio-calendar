@@ -53,7 +53,7 @@ export default function AgendaDay() {
         <p role="status">No reminders yet.</p>
       )}
       <div className="flex justify-end pt-2">
-        <AddReminderFab date={date} position="static" />
+        <AddReminderFab date={date} />
       </div>
     </CustomDialog>
   )
