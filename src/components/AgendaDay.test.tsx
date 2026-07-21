@@ -67,6 +67,16 @@ describe("agenda reminder interactions", () => {
     })
   })
 
+  it("closes the selected day through the named dialog control", () => {
+    const { store } = renderWithProviders(<AgendaDay />, preloadedAgendaState)
+
+    fireEvent.click(
+      screen.getByRole("button", { name: "Close Agenda: July 15, 2026" }),
+    )
+
+    expect(store.getState().agenda.agendaIsOpen).toBe(false)
+  })
+
   it("presents reminders in chronological list order", () => {
     const chronologicalAgendaState: RootState = {
       ...preloadedAgendaState,
