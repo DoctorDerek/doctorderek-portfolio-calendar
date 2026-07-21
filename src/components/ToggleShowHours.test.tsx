@@ -23,5 +23,18 @@ describe("calendar reminder display toggle", () => {
       }),
     ).toHaveAttribute("aria-pressed", "true")
     expect(screen.getByText("Hours")).toBeInTheDocument()
+
+    fireEvent.click(
+      screen.getByRole("button", {
+        name: "Show reminder icons on the calendar",
+      }),
+    )
+
+    expect(
+      screen.getByRole("button", {
+        name: "Show reminder hours on the calendar",
+      }),
+    ).toHaveAttribute("aria-pressed", "false")
+    expect(screen.getByText("Icons")).toBeInTheDocument()
   })
 })
