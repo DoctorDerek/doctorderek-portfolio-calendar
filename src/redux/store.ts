@@ -1,5 +1,4 @@
-import { configureStore } from "@reduxjs/toolkit"
-import { combineReducers } from "redux"
+import { combineReducers, configureStore } from "@reduxjs/toolkit"
 import addReminder from "@/redux/addReminderSlice"
 import agenda from "@/redux/agendaSlice"
 import {
