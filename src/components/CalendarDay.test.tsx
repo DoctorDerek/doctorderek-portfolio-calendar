@@ -30,6 +30,7 @@ describe("calendar day interactions", () => {
   })
 
   it("reveals icon-only reminder details when the day receives keyboard focus", () => {
+    const actualToday = new Date(2026, 6, 14, 12)
     const selectedDate = new Date(2026, 6, 15, 12)
     const reminderState: RootState = {
       addReminder: { addReminderIsOpen: false, dateISOString: "" },
@@ -49,7 +50,7 @@ describe("calendar day interactions", () => {
 
     renderWithProviders(
       <CalendarDay
-        actualToday={selectedDate}
+        actualToday={actualToday}
         selectedDate={selectedDate}
         visibleMonth={selectedDate}
       />,
