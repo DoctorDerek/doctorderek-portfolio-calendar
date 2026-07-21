@@ -28,7 +28,7 @@ export default function CustomIcon({
       title={ariaLabel}
       className={classNames(
         "border border-solid fill-current transition-all duration-500",
-        size === "small" ? "h-8 w-8" : "h-16 w-16",
+        size === "small" ? "h-8 w-8" : "h-12 w-12 sm:h-14 sm:w-14",
         "dark:bg-opacity-80 bg-gray-100",
         (color === "blue" &&
           "border-blue-300 text-blue-500 hover:border-blue-500 hover:bg-blue-300 hover:text-blue-700") as string,
@@ -39,7 +39,7 @@ export default function CustomIcon({
       )}
       onClick={onClick}
     >
-      {<Icon className={size === "small" ? "h-6 w-6" : "h-12 w-12"} />}
+      {<Icon className={size === "small" ? "h-6 w-6" : "h-9 w-9 sm:h-11 sm:w-11"} />}
     </IconButton>
   )
 }

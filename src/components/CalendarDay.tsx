@@ -54,10 +54,10 @@ export default function CalendarDay({
       onBlur={onMouseOut}
       onClick={onClick}
       className={classNames(
-        "flex cursor-pointer flex-wrap items-center justify-center border border-solid border-gray-300",
+        "relative flex min-h-12 cursor-pointer flex-wrap items-center justify-center border border-solid border-gray-300 p-0.5 sm:min-h-20 sm:p-1 lg:min-h-24 dark:border-gray-700",
         dayjs(selectedDateAtCurrentTime).isSame(visibleMonth, "month")
-          ? "bg-opacity-40 bg-gray-50"
-          : "bg-opacity-40 bg-gray-800",
+          ? "bg-white/65 dark:bg-gray-900/75"
+          : "bg-gray-300/65 dark:bg-gray-950/85",
       )}
       aria-label={ariaLabel}
       aria-current={isToday ? "date" : undefined}
@@ -65,7 +65,7 @@ export default function CalendarDay({
     >
       <Avatar
         className={classNames(
-          "border border-solid border-transparent text-gray-800 dark:text-gray-200",
+          "h-8 w-8 border border-solid border-transparent text-sm text-gray-900 sm:h-10 sm:w-10 sm:text-base dark:text-gray-100",
           isToday && focused
             ? "m-px border-current bg-purple-600 shadow-xl md:mx-0.5"
             : isToday
@@ -86,7 +86,7 @@ export default function CalendarDay({
           <div
             className={classNames(
               showHours
-                ? "line-clamp-1 w-full rounded-sm px-1 text-left text-sm"
+                ? "line-clamp-1 w-full rounded-sm px-1 text-left text-[0.625rem] sm:text-xs lg:text-sm"
                 : "absolute z-20 hidden rounded-3xl p-2 text-xl shadow-lg group-hover:block",
             )}
             style={{ backgroundColor: color }}

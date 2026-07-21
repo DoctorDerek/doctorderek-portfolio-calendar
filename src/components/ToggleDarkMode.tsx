@@ -29,7 +29,7 @@ export default function ToggleDarkMode() {
         isDarkTheme ? "Switch to light theme" : "Switch to dark theme"
       }
       className={classNames(
-        "flex min-h-11 w-14 shrink-0 items-center justify-center bg-transparent text-gray-900 sm:w-28 lg:w-[170px]",
+        "flex min-h-11 w-20 shrink-0 items-center justify-center bg-transparent text-gray-900 sm:w-28 lg:w-36",
         "cursor-pointer rounded-[35px] border-0 p-0 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500",
         isDarkTheme ? "theme-toggle--dark" : "theme-toggle--light",
       )}
