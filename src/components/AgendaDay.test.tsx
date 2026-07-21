@@ -21,7 +21,6 @@ const preloadedAgendaState: RootState = {
       },
     ],
   },
-  reset: {},
   showHours: { showHours: false },
 }
 

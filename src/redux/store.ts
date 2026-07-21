@@ -8,14 +8,12 @@ import {
   type ReminderStorage,
 } from "@/redux/reminderStorage"
 import reminders from "@/redux/remindersSlice"
-import reset from "@/redux/resetSlice"
 import showHours from "@/redux/showHoursSlice"
 
 export const rootReducer = combineReducers({
   addReminder,
   agenda,
   reminders,
-  reset,
   showHours,
 })
 

@@ -32,7 +32,6 @@ describe("reminder dialog interactions", () => {
         dateISOString: previousAgendaDateISOString,
       },
       reminders: { reminders: [] },
-      reset: {},
       showHours: { showHours: false },
     }
     const { store } = renderWithProviders(<App />, preloadedState)

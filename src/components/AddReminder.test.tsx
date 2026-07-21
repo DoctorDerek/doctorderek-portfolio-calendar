@@ -14,7 +14,6 @@ const openReminderFormState: RootState = {
     dateISOString: "2026-07-15T12:00:00",
   },
   reminders: { reminders: [] },
-  reset: {},
   showHours: { showHours: false },
 }
 
