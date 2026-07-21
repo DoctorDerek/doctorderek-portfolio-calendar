@@ -79,15 +79,18 @@ export default function CalendarDay({
       </Avatar>
       {calendarDayReminders.map(({ id, dateISOString, color, text }) => (
         <div
-          className={classNames("group flex", showHours ? "w-full" : "w-auto")}
+          className={classNames(
+            "flex min-w-0",
+            showHours || focused ? "w-full" : "w-auto",
+          )}
           key={id}
         >
-          {!showHours && <CustomAvatar color={color} />}
+          {!showHours && !focused && <CustomAvatar color={color} />}
           <div
             className={classNames(
-              showHours
+              showHours || focused
                 ? "line-clamp-1 w-full rounded-sm px-1 text-left text-[0.625rem] sm:text-xs lg:text-sm"
-                : "absolute z-20 hidden rounded-3xl p-2 text-xl shadow-lg group-hover:block",
+                : "sr-only",
             )}
             style={{ backgroundColor: color }}
           >
