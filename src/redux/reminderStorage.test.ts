@@ -44,6 +44,8 @@ describe("reminder persistence", () => {
 
   it.each([
     ["malformed JSON", "not-json"],
+    ["a null storage payload", JSON.stringify(null)],
+    ["a primitive storage payload", JSON.stringify("invalid")],
     [
       "an unsupported version",
       JSON.stringify({ version: 2, reminders: [persistedReminder] }),
@@ -54,6 +56,14 @@ describe("reminder persistence", () => {
         version: 1,
         reminders: [{ ...persistedReminder, color: "Chartreuse" }],
       }),
+    ],
+    [
+      "a null reminder",
+      JSON.stringify({ version: 1, reminders: [null] }),
+    ],
+    [
+      "a primitive reminder",
+      JSON.stringify({ version: 1, reminders: [42] }),
     ],
     [
       "duplicate reminder identities",
@@ -82,6 +92,32 @@ describe("reminder persistence", () => {
     expect(
       persistReminders([persistedReminder], unavailableReminderStorage),
     ).toBe(false)
+  })
+
+  it("does nothing when browser globals are unavailable", () => {
+    vi.stubGlobal("window", undefined)
+
+    try {
+      expect(loadPersistedReminders()).toEqual([])
+      expect(persistReminders([persistedReminder])).toBe(false)
+    } finally {
+      vi.unstubAllGlobals()
+    }
+  })
+
+  it("recovers when the browser blocks local storage access", () => {
+    const localStorageGetter = vi
+      .spyOn(window, "localStorage", "get")
+      .mockImplementation(() => {
+        throw new Error("Storage access is blocked")
+      })
+
+    try {
+      expect(loadPersistedReminders()).toEqual([])
+      expect(persistReminders([persistedReminder])).toBe(false)
+    } finally {
+      localStorageGetter.mockRestore()
+    }
   })
 
   it("hydrates additions and deletions across calendar store sessions", () => {
