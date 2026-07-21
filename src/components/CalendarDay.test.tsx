@@ -72,4 +72,31 @@ describe("calendar day interactions", () => {
 
     expect(reminderDetails).toHaveClass("sr-only")
   })
+
+  it("strengthens the current-date treatment while the day is focused", () => {
+    const selectedDate = new Date(2026, 6, 15, 12)
+
+    renderWithProviders(
+      <CalendarDay
+        actualToday={selectedDate}
+        selectedDate={selectedDate}
+        visibleMonth={selectedDate}
+      />,
+    )
+
+    const calendarDay = screen.getByRole("button", {
+      name: "Wednesday July 15, 2026",
+    })
+    const dateAvatar = screen.getByText("15")
+
+    expect(dateAvatar).toHaveClass("bg-purple-400")
+
+    fireEvent.focus(calendarDay)
+
+    expect(dateAvatar).toHaveClass("bg-purple-600")
+
+    fireEvent.blur(calendarDay)
+
+    expect(dateAvatar).toHaveClass("bg-purple-400")
+  })
 })
