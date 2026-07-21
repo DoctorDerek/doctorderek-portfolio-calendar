@@ -9,20 +9,6 @@ export const daysArray = [
   "Friday",
   "Saturday",
 ]
-export const monthsArray = [
-  "January",
-  "February",
-  "March",
-  "April",
-  "May",
-  "June",
-  "July",
-  "August",
-  "September",
-  "October",
-  "November",
-  "December",
-]
 
 export function getMonthCells(todaysDate: Date) {
   const totalCells = 42
