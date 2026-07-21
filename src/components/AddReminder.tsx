@@ -10,11 +10,14 @@ import CustomDialog from "@/components/CustomDialog"
 import { closeAddReminder } from "@/redux/addReminderSlice"
 import { useAppDispatch, useAppSelector } from "@/redux/hooks"
 import { addNewReminder } from "@/redux/remindersSlice"
-import { REMINDER_COLORS, type ReminderColor } from "@/reminderTypes"
+import {
+  REMINDER_COLORS,
+  REMINDER_MAX_LENGTH,
+  type ReminderColor,
+} from "@/reminderTypes"
 
 const classNames = (...classes: string[]) => classes.join(" ")
 const REMINDER_CHARACTER_COUNT_ID = "reminder-character-count"
-const REMINDER_MAX_LENGTH = 30
 
 const maskPicker = "MMMM D, YYYY h:mm A"
 const formatDateAndTimePicker = (date: Dayjs) => date.format(maskPicker)
