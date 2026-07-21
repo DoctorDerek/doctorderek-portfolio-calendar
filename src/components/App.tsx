@@ -75,7 +75,8 @@ export default function App() {
         <Image
           src="/benjamin-patin-dOzoyaYjCbM-unsplash.jpg"
           alt="Ocean waves breaking by Benjamin Patin on Unsplash"
-          layout="fill"
+          fill
+          sizes="100vw"
           className="object-cover"
         />
         <div className="absolute inset-0 z-0 h-full w-full opacity-0 backdrop-brightness-50 backdrop-filter transition-all duration-500 dark:bg-[rgba(0,0,0,0.3)] dark:opacity-100"></div>
