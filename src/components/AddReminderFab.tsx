@@ -12,7 +12,7 @@ export default function AddReminderFab({
   position,
 }: {
   date?: Date | null
-  position: "fixed" | "absolute"
+  position: "static" | "absolute"
 }) {
   const dispatch = useAppDispatch()
   const onFabAddClick = () => {
@@ -26,12 +26,14 @@ export default function AddReminderFab({
     <Fab
       aria-label={ariaLabel}
       className={classNames(
-        "right-4 bottom-4 h-16 w-16 bg-green-600 fill-current text-white hover:bg-green-800",
-        position,
+        "h-14 w-14 bg-green-600 fill-current text-white hover:bg-green-800 sm:h-16 sm:w-16",
+        position === "absolute"
+          ? "absolute right-4 bottom-4"
+          : "static shrink-0",
       )}
       onClick={onFabAddClick}
     >
-      <AddIcon className="h-12 w-12" />
+      <AddIcon className="h-9 w-9 sm:h-12 sm:w-12" />
     </Fab>
   )
 }

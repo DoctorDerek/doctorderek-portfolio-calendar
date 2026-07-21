@@ -64,8 +64,10 @@ export default function App() {
             </div>
           </header>
           <CalendarGrid actualToday={actualToday} visibleMonth={visibleMonth} />
+          <div className="mt-3 flex w-full justify-end">
+            <AddReminderFab position="static" />
+          </div>
         </Paper>
-        <AddReminderFab position="fixed" />
         <AgendaDay />
         <AddReminder />
       </div>
