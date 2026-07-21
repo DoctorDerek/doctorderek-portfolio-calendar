@@ -68,21 +68,21 @@ function ReminderForm({ dateISOString }: { dateISOString: string }) {
     <CustomDialog title="Add Reminder" open={true} onClose={closeReminder}>
       <form
         aria-label="Reminder details"
-        className="flex flex-col space-y-6"
+        className="flex flex-col gap-5 sm:gap-6"
         onSubmit={saveReminder}
       >
         <div className="space-y-2">
-          <Typography className="text-3xl">
+          <Typography className="text-base font-medium sm:text-xl">
             Select the date and time for the reminder:
           </Typography>
-          <div className="w-full text-3xl">
+          <div className="w-full">
             <LocalizationProvider dateAdapter={AdapterDayjs}>
               <DateTimePicker
                 value={selectedDateTime}
                 onChange={setSelectedDateTime}
                 slotProps={{
                   textField: {
-                    className: "text-3xl bg-gray-200",
+                    className: "text-base sm:text-lg",
                     fullWidth: true,
                     inputProps: {
                       "aria-label": `Choose date and time, selected date and time is ${
@@ -102,13 +102,15 @@ function ReminderForm({ dateISOString }: { dateISOString: string }) {
           handleChange={setSelectedColor}
         />
         <div className="space-y-2">
-          <Typography className="flex justify-between text-3xl">
+          <Typography className="flex flex-col gap-1 text-base font-medium sm:flex-row sm:items-end sm:justify-between sm:text-xl">
             Enter your reminder here:
             <span
               aria-live="polite"
               className={classNames(
-                "flex justify-between text-3xl italic",
-                remainingCharacters < 5 ? "text-red-600" : "text-gray-800",
+                "text-sm font-normal italic sm:text-base",
+                remainingCharacters < 5
+                  ? "text-red-700 dark:text-red-300"
+                  : "text-gray-700 dark:text-gray-300",
               )}
               id={REMINDER_CHARACTER_COUNT_ID}
             >
@@ -119,7 +121,7 @@ function ReminderForm({ dateISOString }: { dateISOString: string }) {
             inputProps={{
               "aria-describedby": REMINDER_CHARACTER_COUNT_ID,
               "aria-label": "Reminder",
-              className: "text-3xl bg-gray-200",
+              className: "text-base sm:text-lg",
             }}
             fullWidth={true}
             value={reminder}
@@ -153,15 +155,16 @@ function ColorPicker({
 }) {
   return (
     <div aria-label="Reminder color" className="space-y-2" role="group">
-      <Typography className="text-3xl">
+      <Typography className="text-base font-medium sm:text-xl">
         Select a color for the reminder:
       </Typography>
-      <div className="flex rounded border border-solid border-gray-400 bg-gray-200">
+      <div className="grid grid-cols-4 gap-2 rounded border border-solid border-gray-400 bg-gray-200 p-2 sm:grid-cols-8 sm:gap-3 dark:bg-gray-800">
         {REMINDER_COLORS.map((color) => (
           <button
             type="button"
+            aria-pressed={color === selectedColor}
             className={classNames(
-              "m-4 h-16 w-16 rounded border-solid border-black",
+              "h-11 w-full min-w-0 rounded border-solid border-black sm:h-12",
               color === selectedColor ? "border-2" : "border",
             )}
             key={color}
@@ -175,7 +178,7 @@ function ColorPicker({
             {color === selectedColor ? (
               <CheckIcon
                 aria-label={color + " is selected"}
-                className="h-12 w-12"
+                className="h-7 w-7 sm:h-8 sm:w-8"
               />
             ) : null}
           </button>
