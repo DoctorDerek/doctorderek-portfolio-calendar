@@ -10,6 +10,12 @@ export default defineConfig({
     },
   },
   test: {
+    coverage: {
+      exclude: ["src/pages/**", "src/test/**", "src/**/*.test.{ts,tsx}"],
+      include: ["src/**/*.{ts,tsx}"],
+      provider: "v8",
+      reporter: ["text", "json", "html", "lcov"],
+    },
     environment: "happy-dom",
     include: ["**/*.test.tsx", "**/*.test.ts"],
     setupFiles: ["./vitest.setup.ts"],
