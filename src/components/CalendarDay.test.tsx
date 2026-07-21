@@ -10,7 +10,11 @@ describe("calendar day interactions", () => {
 
     renderWithProviders(
       <>
-        <CalendarDay selectedDate={selectedDate} todaysDate={selectedDate} />
+        <CalendarDay
+          actualToday={selectedDate}
+          selectedDate={selectedDate}
+          visibleMonth={selectedDate}
+        />
         <AgendaDay />
       </>,
     )

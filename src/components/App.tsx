@@ -14,14 +14,17 @@ import ToggleShowHours from "@/components/ToggleShowHours"
 
 const formatDateAsMonthApp = (date: Date) => dayjs(date).format("MMMM YYYY")
 export default function App() {
-  const [todaysDate, setTodaysDate] = useState(new Date())
-  const prevMonth = () => {
-    setTodaysDate((currentDate) =>
-      dayjs(currentDate).subtract(1, "month").toDate(),
+  const [actualToday] = useState(() => new Date())
+  const [visibleMonth, setVisibleMonth] = useState(actualToday)
+  const showPreviousMonth = () => {
+    setVisibleMonth((currentVisibleMonth) =>
+      dayjs(currentVisibleMonth).subtract(1, "month").toDate(),
     )
   }
-  const nextMonth = () => {
-    setTodaysDate((currentDate) => dayjs(currentDate).add(1, "month").toDate())
+  const showNextMonth = () => {
+    setVisibleMonth((currentVisibleMonth) =>
+      dayjs(currentVisibleMonth).add(1, "month").toDate(),
+    )
   }
 
   return (
@@ -37,7 +40,7 @@ export default function App() {
             <div className="col-start-1 row-start-3 justify-self-start md:col-start-1 md:row-start-1">
               <CustomIcon
                 ariaLabel="Previous Month"
-                onClick={prevMonth}
+                onClick={showPreviousMonth}
                 color="blue"
                 Icon={KeyboardArrowLeftIcon}
               />
@@ -46,7 +49,7 @@ export default function App() {
               <ToggleDarkMode />
             </div>
             <div className="col-span-2 col-start-1 row-start-1 mb-2 min-w-0 text-center text-3xl font-bold text-gray-800 drop-shadow-xl sm:text-5xl md:col-span-1 md:col-start-3 md:row-start-1 lg:text-7xl dark:text-gray-300">
-              {formatDateAsMonthApp(todaysDate)}
+              {formatDateAsMonthApp(visibleMonth)}
             </div>
             <div className="col-start-2 row-start-2 justify-self-start pl-2 md:col-start-4 md:row-start-1 md:pl-0">
               <ToggleShowHours />
@@ -54,13 +57,13 @@ export default function App() {
             <div className="col-start-2 row-start-3 justify-self-end md:col-start-5 md:row-start-1">
               <CustomIcon
                 ariaLabel="Next Month"
-                onClick={nextMonth}
+                onClick={showNextMonth}
                 color="blue"
                 Icon={KeyboardArrowRightIcon}
               />
             </div>
           </header>
-          <CalendarGrid todaysDate={todaysDate} />
+          <CalendarGrid actualToday={actualToday} visibleMonth={visibleMonth} />
         </Paper>
         <AddReminderFab position="fixed" />
         <AgendaDay />

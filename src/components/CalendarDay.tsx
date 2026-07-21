@@ -12,20 +12,24 @@ const formatDateCalendarDay = (date: Date) =>
 const formatTimePicker = (date: Date) => dayjs(date).format("h:mm A")
 
 export default function CalendarDay({
+  actualToday,
   selectedDate,
-  todaysDate,
+  visibleMonth,
 }: {
+  actualToday: Date
   selectedDate: Date
-  todaysDate: Date
+  visibleMonth: Date
 }) {
-  selectedDate = dayjs(selectedDate).hour(dayjs(todaysDate).hour()).toDate()
-  selectedDate = dayjs(selectedDate).minute(dayjs(todaysDate).minute()).toDate()
+  const selectedDateAtCurrentTime = dayjs(selectedDate)
+    .hour(dayjs(actualToday).hour())
+    .minute(dayjs(actualToday).minute())
+    .toDate()
 
   const { showHours } = useAppSelector(({ showHours }) => showHours)
 
   const { reminders } = useAppSelector(({ reminders }) => reminders)
   const calendarDayReminders = reminders.filter((reminder) => {
-    return dayjs(reminder.dateISOString).isSame(selectedDate, "day")
+    return dayjs(reminder.dateISOString).isSame(selectedDateAtCurrentTime, "day")
   })
 
   const dispatch = useAppDispatch()
@@ -35,11 +39,11 @@ export default function CalendarDay({
   const [focused, setFocused] = useState(false)
   const onMouseOver = () => setFocused(true)
   const onMouseOut = () => setFocused(false)
-  const onClick = () => onDayClick(selectedDate)
+  const onClick = () => onDayClick(selectedDateAtCurrentTime)
 
-  const isToday = dayjs(selectedDate).isSame(todaysDate, "day")
+  const isToday = dayjs(selectedDateAtCurrentTime).isSame(actualToday, "day")
 
-  const ariaLabel = formatDateCalendarDay(selectedDate)
+  const ariaLabel = formatDateCalendarDay(selectedDateAtCurrentTime)
 
   return (
     <button
@@ -51,11 +55,12 @@ export default function CalendarDay({
       onClick={onClick}
       className={classNames(
         "flex cursor-pointer flex-wrap items-center justify-center border border-solid border-gray-300",
-        dayjs(selectedDate).isSame(todaysDate, "month")
+        dayjs(selectedDateAtCurrentTime).isSame(visibleMonth, "month")
           ? "bg-opacity-40 bg-gray-50"
           : "bg-opacity-40 bg-gray-800",
       )}
       aria-label={ariaLabel}
+      aria-current={isToday ? "date" : undefined}
       title={ariaLabel}
     >
       <Avatar
@@ -70,7 +75,7 @@ export default function CalendarDay({
                 : "bg-transparent",
         )}
       >
-        {dayjs(selectedDate).date()}
+        {dayjs(selectedDateAtCurrentTime).date()}
       </Avatar>
       {calendarDayReminders.map(({ id, dateISOString, color, text }) => (
         <div

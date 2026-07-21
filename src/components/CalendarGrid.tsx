@@ -2,14 +2,21 @@ import Typography from "@mui/material/Typography"
 import CalendarDay from "@/components/CalendarDay"
 import { daysArray, getMonthCells } from "@/utils/dateUtils"
 
-export default function CalendarGrid({ todaysDate }: { todaysDate: Date }) {
-  const calendarCells = getMonthCells(todaysDate)
+export default function CalendarGrid({
+  actualToday,
+  visibleMonth,
+}: {
+  actualToday: Date
+  visibleMonth: Date
+}) {
+  const calendarCells = getMonthCells(visibleMonth)
   return (
     <div className="flex w-full flex-col items-center justify-center shadow-xl">
       <CalendarGridDaysRow />
       <CalendarGridMonth
-        todaysDate={todaysDate}
+        actualToday={actualToday}
         calendarCells={calendarCells}
+        visibleMonth={visibleMonth}
       />
     </div>
   )
@@ -33,18 +40,21 @@ export default function CalendarGrid({ todaysDate }: { todaysDate: Date }) {
 
   function CalendarGridMonth({
     calendarCells,
-    todaysDate,
+    actualToday,
+    visibleMonth,
   }: {
     calendarCells: Date[]
-    todaysDate: Date
+    actualToday: Date
+    visibleMonth: Date
   }) {
     return (
       <div className="grid w-full grid-cols-7">
         {calendarCells.map((date) => (
           <CalendarDay
+            actualToday={actualToday}
             key={String(date)}
-            todaysDate={todaysDate}
             selectedDate={date}
+            visibleMonth={visibleMonth}
           />
         ))}
       </div>
