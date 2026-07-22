@@ -25,4 +25,27 @@ describe("calendar month navigation", () => {
 
     expect(screen.getByText("June 2026")).toBeInTheDocument()
   })
+
+  it("keeps today anchored to the real date while another month is visible", () => {
+    vi.useFakeTimers()
+    vi.setSystemTime(new Date(2026, 6, 15, 12))
+
+    renderWithProviders(<App />)
+
+    expect(
+      screen.getByRole("button", { name: "Wednesday July 15, 2026" }),
+    ).toHaveAttribute("aria-current", "date")
+
+    fireEvent.click(screen.getByRole("button", { name: "Next Month" }))
+
+    expect(
+      screen.getByRole("button", { name: "Saturday August 15, 2026" }),
+    ).not.toHaveAttribute("aria-current")
+
+    fireEvent.click(screen.getByRole("button", { name: "Previous Month" }))
+
+    expect(
+      screen.getByRole("button", { name: "Wednesday July 15, 2026" }),
+    ).toHaveAttribute("aria-current", "date")
+  })
 })

@@ -1,5 +1,5 @@
 import { fireEvent, screen, within } from "@testing-library/react"
-import { describe, expect, it } from "vitest"
+import { afterEach, describe, expect, it, vi } from "vitest"
 import AddReminder from "@/components/AddReminder"
 import type { RootState } from "@/redux/store"
 import { renderWithProviders } from "@/test/renderWithProviders"
@@ -14,11 +14,14 @@ const openReminderFormState: RootState = {
     dateISOString: "2026-07-15T12:00:00",
   },
   reminders: { reminders: [] },
-  reset: {},
   showHours: { showHours: false },
 }
 
 describe("reminder form controls", () => {
+  afterEach(() => {
+    vi.useRealTimers()
+  })
+
   it("limits reminder text to the visible 30-character allowance", () => {
     renderWithProviders(<AddReminder />, openReminderFormState)
 
@@ -86,4 +89,38 @@ describe("reminder form controls", () => {
 
     expect(saveReminderButton).toBeEnabled()
   })
+
+  it("uses the current time when no initiating date was requested", () => {
+    vi.useFakeTimers({ toFake: ["Date"] })
+    vi.setSystemTime(new Date(2026, 6, 20, 14, 30))
+
+    renderWithProviders(<AddReminder />, {
+      ...openReminderFormState,
+      addReminder: {
+        ...openReminderFormState.addReminder,
+        dateISOString: "",
+      },
+    })
+
+    expect(
+      screen.getByRole("textbox", {
+        name: "Choose date and time, selected date and time is July 20, 2026 2:30 PM",
+      }),
+    ).toBeInTheDocument()
+  })
+
+  it("ignores direct form submission while reminder text is empty", () => {
+    const { store } = renderWithProviders(
+      <AddReminder />,
+      openReminderFormState,
+    )
+
+    fireEvent.submit(screen.getByRole("form", { name: "Reminder details" }))
+
+    expect(store.getState().reminders.reminders).toEqual([])
+    expect(
+      screen.getByRole("dialog", { name: "Add Reminder" }),
+    ).toBeInTheDocument()
+  })
+
 })

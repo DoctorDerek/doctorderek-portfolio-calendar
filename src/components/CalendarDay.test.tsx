@@ -2,6 +2,7 @@ import { fireEvent, screen } from "@testing-library/react"
 import { describe, expect, it } from "vitest"
 import AgendaDay from "@/components/AgendaDay"
 import CalendarDay from "@/components/CalendarDay"
+import type { RootState } from "@/redux/store"
 import { renderWithProviders } from "@/test/renderWithProviders"
 
 describe("calendar day interactions", () => {
@@ -10,7 +11,11 @@ describe("calendar day interactions", () => {
 
     renderWithProviders(
       <>
-        <CalendarDay selectedDate={selectedDate} todaysDate={selectedDate} />
+        <CalendarDay
+          actualToday={selectedDate}
+          selectedDate={selectedDate}
+          visibleMonth={selectedDate}
+        />
         <AgendaDay />
       </>,
     )
@@ -22,5 +27,76 @@ describe("calendar day interactions", () => {
     expect(
       screen.getByRole("dialog", { name: "Agenda: July 15, 2026" }),
     ).toBeInTheDocument()
+  })
+
+  it("reveals icon-only reminder details when the day receives keyboard focus", () => {
+    const actualToday = new Date(2026, 6, 14, 12)
+    const selectedDate = new Date(2026, 6, 15, 12)
+    const reminderState: RootState = {
+      addReminder: { addReminderIsOpen: false, dateISOString: "" },
+      agenda: { agendaIsOpen: false, dateISOString: "" },
+      reminders: {
+        reminders: [
+          {
+            id: "keyboard-review",
+            dateISOString: "2026-07-15T09:00:00.000Z",
+            color: "DodgerBlue",
+            text: "Keyboard review",
+          },
+        ],
+      },
+      showHours: { showHours: false },
+    }
+
+    renderWithProviders(
+      <CalendarDay
+        actualToday={actualToday}
+        selectedDate={selectedDate}
+        visibleMonth={selectedDate}
+      />,
+      reminderState,
+    )
+
+    const calendarDay = screen.getByRole("button", {
+      name: "Wednesday July 15, 2026",
+    })
+    const reminderDetails = screen.getByText(/Keyboard review/)
+
+    expect(reminderDetails).toHaveClass("sr-only")
+
+    fireEvent.focus(calendarDay)
+
+    expect(reminderDetails).not.toHaveClass("sr-only")
+
+    fireEvent.blur(calendarDay)
+
+    expect(reminderDetails).toHaveClass("sr-only")
+  })
+
+  it("strengthens the current-date treatment while the day is focused", () => {
+    const selectedDate = new Date(2026, 6, 15, 12)
+
+    renderWithProviders(
+      <CalendarDay
+        actualToday={selectedDate}
+        selectedDate={selectedDate}
+        visibleMonth={selectedDate}
+      />,
+    )
+
+    const calendarDay = screen.getByRole("button", {
+      name: "Wednesday July 15, 2026",
+    })
+    const dateAvatar = screen.getByText("15")
+
+    expect(dateAvatar).toHaveClass("bg-purple-400")
+
+    fireEvent.focus(calendarDay)
+
+    expect(dateAvatar).toHaveClass("bg-purple-600")
+
+    fireEvent.blur(calendarDay)
+
+    expect(dateAvatar).toHaveClass("bg-purple-400")
   })
 })

@@ -1,6 +1,6 @@
 import AccessAlarmIcon from "@mui/icons-material/AccessAlarm"
 import QueryBuilderIcon from "@mui/icons-material/QueryBuilder"
-import { motion } from "motion/react"
+import { motion, useReducedMotion } from "motion/react"
 import { useAppDispatch, useAppSelector } from "@/redux/hooks"
 import {
   hideHoursOnCalendar,
@@ -10,6 +10,7 @@ import {
 const classNames = (...classes: string[]) => classes.join(" ")
 export default function ToggleShowHours() {
   const { showHours } = useAppSelector(({ showHours }) => showHours)
+  const shouldReduceMotion = useReducedMotion()
   const color = showHours ? "gray" : "purple"
 
   const dispatch = useAppDispatch()
@@ -30,7 +31,7 @@ export default function ToggleShowHours() {
       aria-pressed={showHours}
       title={ariaLabel}
       className={classNames(
-        "relative h-8 w-24 rounded-full border-0 bg-transparent p-0 text-lg font-bold backdrop-blur backdrop-filter transition-all duration-500 focus:outline-none focus-visible:ring-2 focus-visible:ring-purple-500",
+        "relative h-10 w-24 rounded-full border-0 bg-transparent p-0 text-base font-bold backdrop-blur backdrop-filter transition-all duration-500 focus-visible:ring-2 focus-visible:ring-purple-500",
         (color === "gray" &&
           "border-gray-300 text-gray-500 hover:border-gray-500 hover:bg-gray-300 hover:text-gray-700") as string,
         (color === "purple" &&
@@ -38,19 +39,20 @@ export default function ToggleShowHours() {
       )}
     >
       {showHours ? (
-        <span className="absolute top-0.5 right-2">Hours</span>
+        <span className="absolute top-2 right-2">Hours</span>
       ) : (
-        <span className="absolute top-0.5 left-3">Icons</span>
+        <span className="absolute top-2 left-3">Icons</span>
       )}
       <motion.div
         className={classNames(
-          "dark:bg-opacity-80 flex h-8 w-8 items-center justify-center rounded-full border border-solid bg-gray-100 fill-current transition-all duration-500",
+          "dark:bg-opacity-80 flex h-10 w-10 items-center justify-center rounded-full border border-solid bg-gray-100 fill-current transition-all duration-500",
           (color === "gray" &&
             "border-gray-300 text-gray-500 hover:border-gray-500 hover:bg-gray-300 hover:text-gray-700") as string,
           (color === "purple" &&
             "border-purple-300 text-purple-500 hover:border-purple-500 hover:bg-purple-300 hover:text-purple-700") as string,
         )}
-        animate={{ x: showHours ? "0rem" : "4rem" }}
+        animate={{ x: showHours ? "0rem" : "3.5rem" }}
+        transition={shouldReduceMotion ? { duration: 0 } : undefined}
       >
         {showHours ? (
           <QueryBuilderIcon aria-hidden="true" className="h-6 w-6" />

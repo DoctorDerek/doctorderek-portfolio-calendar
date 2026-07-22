@@ -52,7 +52,9 @@ export default function AgendaDay() {
       ) : (
         <p role="status">No reminders yet.</p>
       )}
-      <AddReminderFab date={date} position="absolute" />
+      <div className="flex justify-end pt-2">
+        <AddReminderFab date={date} />
+      </div>
     </CustomDialog>
   )
 }
@@ -71,7 +73,7 @@ function AgendaReminder({
   }
   return (
     <li
-      className="flex items-center justify-between rounded-3xl border-0 border-solid bg-[var(--agenda-reminder-color)] py-0.5 pr-2 pl-3 text-3xl dark:border dark:border-[var(--agenda-reminder-color)] dark:bg-transparent dark:pr-1 dark:pl-2"
+      className="flex items-start justify-between gap-2 rounded-2xl border-0 border-solid bg-[var(--agenda-reminder-color)] py-1 pr-2 pl-3 text-base sm:items-center sm:rounded-3xl sm:text-xl dark:border dark:border-[var(--agenda-reminder-color)] dark:bg-transparent dark:pr-1 dark:pl-2"
       style={reminderColorStyle}
     >
       <ReminderInterior
@@ -94,10 +96,10 @@ function ReminderInterior({
 }) {
   return (
     <>
-      <div className="flex items-center justify-center">
+      <div className="flex min-w-0 flex-wrap items-center">
         <div className="mr-2 hidden h-4 w-4 rounded-full bg-[var(--agenda-reminder-color)] dark:block" />
         <span className="mr-2 font-medium">{time}</span>
-        <span>{text}</span>
+        <span className="min-w-0 break-words">{text}</span>
       </div>
       <CustomIcon
         ariaLabel={`Delete reminder ${time} ${text}`}

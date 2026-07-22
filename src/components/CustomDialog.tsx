@@ -20,16 +20,16 @@ export default function CustomDialog({
       onClose={onClose}
       aria-labelledby={id}
       fullWidth={true}
-      maxWidth={false}
+      maxWidth="md"
       PaperProps={{
         classes: {
-          root: "rounded-3xl bg-gray-200 dark:bg-gray-800 min-h-[80vh] min-w-[80vw] max-w-3xl",
+          root: "m-4 max-h-[calc(100%-2rem)] rounded-2xl bg-gray-100 dark:bg-gray-900 sm:m-8 sm:max-h-[calc(100%-4rem)]",
         },
       }}
     >
       <DialogTitle
         id={id}
-        className="flex justify-between rounded-3xl text-6xl text-gray-800 dark:text-gray-200"
+        className="flex items-center justify-between gap-3 rounded-t-2xl px-4 py-3 text-2xl text-gray-900 sm:px-6 sm:py-4 sm:text-4xl dark:text-gray-100"
       >
         {title}
         <CustomIcon
@@ -41,7 +41,7 @@ export default function CustomDialog({
       </DialogTitle>
       <Divider className="bg-gray-200 dark:hidden" />
       <Divider className="hidden bg-gray-400 dark:block" />
-      <DialogContent className="flex flex-col space-y-6 text-3xl text-gray-800 dark:text-gray-200">
+      <DialogContent className="flex flex-col gap-4 px-4 py-4 text-base text-gray-900 sm:gap-6 sm:px-6 sm:py-5 sm:text-xl dark:text-gray-100">
         {children}
       </DialogContent>
     </Dialog>

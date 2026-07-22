@@ -8,6 +8,7 @@ export const REMINDER_COLORS = [
   "Tomato",
   "Violet",
 ] as const
+export const REMINDER_MAX_LENGTH = 30
 
 export type ReminderColor = (typeof REMINDER_COLORS)[number]
 

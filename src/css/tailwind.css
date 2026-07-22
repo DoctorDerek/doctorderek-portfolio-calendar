@@ -1,19 +1,13 @@
 @import "tailwindcss";
 @custom-variant dark (&:where(.dark, .dark *));
 
-:focus {
-  outline: none !important;
-  box-shadow: 0 0 0 4px rgb(5, 150, 105) !important;
-  border-color: transparent !important;
-  border-radius: 3px;
+:focus-visible {
+  outline: 3px solid rgb(5, 150, 105);
+  outline-offset: 2px;
 }
 
 /* ToggleDarkMode SVG animation by @bartkozal -- used with permission */
 /* Source: https://codesandbox.io/s/dark-mode-toggle-si6k2?file=/src/DarkModeToggle.js */
-
-.button {
-  transition: transform 0.5s;
-}
 
 .cloud1,
 .cloud2,
@@ -36,10 +30,6 @@
 .background-top-color,
 .background-bottom-color {
   transition: stop-color 0.7s;
-}
-
-.theme-toggle--dark .button {
-  transform: translateX(100px);
 }
 
 .theme-toggle--dark .cloud1 {
@@ -80,10 +70,6 @@
 
 .theme-toggle--dark .background-bottom-color {
   stop-color: #210658;
-}
-
-.theme-toggle--light .button {
-  transform: translateX(0);
 }
 
 .theme-toggle--light .cloud1 {
@@ -212,4 +198,15 @@
 .theme-toggle--dark .star11,
 .theme-toggle--dark .star12 {
   transform: scale(1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+  }
 }
