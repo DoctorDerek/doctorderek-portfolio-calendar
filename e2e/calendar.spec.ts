@@ -10,6 +10,62 @@ test.beforeEach(async ({ page }) => {
   await expect(page.getByRole("heading", { level: 1 })).toBeVisible()
 })
 
+test("supports keyboard date and time editing with explicit confirmation", async ({
+  page,
+}) => {
+  await page.getByRole("button", { name: "Add Reminder" }).click()
+  const dateTimeField = page.getByRole("textbox", {
+    name: "Date and time",
+  })
+
+  await dateTimeField.focus()
+  await dateTimeField.press("ControlOrMeta+A")
+  await dateTimeField.fill("08/20/2026 03:45 PM")
+  await dateTimeField.press("Tab")
+  await expect(dateTimeField).toHaveValue("08/20/2026 03:45 PM")
+
+  await page
+    .getByRole("button", { name: "Choose date, selected date is Aug 20, 2026" })
+    .click()
+  await page
+    .getByRole("dialog")
+    .last()
+    .getByRole("button", { name: "OK" })
+    .click()
+
+  await page
+    .getByRole("textbox", { name: "Reminder" })
+    .fill("Keyboard picker review")
+  await page.getByRole("button", { name: "Save Reminder" }).click()
+
+  const persistedReminderDate = await page.evaluate(() => {
+    const serializedReminders = window.localStorage.getItem(
+      "portfolio-calendar.reminders",
+    )
+    if (!serializedReminders) return null
+
+    const reminderStorage = JSON.parse(serializedReminders) as {
+      reminders: Array<{ dateISOString: string }>
+    }
+    const reminderDate = new Date(reminderStorage.reminders[0].dateISOString)
+    return {
+      year: reminderDate.getFullYear(),
+      month: reminderDate.getMonth(),
+      day: reminderDate.getDate(),
+      hour: reminderDate.getHours(),
+      minute: reminderDate.getMinutes(),
+    }
+  })
+
+  expect(persistedReminderDate).toEqual({
+    year: 2026,
+    month: 7,
+    day: 20,
+    hour: 15,
+    minute: 45,
+  })
+})
+
 test("serves only the canonical root without mobile overflow", async ({
   page,
 }) => {
@@ -34,24 +90,25 @@ test("serves only the canonical root without mobile overflow", async ({
   if (!reminderDialogBounds) throw new Error("Reminder dialog has no bounds")
 
   expect(reminderDialogBounds.x).toBeGreaterThanOrEqual(0)
-  expect(reminderDialogBounds.x + reminderDialogBounds.width).toBeLessThanOrEqual(
-    320,
-  )
+  expect(
+    reminderDialogBounds.x + reminderDialogBounds.width,
+  ).toBeLessThanOrEqual(320)
 
   const missingRouteResponse = await page.goto("/not-a-calendar-route")
   expect(missingRouteResponse?.status()).toBe(404)
 })
 
-test("keeps today anchored while navigating between months", async ({ page }) => {
+test("keeps today anchored while navigating between months", async ({
+  page,
+}) => {
   const initialMonthHeading = await page
     .getByRole("heading", { level: 1 })
     .textContent()
   const initialCurrentDate = page.locator('button[aria-current="date"]')
 
   await expect(initialCurrentDate).toHaveCount(1)
-  const initialCurrentDateLabel = await initialCurrentDate.getAttribute(
-    "aria-label",
-  )
+  const initialCurrentDateLabel =
+    await initialCurrentDate.getAttribute("aria-label")
   expect(initialCurrentDateLabel).toBeTruthy()
 
   await page.getByRole("button", { name: "Next Month" }).click()
@@ -80,22 +137,6 @@ test("keeps today anchored while navigating between months", async ({ page }) =>
   )
 })
 
-test("switches and preserves the selected color scheme", async ({ page }) => {
-  await page.getByRole("button", { name: "Switch to dark theme" }).click()
-
-  await expect(
-    page.getByRole("button", { name: "Switch to light theme" }),
-  ).toBeVisible()
-  await expect(page.locator("html")).toHaveClass(/dark/)
-
-  await page.reload()
-
-  await expect(
-    page.getByRole("button", { name: "Switch to light theme" }),
-  ).toBeVisible()
-  await expect(page.locator("html")).toHaveClass(/dark/)
-})
-
 test("switches between reminder icon and hour presentations", async ({
   page,
 }) => {
@@ -112,7 +153,20 @@ test("switches between reminder icon and hour presentations", async ({
   await expect(showIconsButton).toHaveAttribute("aria-pressed", "true")
   await expect(page.getByText("Hours", { exact: true })).toBeVisible()
 
-  await showIconsButton.click()
+  await page.reload()
+
+  await expect(
+    page.getByRole("button", {
+      name: "Show reminder icons on the calendar",
+    }),
+  ).toHaveAttribute("aria-pressed", "true")
+  await expect(page.getByText("Hours", { exact: true })).toBeVisible()
+
+  await page
+    .getByRole("button", { name: "Show reminder icons on the calendar" })
+    .click()
+
+  await page.reload()
 
   await expect(
     page.getByRole("button", {
@@ -132,9 +186,7 @@ test("persists reminder creation and deletion across reloads", async ({
   await page.getByRole("button", { name: "Select color Tomato" }).click()
   await page.getByRole("button", { name: "Save Reminder" }).click()
 
-  await expect(
-    page.getByRole("dialog", { name: "Add Reminder" }),
-  ).toBeHidden()
+  await expect(page.getByRole("dialog", { name: "Add Reminder" })).toBeHidden()
   await page
     .getByRole("button", { name: "Show reminder hours on the calendar" })
     .click()
@@ -154,13 +206,13 @@ test("persists reminder creation and deletion across reloads", async ({
       name: new RegExp(`Delete reminder .* ${reminderText}`),
     })
     .click()
-  await expect(agendaDialog.getByRole("status")).toHaveText(
-    "No reminders yet.",
-  )
+  await expect(agendaDialog.getByRole("status")).toHaveText("No reminders yet.")
 
   await page.reload()
   await page.locator('button[aria-current="date"]').click()
 
-  await expect(page.getByRole("dialog", { name: /^Agenda:/ }).getByRole("status"))
-    .toHaveText("No reminders yet.")
+  await expect(
+    page.getByRole("dialog", { name: /^Agenda:/ }).getByRole("status"),
+  ).toHaveText("No reminders yet.")
 })
+

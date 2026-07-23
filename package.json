@@ -34,11 +34,12 @@
     "not op_mini all"
   ],
   "devDependencies": {
+    "@axe-core/playwright": "^4",
     "@ianvs/prettier-plugin-sort-imports": "^4",
     "@playwright/test": "^1",
     "@tailwindcss/postcss": "^4",
     "@testing-library/dom": "^10",
-    "@testing-library/jest-dom": "^6",
+    "@testing-library/jest-dom": "^7",
     "@testing-library/react": "^16",
     "@types/node": "^24",
     "@types/react": "^19",
@@ -54,7 +55,7 @@
     "jiti": "^2",
     "postcss": "^8",
     "prettier": "^3",
-    "prettier-plugin-tailwindcss": "^0.8.0",
+    "prettier-plugin-tailwindcss": "^0.8.1",
     "tailwindcss": "^4",
     "typescript": "^6",
     "vitest": "^4"
@@ -66,3 +67,4 @@
   },
   "packageManager": "pnpm@11.9.0+sha512.bd682d5d03fe525ef7c9fd6780c6884d1e756ac4c9c9fe00c538782824310dcf90e3ddc4f53835f06dfaebd5085e41855e0bcbb3b60de2ac5bbab89e5036f03b"
 }
+

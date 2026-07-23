@@ -33,6 +33,7 @@ describe("reminder dialog interactions", () => {
       },
       reminders: { reminders: [] },
       showHours: { showHours: false },
+      storageStatus: { failureMessages: {} },
     }
     const { store } = renderWithProviders(<App />, preloadedState)
     const earliestRequestedTimestamp = Date.now()
@@ -172,3 +173,4 @@ describe("reminder dialog interactions", () => {
     )
   })
 })
+

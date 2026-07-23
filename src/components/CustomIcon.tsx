@@ -1,6 +1,7 @@
 import { SvgIconTypeMap } from "@mui/material"
 import IconButton from "@mui/material/IconButton"
 import { OverridableComponent } from "@mui/material/OverridableComponent"
+import combineClassNames from "@/utils/combineClassNames"
 
 type MUIIcon = OverridableComponent<
   SvgIconTypeMap<Record<string, unknown>, "svg">
@@ -21,12 +22,11 @@ export default function CustomIcon({
   Icon: MUIIcon
   size?: "small" | "large"
 }) {
-  const classNames = (...classes: string[]) => classes.join(" ")
   return (
     <IconButton
       aria-label={ariaLabel}
       title={ariaLabel}
-      className={classNames(
+      className={combineClassNames(
         "border border-solid fill-current transition-all duration-500",
         size === "small" ? "h-8 w-8" : "h-12 w-12 sm:h-14 sm:w-14",
         "dark:bg-opacity-80 bg-gray-100",
@@ -36,7 +36,10 @@ export default function CustomIcon({
       )}
       onClick={onClick}
     >
-      {<Icon className={size === "small" ? "h-6 w-6" : "h-9 w-9 sm:h-11 sm:w-11"} />}
+      <Icon
+        className={size === "small" ? "h-6 w-6" : "h-9 w-9 sm:h-11 sm:w-11"}
+      />
     </IconButton>
   )
 }
+

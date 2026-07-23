@@ -13,7 +13,9 @@ describe("calendar day interactions", () => {
       <>
         <CalendarDay
           actualToday={selectedDate}
+          onActive={() => undefined}
           selectedDate={selectedDate}
+          tabIndex={0}
           visibleMonth={selectedDate}
         />
         <AgendaDay />
@@ -46,21 +48,32 @@ describe("calendar day interactions", () => {
         ],
       },
       showHours: { showHours: false },
+      storageStatus: { failureMessages: {} },
     }
 
     renderWithProviders(
       <CalendarDay
         actualToday={actualToday}
+        onActive={() => undefined}
         selectedDate={selectedDate}
+        tabIndex={0}
         visibleMonth={selectedDate}
       />,
       reminderState,
     )
 
     const calendarDay = screen.getByRole("button", {
-      name: "Wednesday July 15, 2026",
+      name: "Wednesday July 15, 2026, 1 reminder",
     })
     const reminderDetails = screen.getByText(/Keyboard review/)
+
+    expect(reminderDetails).toHaveClass("sr-only")
+
+    fireEvent.mouseEnter(calendarDay)
+
+    expect(reminderDetails).not.toHaveClass("sr-only")
+
+    fireEvent.mouseLeave(calendarDay)
 
     expect(reminderDetails).toHaveClass("sr-only")
 
@@ -79,7 +92,9 @@ describe("calendar day interactions", () => {
     renderWithProviders(
       <CalendarDay
         actualToday={selectedDate}
+        onActive={() => undefined}
         selectedDate={selectedDate}
+        tabIndex={0}
         visibleMonth={selectedDate}
       />,
     )
@@ -87,16 +102,17 @@ describe("calendar day interactions", () => {
     const calendarDay = screen.getByRole("button", {
       name: "Wednesday July 15, 2026",
     })
-    const dateAvatar = screen.getByText("15")
+    const dateBadge = screen.getByText("15")
 
-    expect(dateAvatar).toHaveClass("bg-purple-400")
+    expect(dateBadge).toHaveClass("bg-purple-700")
 
     fireEvent.focus(calendarDay)
 
-    expect(dateAvatar).toHaveClass("bg-purple-600")
+    expect(dateBadge).toHaveClass("bg-purple-800")
 
     fireEvent.blur(calendarDay)
 
-    expect(dateAvatar).toHaveClass("bg-purple-400")
+    expect(dateBadge).toHaveClass("bg-purple-700")
   })
 })
+

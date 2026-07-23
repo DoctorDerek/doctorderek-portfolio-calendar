@@ -1,6 +1,8 @@
 import dayjs from "dayjs"
 
-export const daysArray = [
+const CALENDAR_CELL_COUNT = 42
+
+export const CALENDAR_WEEKDAY_NAMES = [
   "Sunday",
   "Monday",
   "Tuesday",
@@ -10,34 +12,49 @@ export const daysArray = [
   "Saturday",
 ]
 
-export function getMonthCells(todaysDate: Date) {
-  const totalCells = 42
+export const formatCalendarMonthHeading = (date: Date) =>
+  dayjs(date).format("MMMM YYYY")
 
-  const today = dayjs(todaysDate)
+export const formatCalendarDate = (date: Date) =>
+  dayjs(date).format("MMMM D, YYYY")
 
-  const daysInMonth = today.daysInMonth()
-  const firstOfMonth = today.startOf("month")
-  const lastOfMonth = today.endOf("month")
-  const firstDayOfMonth = firstOfMonth.day()
-  const daysAfter = totalCells - (daysInMonth + firstDayOfMonth)
+export const formatCalendarDayAccessibleName = (date: Date) =>
+  dayjs(date).format("dddd MMMM D, YYYY")
 
-  const prevMonthArray = []
-  const monthArray = []
-  const nextMonthArray = []
+export const formatReminderTime = (date: Date) => dayjs(date).format("h:mm A")
 
-  for (let i = firstDayOfMonth; i > 0; i--) {
-    prevMonthArray.push(firstOfMonth.subtract(i, "day").toDate())
-  }
+export const getCalendarDateKey = (date: Date) =>
+  dayjs(date).format("YYYY-MM-DD")
 
-  for (let i = 0; i < daysInMonth; i++) {
-    monthArray.push(firstOfMonth.add(i, "day").toDate())
-  }
-
-  for (let i = 0; i < daysAfter; i++) {
-    nextMonthArray.push(lastOfMonth.add(i + 1, "day").toDate())
-  }
-
-  const calendarArray = [...prevMonthArray, ...monthArray, ...nextMonthArray]
-
-  return calendarArray
+export const getCalendarDateInMonth = (date: Date, targetMonth: Date) => {
+  const month = dayjs(targetMonth)
+  return month.date(Math.min(dayjs(date).date(), month.daysInMonth())).toDate()
 }
+
+export function getMonthCells(visibleMonth: Date) {
+  const month = dayjs(visibleMonth)
+  const daysInMonth = month.daysInMonth()
+  const firstOfMonth = month.startOf("month")
+  const lastOfMonth = month.endOf("month")
+  const firstDayOfMonth = firstOfMonth.day()
+  const daysAfter = CALENDAR_CELL_COUNT - (daysInMonth + firstDayOfMonth)
+
+  const previousMonthCells = []
+  const visibleMonthCells = []
+  const nextMonthCells = []
+
+  for (let dayOffset = firstDayOfMonth; dayOffset > 0; dayOffset--) {
+    previousMonthCells.push(firstOfMonth.subtract(dayOffset, "day").toDate())
+  }
+
+  for (let dayOffset = 0; dayOffset < daysInMonth; dayOffset++) {
+    visibleMonthCells.push(firstOfMonth.add(dayOffset, "day").toDate())
+  }
+
+  for (let dayOffset = 1; dayOffset <= daysAfter; dayOffset++) {
+    nextMonthCells.push(lastOfMonth.add(dayOffset, "day").toDate())
+  }
+
+  return [...previousMonthCells, ...visibleMonthCells, ...nextMonthCells]
+}
+

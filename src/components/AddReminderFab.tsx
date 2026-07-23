@@ -1,10 +1,8 @@
 import AddIcon from "@mui/icons-material/Add"
 import { Fab } from "@mui/material"
-import dayjs from "dayjs"
 import { openAddReminder } from "@/redux/addReminderSlice"
 import { useAppDispatch } from "@/redux/hooks"
-
-const formatDateAgenda = (date: Date) => dayjs(date).format("MMMM D, YYYY")
+import { formatCalendarDate } from "@/utils/dateUtils"
 
 export default function AddReminderFab({ date }: { date?: Date | null }) {
   const dispatch = useAppDispatch()
@@ -13,7 +11,7 @@ export default function AddReminderFab({ date }: { date?: Date | null }) {
   }
 
   const ariaLabel =
-    "Add Reminder" + (date ? ` for ${formatDateAgenda(date)}` : "")
+    "Add Reminder" + (date ? ` for ${formatCalendarDate(date)}` : "")
 
   return (
     <Fab
@@ -25,3 +23,4 @@ export default function AddReminderFab({ date }: { date?: Date | null }) {
     </Fab>
   )
 }
+

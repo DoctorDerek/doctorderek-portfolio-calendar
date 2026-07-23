@@ -29,10 +29,10 @@ class MyDocument extends Document {
             rel="stylesheet"
             href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap"
           />
-          <noscript>You need to enable JavaScript to run this app.</noscript>
         </Head>
 
         <body className="h-full w-full subpixel-antialiased">
+          <noscript>You need to enable JavaScript to run this app.</noscript>
           <Main />
           <NextScript />
         </body>
@@ -42,3 +42,4 @@ class MyDocument extends Document {
 }
 
 export default MyDocument
+

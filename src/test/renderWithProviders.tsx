@@ -10,7 +10,7 @@ export function renderWithProviders(
 ) {
   const store = createCalendarStore({
     preloadedState,
-    reminderStorage: null,
+    calendarStorage: null,
   })
 
   return {
@@ -22,3 +22,4 @@ export function renderWithProviders(
     ),
   }
 }
+

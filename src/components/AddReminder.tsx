@@ -15,12 +15,9 @@ import {
   REMINDER_MAX_LENGTH,
   type ReminderColor,
 } from "@/reminderTypes"
+import combineClassNames from "@/utils/combineClassNames"
 
-const classNames = (...classes: string[]) => classes.join(" ")
 const REMINDER_CHARACTER_COUNT_ID = "reminder-character-count"
-
-const maskPicker = "MMMM D, YYYY h:mm A"
-const formatDateAndTimePicker = (date: Dayjs) => date.format(maskPicker)
 
 export default function AddReminder() {
   const { addReminderIsOpen, dateISOString } = useAppSelector(
@@ -78,19 +75,13 @@ function ReminderForm({ dateISOString }: { dateISOString: string }) {
           <div className="w-full">
             <LocalizationProvider dateAdapter={AdapterDayjs}>
               <DateTimePicker
+                label="Date and time"
                 value={selectedDateTime}
                 onChange={setSelectedDateTime}
                 slotProps={{
                   textField: {
                     className: "text-base sm:text-lg",
                     fullWidth: true,
-                    inputProps: {
-                      "aria-label": `Choose date and time, selected date and time is ${
-                        selectedDateTime
-                          ? formatDateAndTimePicker(selectedDateTime)
-                          : ""
-                      }`,
-                    },
                   },
                 }}
               />
@@ -106,7 +97,7 @@ function ReminderForm({ dateISOString }: { dateISOString: string }) {
             Enter your reminder here:
             <span
               aria-live="polite"
-              className={classNames(
+              className={combineClassNames(
                 "text-sm font-normal italic sm:text-base",
                 remainingCharacters < 5
                   ? "text-red-700 dark:text-red-300"
@@ -118,10 +109,12 @@ function ReminderForm({ dateISOString }: { dateISOString: string }) {
             </span>
           </Typography>
           <TextField
-            inputProps={{
-              "aria-describedby": REMINDER_CHARACTER_COUNT_ID,
-              "aria-label": "Reminder",
-              className: "text-base sm:text-lg",
+            slotProps={{
+              htmlInput: {
+                "aria-describedby": REMINDER_CHARACTER_COUNT_ID,
+                "aria-label": "Reminder",
+                className: "text-base sm:text-lg",
+              },
             }}
             fullWidth={true}
             value={reminder}
@@ -163,7 +156,7 @@ function ColorPicker({
           <button
             type="button"
             aria-pressed={color === selectedColor}
-            className={classNames(
+            className={combineClassNames(
               "h-11 w-full min-w-0 rounded border-solid border-black sm:h-12",
               color === selectedColor ? "border-2" : "border",
             )}
@@ -187,3 +180,4 @@ function ColorPicker({
     </div>
   )
 }
+

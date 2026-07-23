@@ -15,6 +15,7 @@ const openReminderFormState: RootState = {
   },
   reminders: { reminders: [] },
   showHours: { showHours: false },
+  storageStatus: { failureMessages: {} },
 }
 
 describe("reminder form controls", () => {
@@ -102,11 +103,9 @@ describe("reminder form controls", () => {
       },
     })
 
-    expect(
-      screen.getByRole("textbox", {
-        name: "Choose date and time, selected date and time is July 20, 2026 2:30 PM",
-      }),
-    ).toBeInTheDocument()
+    expect(screen.getByLabelText("Date and time")).toHaveValue(
+      "07/20/2026 02:30 PM",
+    )
   })
 
   it("ignores direct form submission while reminder text is empty", () => {
@@ -122,5 +121,5 @@ describe("reminder form controls", () => {
       screen.getByRole("dialog", { name: "Add Reminder" }),
     ).toBeInTheDocument()
   })
-
 })
+
