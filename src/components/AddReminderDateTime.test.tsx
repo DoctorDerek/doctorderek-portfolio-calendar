@@ -6,27 +6,19 @@ import type { RootState } from "@/redux/store"
 import { renderWithProviders } from "@/test/renderWithProviders"
 
 type MockDateTimePickerProps = {
+  label: string
   value: Dayjs | null
   onChange: (value: Dayjs | null) => void
-  slotProps: {
-    textField: {
-      inputProps: {
-        "aria-label": string
-      }
-    }
-  }
 }
 
 vi.mock("@mui/x-date-pickers/DateTimePicker", () => ({
-  DateTimePicker: ({
-    value,
-    onChange,
-    slotProps,
-  }: MockDateTimePickerProps) => (
+  DateTimePicker: ({ label, value, onChange }: MockDateTimePickerProps) => (
     <div>
-      <output aria-label="Date and time accessible label">
-        {slotProps.textField.inputProps["aria-label"]}
-      </output>
+      <input
+        aria-label={label}
+        readOnly
+        value={value?.format("MMMM D, YYYY h:mm A") ?? ""}
+      />
       <button type="button" onClick={() => onChange(null)}>
         Clear date and time
       </button>
@@ -43,6 +35,7 @@ const openReminderFormState: RootState = {
   agenda: { agendaIsOpen: false, dateISOString: "" },
   reminders: { reminders: [] },
   showHours: { showHours: false },
+  storageStatus: { failureMessages: {} },
 }
 
 describe("reminder date and time selection", () => {
@@ -52,29 +45,24 @@ describe("reminder date and time selection", () => {
       openReminderFormState,
     )
 
-    expect(
-      screen.getByRole("status", { name: "Date and time accessible label" }),
-    ).toHaveTextContent(
-      "Choose date and time, selected date and time is July 15, 2026 12:00 PM",
+    expect(screen.getByRole("textbox", { name: "Date and time" })).toHaveValue(
+      "July 15, 2026 12:00 PM",
     )
 
-    fireEvent.click(
-      screen.getByRole("button", { name: "Clear date and time" }),
-    )
+    fireEvent.click(screen.getByRole("button", { name: "Clear date and time" }))
     fireEvent.change(screen.getByRole("textbox", { name: "Reminder" }), {
       target: { value: "No date selected" },
     })
 
     expect(screen.getByText("No date selected")).toBeInTheDocument()
-    expect(
-      screen.getByRole("status", { name: "Date and time accessible label" }),
-    ).toHaveTextContent("Choose date and time, selected date and time is")
-    expect(
-      screen.getByRole("button", { name: "Save Reminder" }),
-    ).toBeDisabled()
+    expect(screen.getByRole("textbox", { name: "Date and time" })).toHaveValue(
+      "",
+    )
+    expect(screen.getByRole("button", { name: "Save Reminder" })).toBeDisabled()
 
     fireEvent.submit(screen.getByRole("form", { name: "Reminder details" }))
 
     expect(store.getState().reminders.reminders).toEqual([])
   })
 })
+

@@ -1,12 +1,17 @@
 import { describe, expect, it, vi } from "vitest"
+import type { CalendarStorage } from "@/redux/calendarStorage"
+import { DISPLAY_PREFERENCE_STORAGE_KEY } from "@/redux/displayPreferenceStorage"
+import { addNewReminder, deleteReminder } from "@/redux/remindersSlice"
 import {
   loadPersistedReminders,
   persistReminders,
   REMINDER_STORAGE_KEY,
-  type ReminderStorage,
 } from "@/redux/reminderStorage"
-import { addNewReminder, deleteReminder } from "@/redux/remindersSlice"
 import { showHoursOnCalendar } from "@/redux/showHoursSlice"
+import {
+  REMINDER_LOAD_FAILURE_MESSAGE,
+  REMINDER_SAVE_FAILURE_MESSAGE,
+} from "@/redux/storageStatusSlice"
 import { createCalendarStore } from "@/redux/store"
 import type { Reminder } from "@/reminderTypes"
 
@@ -19,7 +24,7 @@ const persistedReminder: Reminder = {
 
 const createMemoryReminderStorage = (initialValue: string | null = null) => {
   let storedValue = initialValue
-  const reminderStorage: ReminderStorage = {
+  const reminderStorage: CalendarStorage = {
     getItem: vi.fn(() => storedValue),
     setItem: vi.fn((_key, value) => {
       storedValue = value
@@ -32,14 +37,37 @@ describe("reminder persistence", () => {
   it("round-trips validated reminder data through the versioned storage key", () => {
     const reminderStorage = createMemoryReminderStorage()
 
-    expect(persistReminders([persistedReminder], reminderStorage)).toBe(true)
+    expect(persistReminders([persistedReminder], reminderStorage)).toEqual({
+      status: "success",
+    })
     expect(reminderStorage.setItem).toHaveBeenCalledWith(
       REMINDER_STORAGE_KEY,
       expect.any(String),
     )
-    expect(loadPersistedReminders(reminderStorage)).toEqual([
-      persistedReminder,
-    ])
+    expect(loadPersistedReminders(reminderStorage)).toEqual({
+      status: "success",
+      reminders: [persistedReminder],
+    })
+  })
+
+  it("hydrates validated reminders in chronological order", () => {
+    const earlierReminder = {
+      ...persistedReminder,
+      id: "planning-session",
+      dateISOString: "2026-07-14T18:00:00.000Z",
+      text: "Planning session",
+    }
+    const reminderStorage = createMemoryReminderStorage(
+      JSON.stringify({
+        version: 1,
+        reminders: [persistedReminder, earlierReminder],
+      }),
+    )
+
+    expect(loadPersistedReminders(reminderStorage)).toEqual({
+      status: "success",
+      reminders: [earlierReminder, persistedReminder],
+    })
   })
 
   it.each([
@@ -58,13 +86,30 @@ describe("reminder persistence", () => {
       }),
     ],
     [
-      "a null reminder",
-      JSON.stringify({ version: 1, reminders: [null] }),
+      "a noncanonical reminder timestamp",
+      JSON.stringify({
+        version: 1,
+        reminders: [
+          { ...persistedReminder, dateISOString: "2026-07-15T09:00:00Z" },
+        ],
+      }),
     ],
     [
-      "a primitive reminder",
-      JSON.stringify({ version: 1, reminders: [42] }),
+      "a non-string reminder timestamp",
+      JSON.stringify({
+        version: 1,
+        reminders: [{ ...persistedReminder, dateISOString: 42 }],
+      }),
     ],
+    [
+      "an invalid reminder timestamp",
+      JSON.stringify({
+        version: 1,
+        reminders: [{ ...persistedReminder, dateISOString: "not-a-date" }],
+      }),
+    ],
+    ["a null reminder", JSON.stringify({ version: 1, reminders: [null] })],
+    ["a primitive reminder", JSON.stringify({ version: 1, reminders: [42] })],
     [
       "duplicate reminder identities",
       JSON.stringify({
@@ -75,11 +120,14 @@ describe("reminder persistence", () => {
   ])("rejects %s", (_scenario, storedValue) => {
     expect(
       loadPersistedReminders(createMemoryReminderStorage(storedValue)),
-    ).toEqual([])
+    ).toEqual({
+      status: "failure",
+      errorMessage: expect.any(String),
+    })
   })
 
   it("recovers when browser storage cannot be read or written", () => {
-    const unavailableReminderStorage: ReminderStorage = {
+    const unavailableReminderStorage: CalendarStorage = {
       getItem: vi.fn(() => {
         throw new Error("Storage is unavailable")
       }),
@@ -88,18 +136,71 @@ describe("reminder persistence", () => {
       }),
     }
 
-    expect(loadPersistedReminders(unavailableReminderStorage)).toEqual([])
+    expect(loadPersistedReminders(unavailableReminderStorage)).toEqual({
+      status: "failure",
+      errorMessage: "Storage is unavailable",
+    })
     expect(
       persistReminders([persistedReminder], unavailableReminderStorage),
-    ).toBe(false)
+    ).toEqual({
+      status: "failure",
+      errorMessage: "Storage is unavailable",
+    })
+
+    const calendarStore = createCalendarStore({
+      calendarStorage: unavailableReminderStorage,
+    })
+    expect(
+      calendarStore.getState().storageStatus.failureMessages.reminders,
+    ).toBe(REMINDER_LOAD_FAILURE_MESSAGE)
+
+    calendarStore.dispatch(
+      addNewReminder({
+        dateISOString: persistedReminder.dateISOString,
+        color: persistedReminder.color,
+        text: persistedReminder.text,
+      }),
+    )
+    expect(
+      calendarStore.getState().storageStatus.failureMessages.reminders,
+    ).toBe(REMINDER_SAVE_FAILURE_MESSAGE)
+  })
+
+  it("clears a hydration failure after reminders save successfully", () => {
+    const reminderStorage = createMemoryReminderStorage("invalid")
+    const calendarStore = createCalendarStore({
+      calendarStorage: reminderStorage,
+    })
+
+    expect(
+      calendarStore.getState().storageStatus.failureMessages.reminders,
+    ).toBe(REMINDER_LOAD_FAILURE_MESSAGE)
+
+    calendarStore.dispatch(
+      addNewReminder({
+        dateISOString: persistedReminder.dateISOString,
+        color: persistedReminder.color,
+        text: persistedReminder.text,
+      }),
+    )
+
+    expect(
+      calendarStore.getState().storageStatus.failureMessages.reminders,
+    ).toBeUndefined()
   })
 
   it("does nothing when browser globals are unavailable", () => {
     vi.stubGlobal("window", undefined)
 
     try {
-      expect(loadPersistedReminders()).toEqual([])
-      expect(persistReminders([persistedReminder])).toBe(false)
+      expect(loadPersistedReminders()).toEqual({
+        status: "failure",
+        errorMessage: "Browser storage is unavailable",
+      })
+      expect(persistReminders([persistedReminder])).toEqual({
+        status: "failure",
+        errorMessage: "Browser storage is unavailable",
+      })
     } finally {
       vi.unstubAllGlobals()
     }
@@ -113,8 +214,14 @@ describe("reminder persistence", () => {
       })
 
     try {
-      expect(loadPersistedReminders()).toEqual([])
-      expect(persistReminders([persistedReminder])).toBe(false)
+      expect(loadPersistedReminders()).toEqual({
+        status: "failure",
+        errorMessage: "Storage access is blocked",
+      })
+      expect(persistReminders([persistedReminder])).toEqual({
+        status: "failure",
+        errorMessage: "Storage access is blocked",
+      })
     } finally {
       localStorageGetter.mockRestore()
     }
@@ -122,7 +229,9 @@ describe("reminder persistence", () => {
 
   it("hydrates additions and deletions across calendar store sessions", () => {
     const reminderStorage = createMemoryReminderStorage()
-    const firstCalendarStore = createCalendarStore({ reminderStorage })
+    const firstCalendarStore = createCalendarStore({
+      calendarStorage: reminderStorage,
+    })
 
     firstCalendarStore.dispatch(
       addNewReminder({
@@ -132,7 +241,9 @@ describe("reminder persistence", () => {
       }),
     )
 
-    const rehydratedCalendarStore = createCalendarStore({ reminderStorage })
+    const rehydratedCalendarStore = createCalendarStore({
+      calendarStorage: reminderStorage,
+    })
     expect(rehydratedCalendarStore.getState().reminders.reminders).toEqual([
       expect.objectContaining({ text: persistedReminder.text }),
     ])
@@ -142,16 +253,27 @@ describe("reminder persistence", () => {
     rehydratedCalendarStore.dispatch(deleteReminder(reminderId))
 
     expect(
-      createCalendarStore({ reminderStorage }).getState().reminders.reminders,
+      createCalendarStore({ calendarStorage: reminderStorage }).getState()
+        .reminders.reminders,
     ).toEqual([])
   })
 
-  it("does not rewrite reminders for unrelated state transitions", () => {
+  it("does not rewrite reminders for display preference transitions", () => {
     const reminderStorage = createMemoryReminderStorage()
-    const calendarStore = createCalendarStore({ reminderStorage })
+    const calendarStore = createCalendarStore({
+      calendarStorage: reminderStorage,
+    })
 
     calendarStore.dispatch(showHoursOnCalendar())
 
-    expect(reminderStorage.setItem).not.toHaveBeenCalled()
+    expect(reminderStorage.setItem).toHaveBeenCalledWith(
+      DISPLAY_PREFERENCE_STORAGE_KEY,
+      expect.any(String),
+    )
+    expect(reminderStorage.setItem).not.toHaveBeenCalledWith(
+      REMINDER_STORAGE_KEY,
+      expect.any(String),
+    )
   })
 })
+

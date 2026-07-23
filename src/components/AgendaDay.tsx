@@ -8,9 +8,8 @@ import { closeAgenda } from "@/redux/agendaSlice"
 import { useAppDispatch, useAppSelector } from "@/redux/hooks"
 import { deleteReminder } from "@/redux/remindersSlice"
 import type { Reminder, ReminderColor } from "@/reminderTypes"
+import { formatCalendarDate, formatReminderTime } from "@/utils/dateUtils"
 
-const formatDateAgenda = (date: Date) => dayjs(date).format("MMMM D, YYYY")
-const formatTimePicker = (date: Date) => dayjs(date).format("h:mm A")
 type AgendaReminderColorStyle = CSSProperties & {
   "--agenda-reminder-color": ReminderColor
 }
@@ -32,9 +31,9 @@ export default function AgendaDay() {
     dispatch(deleteReminder(id))
   }
 
-  const dialogTitle = date ? "Agenda: " + formatDateAgenda(date) : "Closing"
+  const dialogTitle = date ? "Agenda: " + formatCalendarDate(date) : "Closing"
   const reminderListLabel = date
-    ? "Reminders for " + formatDateAgenda(date)
+    ? "Reminders for " + formatCalendarDate(date)
     : "Reminders"
 
   return (
@@ -67,7 +66,7 @@ function AgendaReminder({
   onDeleteReminder: (id: string) => void
 }) {
   const { id, dateISOString, color, text } = reminder
-  const time = formatTimePicker(dayjs(dateISOString).toDate())
+  const time = formatReminderTime(dayjs(dateISOString).toDate())
   const reminderColorStyle: AgendaReminderColorStyle = {
     "--agenda-reminder-color": color,
   }
@@ -111,3 +110,4 @@ function ReminderInterior({
     </>
   )
 }
+

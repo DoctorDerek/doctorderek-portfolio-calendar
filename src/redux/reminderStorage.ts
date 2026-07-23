@@ -1,11 +1,15 @@
 import {
+  resolveCalendarStorage,
+  type CalendarStorage,
+  type CalendarStorageFailure,
+} from "@/redux/calendarStorage"
+import {
   REMINDER_COLORS,
   REMINDER_MAX_LENGTH,
   type Reminder,
   type ReminderColor,
 } from "@/reminderTypes"
-
-export type ReminderStorage = Pick<Storage, "getItem" | "setItem">
+import { getErrorMessage } from "@/utils/errorUtils"
 
 export const REMINDER_STORAGE_KEY = "portfolio-calendar.reminders"
 
@@ -23,17 +27,22 @@ type UnvalidatedReminderStorage = {
   reminders?: unknown
 }
 
-const getBrowserReminderStorage = () => {
-  try {
-    return typeof window === "undefined" ? undefined : window.localStorage
-  } catch {
-    return undefined
-  }
-}
+export type LoadPersistedRemindersResult =
+  { status: "success"; reminders: Reminder[] } | CalendarStorageFailure
+
+export type PersistRemindersResult =
+  { status: "success" } | CalendarStorageFailure
 
 const isReminderColor = (value: unknown): value is ReminderColor =>
   typeof value === "string" &&
   REMINDER_COLORS.some((reminderColor) => reminderColor === value)
+
+const isCanonicalISOString = (value: unknown): value is string => {
+  if (typeof value !== "string") return false
+
+  const date = new Date(value)
+  return Number.isFinite(date.getTime()) && date.toISOString() === value
+}
 
 const isReminder = (value: unknown): value is Reminder => {
   if (typeof value !== "object" || value === null) return false
@@ -42,8 +51,7 @@ const isReminder = (value: unknown): value is Reminder => {
   return (
     typeof reminder.id === "string" &&
     reminder.id.length > 0 &&
-    typeof reminder.dateISOString === "string" &&
-    Number.isFinite(Date.parse(reminder.dateISOString)) &&
+    isCanonicalISOString(reminder.dateISOString) &&
     isReminderColor(reminder.color) &&
     typeof reminder.text === "string" &&
     reminder.text === reminder.text.trim() &&
@@ -71,43 +79,55 @@ const isReminderStorage = (
 }
 
 export const loadPersistedReminders = (
-  reminderStorage: ReminderStorage | undefined = getBrowserReminderStorage(),
-) => {
-  if (!reminderStorage) return []
+  calendarStorage?: CalendarStorage,
+): LoadPersistedRemindersResult => {
+  const calendarStorageResult = resolveCalendarStorage(calendarStorage)
+  if (calendarStorageResult.status === "failure") {
+    return calendarStorageResult
+  }
 
   try {
-    const serializedReminderStorage = reminderStorage.getItem(
-      REMINDER_STORAGE_KEY,
-    )
-    if (!serializedReminderStorage) return []
+    const serializedReminderStorage =
+      calendarStorageResult.calendarStorage.getItem(REMINDER_STORAGE_KEY)
+    if (!serializedReminderStorage) return { status: "success", reminders: [] }
 
-    const parsedReminderStorage: unknown = JSON.parse(
-      serializedReminderStorage,
-    )
+    const parsedReminderStorage: unknown = JSON.parse(serializedReminderStorage)
     return isReminderStorage(parsedReminderStorage)
-      ? parsedReminderStorage.reminders
-      : []
-  } catch {
-    return []
+      ? {
+          status: "success",
+          reminders: [...parsedReminderStorage.reminders].sort((left, right) =>
+            left.dateISOString.localeCompare(right.dateISOString),
+          ),
+        }
+      : {
+          status: "failure",
+          errorMessage: "Stored reminder data is invalid",
+        }
+  } catch (error: unknown) {
+    return { status: "failure", errorMessage: getErrorMessage(error) }
   }
 }
 
 export const persistReminders = (
   reminders: Reminder[],
-  reminderStorage: ReminderStorage | undefined = getBrowserReminderStorage(),
-) => {
-  if (!reminderStorage) return false
+  calendarStorage?: CalendarStorage,
+): PersistRemindersResult => {
+  const calendarStorageResult = resolveCalendarStorage(calendarStorage)
+  if (calendarStorageResult.status === "failure") {
+    return calendarStorageResult
+  }
 
   try {
-    reminderStorage.setItem(
+    calendarStorageResult.calendarStorage.setItem(
       REMINDER_STORAGE_KEY,
       JSON.stringify({
         version: REMINDER_STORAGE_VERSION,
         reminders,
       }),
     )
-    return true
-  } catch {
-    return false
+    return { status: "success" }
+  } catch (error: unknown) {
+    return { status: "failure", errorMessage: getErrorMessage(error) }
   }
 }
+

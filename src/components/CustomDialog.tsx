@@ -21,9 +21,11 @@ export default function CustomDialog({
       aria-labelledby={id}
       fullWidth={true}
       maxWidth="md"
-      PaperProps={{
-        classes: {
-          root: "m-4 max-h-[calc(100%-2rem)] rounded-2xl bg-gray-100 dark:bg-gray-900 sm:m-8 sm:max-h-[calc(100%-4rem)]",
+      slotProps={{
+        paper: {
+          classes: {
+            root: "m-4 max-h-[calc(100%-2rem)] rounded-2xl bg-gray-100 dark:bg-gray-900 sm:m-8 sm:max-h-[calc(100%-4rem)]",
+          },
         },
       }}
     >
@@ -47,3 +49,4 @@ export default function CustomDialog({
     </Dialog>
   )
 }
+

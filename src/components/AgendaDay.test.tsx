@@ -22,6 +22,7 @@ const preloadedAgendaState: RootState = {
     ],
   },
   showHours: { showHours: false },
+  storageStatus: { failureMessages: {} },
 }
 
 describe("agenda reminder interactions", () => {
@@ -103,3 +104,4 @@ describe("agenda reminder interactions", () => {
     expect(reminderItems[1]).toHaveTextContent("1:30 PMArchitecture review")
   })
 })
+

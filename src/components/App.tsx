@@ -2,6 +2,7 @@ import KeyboardArrowLeftIcon from "@mui/icons-material/KeyboardArrowLeft"
 import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight"
 import Paper from "@mui/material/Paper"
 import dayjs from "dayjs"
+import dynamic from "next/dynamic"
 import Image from "next/image"
 import { useState } from "react"
 import AddReminder from "@/components/AddReminder"
@@ -9,22 +10,36 @@ import AddReminderFab from "@/components/AddReminderFab"
 import AgendaDay from "@/components/AgendaDay"
 import CalendarGrid from "@/components/CalendarGrid"
 import CustomIcon from "@/components/CustomIcon"
-import ToggleDarkMode from "@/components/ToggleDarkMode"
+import StorageStatus from "@/components/StorageStatus"
 import ToggleShowHours from "@/components/ToggleShowHours"
+import useCurrentDate from "@/hooks/useCurrentDate"
+import {
+  formatCalendarMonthHeading,
+  getCalendarDateInMonth,
+} from "@/utils/dateUtils"
 
-const formatDateAsMonthApp = (date: Date) => dayjs(date).format("MMMM YYYY")
+const ToggleDarkMode = dynamic(() => import("@/components/ToggleDarkMode"), {
+  ssr: false,
+})
+
 export default function App() {
-  const [actualToday] = useState(() => new Date())
+  const actualToday = useCurrentDate()
   const [visibleMonth, setVisibleMonth] = useState(actualToday)
-  const showPreviousMonth = () => {
-    setVisibleMonth((currentVisibleMonth) =>
-      dayjs(currentVisibleMonth).subtract(1, "month").toDate(),
+  const [activeDate, setActiveDate] = useState(actualToday)
+  const showMonth = (monthOffset: number) => {
+    const nextVisibleMonth = dayjs(visibleMonth)
+      .add(monthOffset, "month")
+      .toDate()
+    setVisibleMonth(nextVisibleMonth)
+    setActiveDate((currentActiveDate) =>
+      getCalendarDateInMonth(currentActiveDate, nextVisibleMonth),
     )
   }
+  const showPreviousMonth = () => {
+    showMonth(-1)
+  }
   const showNextMonth = () => {
-    setVisibleMonth((currentVisibleMonth) =>
-      dayjs(currentVisibleMonth).add(1, "month").toDate(),
-    )
+    showMonth(1)
   }
 
   return (
@@ -48,8 +63,13 @@ export default function App() {
             <div className="col-start-1 row-start-2 justify-self-start md:col-start-2 md:row-start-1">
               <ToggleDarkMode />
             </div>
-            <h1 className="col-start-2 row-start-1 min-w-0 text-center text-2xl font-bold text-gray-900 drop-shadow-lg sm:text-4xl md:col-start-3 lg:text-5xl dark:text-gray-100">
-              {formatDateAsMonthApp(visibleMonth)}
+            <h1
+              className="col-start-2 row-start-1 min-w-0 text-center text-2xl font-bold text-gray-900 drop-shadow-lg sm:text-4xl md:col-start-3 lg:text-5xl dark:text-gray-100"
+              id="calendar-month-heading"
+              aria-live="polite"
+              aria-atomic="true"
+            >
+              {formatCalendarMonthHeading(visibleMonth)}
             </h1>
             <div className="col-start-3 row-start-2 justify-self-end md:col-start-4 md:row-start-1">
               <ToggleShowHours />
@@ -63,18 +83,25 @@ export default function App() {
               />
             </div>
           </header>
-          <CalendarGrid actualToday={actualToday} visibleMonth={visibleMonth} />
-          <div className="mt-3 flex w-full justify-end">
+          <CalendarGrid
+            activeDate={activeDate}
+            actualToday={actualToday}
+            onActiveDateChange={setActiveDate}
+            onVisibleMonthChange={setVisibleMonth}
+            visibleMonth={visibleMonth}
+          />
+          <div className="mt-3 flex w-full items-center gap-3">
+            <StorageStatus />
             <AddReminderFab />
           </div>
         </Paper>
         <AgendaDay />
         <AddReminder />
       </div>
-      <div className="fixed inset-0 z-0 h-full w-full">
+      <div aria-hidden="true" className="fixed inset-0 z-0 h-full w-full">
         <Image
           src="/benjamin-patin-dOzoyaYjCbM-unsplash.jpg"
-          alt="Ocean waves breaking by Benjamin Patin on Unsplash"
+          alt=""
           fill
           sizes="100vw"
           className="object-cover"
@@ -84,3 +111,4 @@ export default function App() {
     </>
   )
 }
+
