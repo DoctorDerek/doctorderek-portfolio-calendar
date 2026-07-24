@@ -116,12 +116,12 @@ describe("reminder form controls", () => {
     expect(saveReminderButton).toBeEnabled()
 
     fireEvent.change(reminderTextField, {
-      target: { value: "one two three four five six seven eight nine ten" },
+      target: { value: "aaaaaaaaaaaaaaaaaaaaaaaa" },
     })
 
-    expect(
-      screen.getByText("6 characters remaining"),
-    ).toHaveTextContent("6 characters remaining")
+    expect(document.getElementById("reminder-character-count")).toHaveTextContent(
+      "6 characters remaining",
+    )
   })
 
   it("uses the current time when no initiating date was requested", () => {
