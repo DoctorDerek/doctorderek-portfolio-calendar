@@ -140,4 +140,37 @@ describe("calendar day interactions", () => {
     fireEvent.click(calendarDay)
     expect(onActive).toHaveBeenCalledTimes(2)
   })
+
+  it("shows reminder details immediately when hour view is enabled", () => {
+    const selectedDate = new Date(2026, 6, 15, 12)
+    const reminderState: RootState = {
+      addReminder: { addReminderIsOpen: false, dateISOString: "" },
+      agenda: { agendaIsOpen: false, dateISOString: "" },
+      reminders: {
+        reminders: [
+          {
+            id: "hour-view",
+            dateISOString: "2026-07-15T09:00:00.000Z",
+            color: "DodgerBlue",
+            text: "Hour view reminder",
+          },
+        ],
+      },
+      showHours: { showHours: true },
+      storageStatus: { failureMessages: {} },
+    }
+
+    renderWithProviders(
+      <CalendarDay
+        actualToday={selectedDate}
+        onActive={() => undefined}
+        selectedDate={selectedDate}
+        tabIndex={0}
+        visibleMonth={selectedDate}
+      />,
+      reminderState,
+    )
+
+    expect(screen.getByText(/Hour view reminder/)).not.toHaveClass("sr-only")
+  })
 })
