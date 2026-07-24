@@ -141,6 +141,20 @@ describe("reminder form controls", () => {
     )
   })
 
+  it("renders nothing when the reminder panel is closed", () => {
+    renderWithProviders(<AddReminder />, {
+      ...openReminderFormState,
+      addReminder: {
+        ...openReminderFormState.addReminder,
+        addReminderIsOpen: false,
+      },
+    })
+
+    expect(
+      screen.queryByRole("dialog", { name: "Add Reminder" }),
+    ).not.toBeInTheDocument()
+  })
+
   it("ignores direct form submission while reminder text is empty", () => {
     const { store } = renderWithProviders(
       <AddReminder />,
