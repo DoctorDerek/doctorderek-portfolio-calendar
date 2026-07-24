@@ -144,5 +144,32 @@ describe("calendar display preference persistence", () => {
       expect.any(String),
     )
   })
-})
 
+  it("fails to load display preferences when storage is unavailable", () => {
+    const originalWindow = globalThis.window
+    try {
+      globalThis.window = undefined as unknown as Window
+
+      expect(loadDisplayPreference()).toEqual({
+        status: "failure",
+        errorMessage: "Browser storage is unavailable",
+      })
+    } finally {
+      globalThis.window = originalWindow
+    }
+  })
+
+  it("fails to persist display preferences when storage is unavailable", () => {
+    const originalWindow = globalThis.window
+    try {
+      globalThis.window = undefined as unknown as Window
+
+      expect(persistDisplayPreference(false)).toEqual({
+        status: "failure",
+        errorMessage: "Browser storage is unavailable",
+      })
+    } finally {
+      globalThis.window = originalWindow
+    }
+  })
+})
