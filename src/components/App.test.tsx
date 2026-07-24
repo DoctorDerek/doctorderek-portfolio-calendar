@@ -197,10 +197,7 @@ describe("calendar month navigation", () => {
 
     renderWithProviders(<App />)
 
-    const firstGridCell = screen
-      .getByRole("grid", { name: "July 2026" })
-      .querySelectorAll('[role="row"]')[1]
-      .querySelector('[role="button"]')!
+    const firstGridCell = within(screen.getByRole("grid", { name: "July 2026" })).getAllByRole("button")[0]
 
     firstGridCell.focus()
     expect(firstGridCell).toHaveFocus()
