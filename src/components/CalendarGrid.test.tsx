@@ -103,6 +103,62 @@ describe("calendar grid keyboard navigation", () => {
     expect(onActiveDateChange).toHaveBeenCalledWith(new Date(2026, 5, 15))
   })
 
+  it("moves to the previous day aligned week boundary with Home", () => {
+    const onActiveDateChange = vi.fn()
+    const onVisibleMonthChange = vi.fn()
+    const visibleMonth = new Date(2026, 6, 1)
+    const activeDate = new Date(2026, 6, 15, 12)
+
+    renderWithProviders(
+      <CalendarGrid
+        actualToday={activeDate}
+        activeDate={activeDate}
+        onActiveDateChange={onActiveDateChange}
+        onVisibleMonthChange={onVisibleMonthChange}
+        visibleMonth={visibleMonth}
+      />,
+    )
+
+    const activeButton = screen.getByRole("button", {
+      name: "Wednesday July 15, 2026",
+    })
+
+    fireEvent.focus(activeButton)
+    fireEvent.keyDown(activeButton, { key: "Home" })
+
+    expect(onVisibleMonthChange).not.toHaveBeenCalled()
+    expect(onActiveDateChange).toHaveBeenCalledWith(new Date(2026, 6, 12))
+  })
+
+  it("moves to the first and last date with Ctrl+Home and Ctrl+End", () => {
+    const onActiveDateChange = vi.fn()
+    const onVisibleMonthChange = vi.fn()
+    const visibleMonth = new Date(2026, 6, 1)
+    const activeDate = new Date(2026, 6, 15, 12)
+
+    renderWithProviders(
+      <CalendarGrid
+        actualToday={activeDate}
+        activeDate={activeDate}
+        onActiveDateChange={onActiveDateChange}
+        onVisibleMonthChange={onVisibleMonthChange}
+        visibleMonth={visibleMonth}
+      />,
+    )
+
+    const activeButton = screen.getByRole("button", {
+      name: "Wednesday July 15, 2026",
+    })
+
+    fireEvent.focus(activeButton)
+    fireEvent.keyDown(activeButton, { key: "Home", ctrlKey: true })
+    fireEvent.keyDown(activeButton, { key: "End", ctrlKey: true })
+
+    expect(onVisibleMonthChange).not.toHaveBeenCalled()
+    expect(onActiveDateChange).toHaveBeenNthCalledWith(1, new Date(2026, 5, 28))
+    expect(onActiveDateChange).toHaveBeenNthCalledWith(2, new Date(2026, 7, 9))
+  })
+
   it("moves to the next month with PageDown and keeps day alignment", () => {
     const onActiveDateChange = vi.fn()
     const onVisibleMonthChange = vi.fn()
