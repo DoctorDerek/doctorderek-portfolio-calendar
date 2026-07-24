@@ -239,4 +239,85 @@ describe("calendar grid keyboard navigation", () => {
     expect(onVisibleMonthChange).toHaveBeenCalledWith(new Date(2025, 6, 1))
     expect(onActiveDateChange).toHaveBeenCalledWith(new Date(2025, 6, 15))
   })
+
+  it("keeps day alignment across month-length boundaries with PageDown", () => {
+    const onActiveDateChange = vi.fn()
+    const onVisibleMonthChange = vi.fn()
+    const visibleMonth = new Date(2026, 0, 1)
+    const activeDate = new Date(2026, 0, 31, 12)
+
+    renderWithProviders(
+      <CalendarGrid
+        actualToday={activeDate}
+        activeDate={activeDate}
+        onActiveDateChange={onActiveDateChange}
+        onVisibleMonthChange={onVisibleMonthChange}
+        visibleMonth={visibleMonth}
+      />,
+    )
+
+    const activeButton = screen.getByRole("button", {
+      name: "Saturday January 31, 2026",
+    })
+
+    fireEvent.focus(activeButton)
+    fireEvent.keyDown(activeButton, { key: "PageDown" })
+
+    expect(onVisibleMonthChange).toHaveBeenCalledWith(new Date(2026, 1, 1))
+    expect(onActiveDateChange).toHaveBeenCalledWith(new Date(2026, 1, 28))
+  })
+
+  it("keeps day alignment across year boundaries with Shift+PageDown", () => {
+    const onActiveDateChange = vi.fn()
+    const onVisibleMonthChange = vi.fn()
+    const visibleMonth = new Date(2026, 0, 1)
+    const activeDate = new Date(2026, 0, 31, 12)
+
+    renderWithProviders(
+      <CalendarGrid
+        actualToday={activeDate}
+        activeDate={activeDate}
+        onActiveDateChange={onActiveDateChange}
+        onVisibleMonthChange={onVisibleMonthChange}
+        visibleMonth={visibleMonth}
+      />,
+    )
+
+    const activeButton = screen.getByRole("button", {
+      name: "Saturday January 31, 2026",
+    })
+
+    fireEvent.focus(activeButton)
+    fireEvent.keyDown(activeButton, { key: "PageDown", shiftKey: true })
+
+    expect(onVisibleMonthChange).toHaveBeenCalledWith(new Date(2027, 0, 1))
+    expect(onActiveDateChange).toHaveBeenCalledWith(new Date(2027, 0, 31))
+  })
+
+  it("keeps day alignment across year boundaries with Shift+PageUp", () => {
+    const onActiveDateChange = vi.fn()
+    const onVisibleMonthChange = vi.fn()
+    const visibleMonth = new Date(2026, 0, 1)
+    const activeDate = new Date(2026, 0, 31, 12)
+
+    renderWithProviders(
+      <CalendarGrid
+        actualToday={activeDate}
+        activeDate={activeDate}
+        onActiveDateChange={onActiveDateChange}
+        onVisibleMonthChange={onVisibleMonthChange}
+        visibleMonth={visibleMonth}
+      />,
+    )
+
+    const activeButton = screen.getByRole("button", {
+      name: "Saturday January 31, 2026",
+    })
+
+    fireEvent.focus(activeButton)
+    fireEvent.keyDown(activeButton, { key: "PageUp", shiftKey: true })
+
+    expect(onVisibleMonthChange).toHaveBeenCalledWith(new Date(2025, 0, 1))
+    expect(onActiveDateChange).toHaveBeenCalledWith(new Date(2025, 0, 31))
+  })
 })
