@@ -242,6 +242,23 @@ describe("calendar month navigation", () => {
     expect(firstRowButton).toHaveFocus()
   })
 
+  it("does not move focus when navigating down from the bottom calendar row", () => {
+    vi.useFakeTimers()
+    vi.setSystemTime(new Date(2026, 6, 15, 12))
+
+    renderWithProviders(<App />)
+
+    const calendarGrid = screen.getByRole("grid", { name: "July 2026" })
+    const calendarButtons = within(calendarGrid).getAllByRole("button")
+    const lastRowButton = calendarButtons[calendarButtons.length - 1]!
+
+    lastRowButton.focus()
+    expect(lastRowButton).toHaveFocus()
+
+    fireEvent.keyDown(lastRowButton, { key: "ArrowDown" })
+    expect(lastRowButton).toHaveFocus()
+  })
+
   it("resynchronizes today when the page becomes visible or focused", () => {
     vi.useFakeTimers()
     vi.setSystemTime(new Date(2026, 6, 15, 12))
