@@ -314,3 +314,18 @@ test("returns focus to Add Reminder after closing with Escape", async ({ page })
   await expect(addReminderDialog).toBeHidden()
   await expect(addReminderButton).toBeFocused()
 })
+
+test("returns focus to the active date after closing agenda with Escape", async ({
+  page,
+}) => {
+  const currentDateButton = page.locator('button[aria-current="date"]')
+  await currentDateButton.focus()
+  await page.keyboard.press("Enter")
+
+  const agendaDialog = page.getByRole("dialog", { name: /^Agenda:/ })
+  await expect(agendaDialog).toBeVisible()
+
+  await page.keyboard.press("Escape")
+  await expect(agendaDialog).toBeHidden()
+  await expect(currentDateButton).toBeFocused()
+})
