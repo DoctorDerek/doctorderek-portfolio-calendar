@@ -280,3 +280,23 @@ test("moves focus back to month controls with Shift+Tab", async ({ page }) => {
 
   await expect(page.getByRole("button", { name: "Next Month" })).toBeFocused()
 })
+
+test("does not wrap focus when navigating calendar edges", async ({ page }) => {
+  const calendar = page.getByRole("grid")
+  const buttons = calendar.getByRole("button")
+  const buttonCount = await buttons.count()
+
+  const firstGridButton = buttons.first()
+  const firstLabel = await firstGridButton.getAttribute("aria-label")
+  await firstGridButton.focus()
+  await page.keyboard.press("ArrowLeft")
+  await expect(firstGridButton).toBeFocused()
+  expect(await firstGridButton.getAttribute("aria-label")).toBe(firstLabel)
+
+  const lastGridButton = buttons.nth(buttonCount - 1)
+  const lastLabel = await lastGridButton.getAttribute("aria-label")
+  await lastGridButton.focus()
+  await page.keyboard.press("ArrowRight")
+  await expect(lastGridButton).toBeFocused()
+  expect(await lastGridButton.getAttribute("aria-label")).toBe(lastLabel)
+})
