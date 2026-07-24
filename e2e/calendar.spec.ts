@@ -300,3 +300,17 @@ test("does not wrap focus when navigating calendar edges", async ({ page }) => {
   await expect(lastGridButton).toBeFocused()
   expect(await lastGridButton.getAttribute("aria-label")).toBe(lastLabel)
 })
+
+test("returns focus to Add Reminder after closing with Escape", async ({ page }) => {
+  const addReminderButton = page.getByRole("button", { name: "Add Reminder" })
+
+  await addReminderButton.focus()
+  await page.keyboard.press("Enter")
+
+  const addReminderDialog = page.getByRole("dialog", { name: "Add Reminder" })
+  await expect(addReminderDialog).toBeVisible()
+  await page.keyboard.press("Escape")
+
+  await expect(addReminderDialog).toBeHidden()
+  await expect(addReminderButton).toBeFocused()
+})
