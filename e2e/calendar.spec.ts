@@ -265,3 +265,11 @@ test("supports calendar keyboard traversal and opens agenda on Enter", async ({
   expect(nextFocusedLabel).toBe(homeFocusLabel)
 })
 
+test("moves focus out of calendar with Tab", async ({ page }) => {
+  const activeDateButton = page.locator('button[aria-current="date"]')
+  await activeDateButton.focus()
+  await page.keyboard.press("Tab")
+
+  await expect(page.getByRole("button", { name: "Add Reminder" })).toBeFocused()
+})
+
