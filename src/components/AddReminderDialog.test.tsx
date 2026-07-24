@@ -190,6 +190,28 @@ describe("reminder dialog interactions", () => {
     expect(screen.getByText("Enter saves reminder")).toBeInTheDocument()
   })
 
+  it("persists the selected reminder color when saving", async () => {
+    const { store } = renderWithProviders(<App />)
+
+    fireEvent.click(screen.getByRole("button", { name: "Add Reminder" }))
+    fireEvent.click(
+      screen.getByRole("button", { name: "Select color Tomato" }),
+    )
+    fireEvent.change(screen.getByRole("textbox", { name: "Reminder" }), {
+      target: { value: "Color persists" },
+    })
+    fireEvent.submit(screen.getByRole("form", { name: "Reminder details" }))
+
+    await waitFor(() => {
+      expect(
+        screen.queryByRole("dialog", { name: "Add Reminder" }),
+      ).not.toBeInTheDocument()
+    })
+
+    expect(screen.getByText("Color persists")).toBeInTheDocument()
+    expect(store.getState().reminders.reminders[0].color).toBe("Tomato")
+  })
+
   it("adds reminder text to the calendar through the explicit save action", async () => {
     renderWithProviders(<App />)
 
