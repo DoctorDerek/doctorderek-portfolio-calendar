@@ -91,6 +91,39 @@ describe("reminder form controls", () => {
     expect(saveReminderButton).toBeEnabled()
   })
 
+  it("updates remaining character count as reminder text changes", () => {
+    renderWithProviders(<AddReminder />, openReminderFormState)
+
+    const reminderTextField = screen.getByRole("textbox", {
+      name: "Reminder",
+    })
+    const saveReminderButton = screen.getByRole("button", {
+      name: "Save Reminder",
+    })
+
+    expect(
+      screen.getByText("30 characters max"),
+    ).toHaveTextContent("30 characters max")
+    expect(saveReminderButton).toBeDisabled()
+
+    fireEvent.change(reminderTextField, {
+      target: { value: "one" },
+    })
+
+    expect(
+      screen.getByText("27 characters remaining"),
+    ).toHaveTextContent("27 characters remaining")
+    expect(saveReminderButton).toBeEnabled()
+
+    fireEvent.change(reminderTextField, {
+      target: { value: "one two three four five six seven eight nine ten" },
+    })
+
+    expect(
+      screen.getByText("6 characters remaining"),
+    ).toHaveTextContent("6 characters remaining")
+  })
+
   it("uses the current time when no initiating date was requested", () => {
     vi.useFakeTimers({ toFake: ["Date"] })
     vi.setSystemTime(new Date(2026, 6, 20, 14, 30))
@@ -122,4 +155,3 @@ describe("reminder form controls", () => {
     ).toBeInTheDocument()
   })
 })
-
