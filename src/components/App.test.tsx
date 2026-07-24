@@ -295,6 +295,32 @@ describe("calendar month navigation", () => {
     expect(activeDateButton).toHaveFocus()
   })
 
+  it("moves to calendar extremes with Ctrl+Home and Ctrl+End", () => {
+    vi.useFakeTimers()
+    vi.setSystemTime(new Date(2026, 6, 15, 12))
+
+    renderWithProviders(<App />)
+
+    const activeDateButton = screen.getByRole("button", {
+      name: formatCalendarDayAccessibleName(new Date(2026, 6, 16)),
+    })
+    activeDateButton.focus()
+
+    fireEvent.keyDown(activeDateButton, { key: "Home", ctrlKey: true })
+
+    const firstGridCell = within(
+      screen.getByRole("grid", { name: "July 2026" }),
+    ).getAllByRole("button")[0]
+    expect(firstGridCell).toHaveFocus()
+
+    fireEvent.keyDown(firstGridCell, { key: "End", ctrlKey: true })
+
+    const lastGridCell = within(
+      screen.getByRole("grid", { name: "July 2026" }),
+    ).getAllByRole("button")[41]
+    expect(lastGridCell).toHaveFocus()
+  })
+
   it("resynchronizes today when the page becomes visible or focused", () => {
     vi.useFakeTimers()
     vi.setSystemTime(new Date(2026, 6, 15, 12))
