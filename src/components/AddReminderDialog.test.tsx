@@ -103,6 +103,26 @@ describe("reminder dialog interactions", () => {
     })
   })
 
+  it("does not save a draft when Escape closes the dialog", async () => {
+    renderWithProviders(<App />)
+
+    fireEvent.click(screen.getByRole("button", { name: "Add Reminder" }))
+    fireEvent.change(screen.getByRole("textbox", { name: "Reminder" }), {
+      target: { value: "Escape draft" },
+    })
+    fireEvent.keyDown(screen.getByRole("dialog", { name: "Add Reminder" }), {
+      key: "Escape",
+    })
+
+    await waitFor(() => {
+      expect(
+        screen.queryByRole("dialog", { name: "Add Reminder" }),
+      ).not.toBeInTheDocument()
+    })
+
+    expect(screen.queryByText("Escape draft")).not.toBeInTheDocument()
+  })
+
   it("starts a clean draft whenever the dialog reopens", async () => {
     const firstSessionDate = new Date("2026-07-18T16:00:00.000Z")
     const secondSessionDate = new Date("2026-07-19T17:30:00.000Z")
