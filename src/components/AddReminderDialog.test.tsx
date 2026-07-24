@@ -103,6 +103,28 @@ describe("reminder dialog interactions", () => {
     })
   })
 
+  it("restores focus to the launcher when the dialog is closed", async () => {
+    renderWithProviders(<App />)
+
+    const launcherButton = screen.getByRole("button", { name: "Add Reminder" })
+    launcherButton.focus()
+    fireEvent.click(launcherButton)
+
+    expect(
+      screen.getByRole("dialog", { name: "Add Reminder" }),
+    ).toBeInTheDocument()
+
+    fireEvent.click(screen.getByRole("button", { name: "Close Add Reminder" }))
+
+    await waitFor(() => {
+      expect(
+        screen.queryByRole("dialog", { name: "Add Reminder" }),
+      ).not.toBeInTheDocument()
+    })
+
+    expect(launcherButton).toHaveFocus()
+  })
+
   it("does not save a draft when Escape closes the dialog", async () => {
     renderWithProviders(<App />)
 
@@ -247,5 +269,23 @@ describe("reminder dialog interactions", () => {
     expect(store.getState().reminders.reminders[0].text).toBe(
       "Planning session",
     )
+  })
+
+  it("restores focus to the launcher when Escape closes the dialog", async () => {
+    renderWithProviders(<App />)
+    const launcherButton = screen.getByRole("button", { name: "Add Reminder" })
+    launcherButton.focus()
+
+    fireEvent.click(screen.getByRole("button", { name: "Add Reminder" }))
+    fireEvent.keyDown(screen.getByRole("dialog", { name: "Add Reminder" }), {
+      key: "Escape",
+    })
+
+    await waitFor(() => {
+      expect(
+        screen.queryByRole("dialog", { name: "Add Reminder" }),
+      ).not.toBeInTheDocument()
+    })
+    expect(launcherButton).toHaveFocus()
   })
 })
