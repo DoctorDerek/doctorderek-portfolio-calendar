@@ -172,6 +172,24 @@ describe("reminder dialog interactions", () => {
     }
   })
 
+  it("saves the reminder and closes through form submit", async () => {
+    renderWithProviders(<App />)
+
+    fireEvent.click(screen.getByRole("button", { name: "Add Reminder" }))
+    fireEvent.change(screen.getByRole("textbox", { name: "Reminder" }), {
+      target: { value: "Enter saves reminder" },
+    })
+    fireEvent.submit(screen.getByRole("form", { name: "Reminder details" }))
+
+    await waitFor(() => {
+      expect(
+        screen.queryByRole("dialog", { name: "Add Reminder" }),
+      ).not.toBeInTheDocument()
+    })
+
+    expect(screen.getByText("Enter saves reminder")).toBeInTheDocument()
+  })
+
   it("adds reminder text to the calendar through the explicit save action", async () => {
     renderWithProviders(<App />)
 
