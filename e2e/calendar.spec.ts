@@ -273,3 +273,10 @@ test("moves focus out of calendar with Tab", async ({ page }) => {
   await expect(page.getByRole("button", { name: "Add Reminder" })).toBeFocused()
 })
 
+test("moves focus back to month controls with Shift+Tab", async ({ page }) => {
+  const activeDateButton = page.locator('button[aria-current="date"]')
+  await activeDateButton.focus()
+  await page.keyboard.press("Shift+Tab")
+
+  await expect(page.getByRole("button", { name: "Next Month" })).toBeFocused()
+})
