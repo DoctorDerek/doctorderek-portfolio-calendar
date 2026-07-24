@@ -102,4 +102,58 @@ describe("calendar grid keyboard navigation", () => {
     expect(onVisibleMonthChange).toHaveBeenCalledWith(new Date(2026, 5, 1))
     expect(onActiveDateChange).toHaveBeenCalledWith(new Date(2026, 5, 15))
   })
+
+  it("moves to the next month with PageDown and keeps day alignment", () => {
+    const onActiveDateChange = vi.fn()
+    const onVisibleMonthChange = vi.fn()
+    const visibleMonth = new Date(2026, 6, 1)
+    const activeDate = new Date(2026, 6, 15, 12)
+
+    renderWithProviders(
+      <CalendarGrid
+        actualToday={activeDate}
+        activeDate={activeDate}
+        onActiveDateChange={onActiveDateChange}
+        onVisibleMonthChange={onVisibleMonthChange}
+        visibleMonth={visibleMonth}
+      />,
+    )
+
+    const activeButton = screen.getByRole("button", {
+      name: "Wednesday July 15, 2026",
+    })
+
+    fireEvent.focus(activeButton)
+    fireEvent.keyDown(activeButton, { key: "PageDown" })
+
+    expect(onVisibleMonthChange).toHaveBeenCalledWith(new Date(2026, 7, 1))
+    expect(onActiveDateChange).toHaveBeenCalledWith(new Date(2026, 7, 15))
+  })
+
+  it("moves one year forward with Shift+PageDown and keeps day alignment", () => {
+    const onActiveDateChange = vi.fn()
+    const onVisibleMonthChange = vi.fn()
+    const visibleMonth = new Date(2026, 6, 1)
+    const activeDate = new Date(2026, 6, 15, 12)
+
+    renderWithProviders(
+      <CalendarGrid
+        actualToday={activeDate}
+        activeDate={activeDate}
+        onActiveDateChange={onActiveDateChange}
+        onVisibleMonthChange={onVisibleMonthChange}
+        visibleMonth={visibleMonth}
+      />,
+    )
+
+    const activeButton = screen.getByRole("button", {
+      name: "Wednesday July 15, 2026",
+    })
+
+    fireEvent.focus(activeButton)
+    fireEvent.keyDown(activeButton, { key: "PageDown", shiftKey: true })
+
+    expect(onVisibleMonthChange).toHaveBeenCalledWith(new Date(2027, 6, 1))
+    expect(onActiveDateChange).toHaveBeenCalledWith(new Date(2027, 6, 15))
+  })
 })
