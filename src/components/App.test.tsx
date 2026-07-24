@@ -259,6 +259,26 @@ describe("calendar month navigation", () => {
     expect(lastRowButton).toHaveFocus()
   })
 
+  it("does not move focus when pressing Home or End at row edge cells", () => {
+    vi.useFakeTimers()
+    vi.setSystemTime(new Date(2026, 6, 15, 12))
+
+    renderWithProviders(<App />)
+
+    const calendarGrid = screen.getByRole("grid", { name: "July 2026" })
+    const calendarButtons = within(calendarGrid).getAllByRole("button")
+    const firstCell = calendarButtons[0]!
+    const lastCell = calendarButtons[calendarButtons.length - 1]!
+
+    firstCell.focus()
+    fireEvent.keyDown(firstCell, { key: "Home" })
+    expect(firstCell).toHaveFocus()
+
+    lastCell.focus()
+    fireEvent.keyDown(lastCell, { key: "End" })
+    expect(lastCell).toHaveFocus()
+  })
+
   it("resynchronizes today when the page becomes visible or focused", () => {
     vi.useFakeTimers()
     vi.setSystemTime(new Date(2026, 6, 15, 12))
@@ -305,4 +325,3 @@ describe("calendar month navigation", () => {
     expect(screen.getByRole("button", { name: "Add Reminder" })).toBeEnabled()
   })
 })
-
