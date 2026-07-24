@@ -191,6 +191,24 @@ describe("calendar month navigation", () => {
     expect(screen.getByText("July 2026")).toBeInTheDocument()
   })
 
+  it("does not move focus when navigating left from the first calendar cell", () => {
+    vi.useFakeTimers()
+    vi.setSystemTime(new Date(2026, 6, 15, 12))
+
+    renderWithProviders(<App />)
+
+    const firstGridCell = screen
+      .getByRole("grid", { name: "July 2026" })
+      .querySelectorAll('[role="row"]')[1]
+      .querySelector('[role="button"]')!
+
+    firstGridCell.focus()
+    expect(firstGridCell).toHaveFocus()
+
+    fireEvent.keyDown(firstGridCell, { key: "ArrowLeft" })
+    expect(firstGridCell).toHaveFocus()
+  })
+
   it("resynchronizes today when the page becomes visible or focused", () => {
     vi.useFakeTimers()
     vi.setSystemTime(new Date(2026, 6, 15, 12))
