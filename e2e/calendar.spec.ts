@@ -216,3 +216,52 @@ test("persists reminder creation and deletion across reloads", async ({
   ).toHaveText("No reminders yet.")
 })
 
+test("supports calendar keyboard traversal and opens agenda on Enter", async ({
+  page,
+}) => {
+  const currentDateButton = page.locator('button[aria-current="date"]')
+  await expect(currentDateButton).toHaveCount(1)
+
+  const initialFocusedLabel = await currentDateButton.getAttribute("aria-label")
+  expect(initialFocusedLabel).toBeTruthy()
+
+  await currentDateButton.focus()
+  await page.keyboard.press("ArrowRight")
+
+  const rightFocusLabel = await page.evaluate(() => {
+    return document.activeElement?.getAttribute("aria-label")
+  })
+  expect(rightFocusLabel).toBeTruthy()
+  expect(rightFocusLabel).not.toBe(initialFocusedLabel)
+
+  await page.keyboard.press("ArrowDown")
+  const downFocusLabel = await page.evaluate(() => {
+    return document.activeElement?.getAttribute("aria-label")
+  })
+  expect(downFocusLabel).toBeTruthy()
+  expect(downFocusLabel).not.toBe(rightFocusLabel)
+
+  await page.keyboard.press("Home")
+  const homeFocusLabel = await page.evaluate(() => {
+    return document.activeElement?.getAttribute("aria-label")
+  })
+  expect(homeFocusLabel).toBeTruthy()
+  expect(homeFocusLabel).not.toBe(downFocusLabel)
+
+  await page.keyboard.press("Enter")
+  const agendaDialog = page.getByRole("dialog", { name: /^Agenda:/ })
+  await expect(agendaDialog).toBeVisible()
+
+  const closeAgenda = agendaDialog.getByRole("button", {
+    name: /^Close Agenda: /,
+  })
+  await expect(closeAgenda).toBeVisible()
+  await page.keyboard.press("Escape")
+  await expect(agendaDialog).toBeHidden()
+
+  const nextFocusedLabel = await page.evaluate(() => {
+    return document.activeElement?.getAttribute("aria-label")
+  })
+  expect(nextFocusedLabel).toBe(homeFocusLabel)
+})
+
