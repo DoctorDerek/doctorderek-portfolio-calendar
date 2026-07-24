@@ -216,6 +216,32 @@ test("persists reminder creation and deletion across reloads", async ({
   ).toHaveText("No reminders yet.")
 })
 
+test("saves a selected reminder color and exposes it in the agenda list", async ({
+  page,
+}) => {
+  await page.getByRole("button", { name: "Add Reminder" }).click()
+  await page.getByRole("textbox", { name: "Reminder" }).fill("Violet mode")
+  await page
+    .getByRole("button", { name: "Select color Tomato" })
+    .click()
+  await page.getByRole("button", { name: "Save Reminder" }).click()
+
+  await expect(page.getByRole("dialog", { name: "Add Reminder" })).toBeHidden()
+
+  const currentDateButton = page.locator('button[aria-current="date"]')
+  await currentDateButton.click()
+
+  const agendaDialog = page.getByRole("dialog", { name: /^Agenda:/ })
+  await expect(agendaDialog).toBeVisible()
+
+  const reminderItem = agendaDialog.locator("li", { hasText: "Violet mode" })
+  await expect(reminderItem).toBeVisible()
+  await expect(reminderItem).toHaveAttribute(
+    "style",
+    /--agenda-reminder-color:\s*Tomato/,
+  )
+})
+
 test("supports calendar keyboard traversal and opens agenda on Enter", async ({
   page,
 }) => {
