@@ -128,7 +128,9 @@ describe("calendar month navigation", () => {
     })
     januaryThirtyFirst.focus()
 
-    fireEvent.keyDown(document.activeElement ?? document.body, { key: "PageDown" })
+    fireEvent.keyDown(document.activeElement ?? document.body, {
+      key: "PageDown",
+    })
     expect(screen.getByText("February 2026")).toBeInTheDocument()
     expect(
       screen.getByRole("button", {
@@ -197,7 +199,9 @@ describe("calendar month navigation", () => {
 
     renderWithProviders(<App />)
 
-    const firstGridCell = within(screen.getByRole("grid", { name: "July 2026" })).getAllByRole("button")[0]
+    const firstGridCell = within(
+      screen.getByRole("grid", { name: "July 2026" }),
+    ).getAllByRole("button")[0]
 
     firstGridCell.focus()
     expect(firstGridCell).toHaveFocus()
