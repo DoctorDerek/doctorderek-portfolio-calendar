@@ -280,6 +280,21 @@ describe("calendar month navigation", () => {
     expect(lastCell).toHaveFocus()
   })
 
+  it("ignores non-navigation keys without moving focus", () => {
+    vi.useFakeTimers()
+    vi.setSystemTime(new Date(2026, 6, 15, 12))
+
+    renderWithProviders(<App />)
+
+    const activeDateButton = screen.getByRole("button", {
+      name: formatCalendarDayAccessibleName(new Date(2026, 6, 15)),
+    })
+    activeDateButton.focus()
+
+    fireEvent.keyDown(activeDateButton, { key: "a" })
+    expect(activeDateButton).toHaveFocus()
+  })
+
   it("resynchronizes today when the page becomes visible or focused", () => {
     vi.useFakeTimers()
     vi.setSystemTime(new Date(2026, 6, 15, 12))
