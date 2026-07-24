@@ -87,6 +87,22 @@ describe("reminder dialog interactions", () => {
     expect(screen.queryByText("Dismissed reminder")).not.toBeInTheDocument()
   })
 
+  it("closes the dialog when Escape is pressed", async () => {
+    renderWithProviders(<App />)
+
+    fireEvent.click(screen.getByRole("button", { name: "Add Reminder" }))
+
+    fireEvent.keyDown(screen.getByRole("dialog", { name: "Add Reminder" }), {
+      key: "Escape",
+    })
+
+    await waitFor(() => {
+      expect(
+        screen.queryByRole("dialog", { name: "Add Reminder" }),
+      ).not.toBeInTheDocument()
+    })
+  })
+
   it("starts a clean draft whenever the dialog reopens", async () => {
     const firstSessionDate = new Date("2026-07-18T16:00:00.000Z")
     const secondSessionDate = new Date("2026-07-19T17:30:00.000Z")
@@ -173,4 +189,3 @@ describe("reminder dialog interactions", () => {
     )
   })
 })
-
