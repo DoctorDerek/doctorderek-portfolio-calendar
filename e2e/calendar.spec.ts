@@ -329,3 +329,18 @@ test("returns focus to the active date after closing agenda with Escape", async 
   await expect(agendaDialog).toBeHidden()
   await expect(currentDateButton).toBeFocused()
 })
+
+test("submits reminder with Enter and closes Add Reminder dialog", async ({
+  page,
+}) => {
+  const addReminderButton = page.getByRole("button", { name: "Add Reminder" })
+  await addReminderButton.click()
+
+  const reminderInput = page.getByRole("textbox", { name: "Reminder" })
+  await reminderInput.fill("Enter-saves reminder")
+  await page.keyboard.press("Enter")
+
+  const addReminderDialog = page.getByRole("dialog", { name: "Add Reminder" })
+  await expect(addReminderDialog).toBeHidden()
+  await expect(page.getByText("Enter-saves reminder")).toBeVisible()
+})
