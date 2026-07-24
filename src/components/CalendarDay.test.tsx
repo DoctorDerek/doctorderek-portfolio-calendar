@@ -141,6 +141,30 @@ describe("calendar day interactions", () => {
     expect(onActive).toHaveBeenCalledTimes(2)
   })
 
+  it("forwards keyboard events to the supplied keydown handler", () => {
+    const onKeyDown = vi.fn()
+    const selectedDate = new Date(2026, 6, 15, 12)
+
+    renderWithProviders(
+      <CalendarDay
+        actualToday={selectedDate}
+        onActive={() => undefined}
+        onKeyDown={onKeyDown}
+        selectedDate={selectedDate}
+        tabIndex={0}
+        visibleMonth={selectedDate}
+      />,
+    )
+
+    const calendarDay = screen.getByRole("button", {
+      name: "Wednesday July 15, 2026",
+    })
+
+    fireEvent.keyDown(calendarDay, { key: "a" })
+
+    expect(onKeyDown).toHaveBeenCalledTimes(1)
+  })
+
   it("shows reminder details immediately when hour view is enabled", () => {
     const selectedDate = new Date(2026, 6, 15, 12)
     const reminderState: RootState = {
