@@ -242,6 +242,31 @@ test("saves a selected reminder color and exposes it in the agenda list", async 
   )
 })
 
+test("opens agenda-scoped Add Reminder using the day-specific action", async ({
+  page,
+}) => {
+  const currentDateButton = page.locator('button[aria-current="date"]')
+  await currentDateButton.click()
+
+  const agendaDialog = page.getByRole("dialog", { name: /^Agenda:/ })
+  await expect(agendaDialog).toBeVisible()
+
+  const agendaReminderButton = agendaDialog.getByRole("button", {
+    name: /^Add Reminder for /,
+  })
+  await agendaReminderButton.click()
+
+  const addReminderDialog = page.getByRole("dialog", { name: "Add Reminder" })
+  await expect(addReminderDialog).toBeVisible()
+  await page.getByRole("textbox", { name: "Reminder" }).fill(
+    "Agenda-scoped reminder",
+  )
+  await page.getByRole("button", { name: "Save Reminder" }).click()
+
+  await expect(addReminderDialog).toBeHidden()
+  await expect(agendaDialog.getByText("Agenda-scoped reminder")).toBeVisible()
+})
+
 test("supports calendar keyboard traversal and opens agenda on Enter", async ({
   page,
 }) => {
