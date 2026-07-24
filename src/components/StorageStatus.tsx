@@ -5,9 +5,11 @@ export default function StorageStatus() {
   const { failureMessages } = useAppSelector(
     ({ storageStatus }) => storageStatus,
   )
-  const message =
-    failureMessages.reminders ?? failureMessages.displayPreference ?? null
-  if (!message) return null
+  const messages = [
+    failureMessages.reminders,
+    failureMessages.displayPreference,
+  ].filter((message): message is string => message !== undefined)
+  if (!messages.length) return null
 
   return (
     <Alert
@@ -16,7 +18,7 @@ export default function StorageStatus() {
       role="status"
       severity="warning"
     >
-      {message}
+      {messages.join(" ")}
     </Alert>
   )
 }
