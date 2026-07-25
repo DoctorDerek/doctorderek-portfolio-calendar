@@ -216,9 +216,7 @@ describe("reminder dialog interactions", () => {
     const { store } = renderWithProviders(<App />)
 
     fireEvent.click(screen.getByRole("button", { name: "Add Reminder" }))
-    fireEvent.click(
-      screen.getByRole("button", { name: "Select color Tomato" }),
-    )
+    fireEvent.click(screen.getByRole("button", { name: "Select color Tomato" }))
     fireEvent.change(screen.getByRole("textbox", { name: "Reminder" }), {
       target: { value: "Color persists" },
     })

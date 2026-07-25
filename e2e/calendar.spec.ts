@@ -221,9 +221,7 @@ test("saves a selected reminder color and exposes it in the agenda list", async 
 }) => {
   await page.getByRole("button", { name: "Add Reminder" }).click()
   await page.getByRole("textbox", { name: "Reminder" }).fill("Violet mode")
-  await page
-    .getByRole("button", { name: "Select color Tomato" })
-    .click()
+  await page.getByRole("button", { name: "Select color Tomato" }).click()
   await page.getByRole("button", { name: "Save Reminder" }).click()
 
   await expect(page.getByRole("dialog", { name: "Add Reminder" })).toBeHidden()
@@ -258,9 +256,9 @@ test("opens agenda-scoped Add Reminder using the day-specific action", async ({
 
   const addReminderDialog = page.getByRole("dialog", { name: "Add Reminder" })
   await expect(addReminderDialog).toBeVisible()
-  await page.getByRole("textbox", { name: "Reminder" }).fill(
-    "Agenda-scoped reminder",
-  )
+  await page
+    .getByRole("textbox", { name: "Reminder" })
+    .fill("Agenda-scoped reminder")
   await page.getByRole("button", { name: "Save Reminder" }).click()
 
   await expect(addReminderDialog).toBeHidden()
@@ -352,7 +350,9 @@ test("does not wrap focus when navigating calendar edges", async ({ page }) => {
   expect(await lastGridButton.getAttribute("aria-label")).toBe(lastLabel)
 })
 
-test("returns focus to Add Reminder after closing with Escape", async ({ page }) => {
+test("returns focus to Add Reminder after closing with Escape", async ({
+  page,
+}) => {
   const addReminderButton = page.getByRole("button", { name: "Add Reminder" })
 
   await addReminderButton.focus()
@@ -391,9 +391,7 @@ test("returns focus to the active date after clicking agenda close", async ({
   const agendaDialog = page.getByRole("dialog", { name: /^Agenda:/ })
   await expect(agendaDialog).toBeVisible()
 
-  await agendaDialog
-    .getByRole("button", { name: /^Close Agenda: / })
-    .click()
+  await agendaDialog.getByRole("button", { name: /^Close Agenda: / }).click()
 
   await expect(agendaDialog).toBeHidden()
   await expect(currentDateButton).toBeFocused()

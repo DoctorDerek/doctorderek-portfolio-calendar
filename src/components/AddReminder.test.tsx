@@ -101,27 +101,27 @@ describe("reminder form controls", () => {
       name: "Save Reminder",
     })
 
-    expect(
-      screen.getByText("30 characters max"),
-    ).toHaveTextContent("30 characters max")
+    expect(screen.getByText("30 characters max")).toHaveTextContent(
+      "30 characters max",
+    )
     expect(saveReminderButton).toBeDisabled()
 
     fireEvent.change(reminderTextField, {
       target: { value: "one" },
     })
 
-    expect(
-      screen.getByText("27 characters remaining"),
-    ).toHaveTextContent("27 characters remaining")
+    expect(screen.getByText("27 characters remaining")).toHaveTextContent(
+      "27 characters remaining",
+    )
     expect(saveReminderButton).toBeEnabled()
 
     fireEvent.change(reminderTextField, {
       target: { value: "aaaaaaaaaaaaaaaaaaaaaaaa" },
     })
 
-    expect(document.getElementById("reminder-character-count")).toHaveTextContent(
-      "6 characters remaining",
-    )
+    expect(
+      document.getElementById("reminder-character-count"),
+    ).toHaveTextContent("6 characters remaining")
   })
 
   it("uses the current time when no initiating date was requested", () => {

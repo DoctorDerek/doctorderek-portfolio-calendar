@@ -16,14 +16,14 @@ describe("add reminder quick action", () => {
     const { store } = renderWithProviders(<AddReminderFab />)
 
     fireEvent.click(screen.getByRole("button", { name: "Add Reminder" }))
-    expect(store.getState().addReminder.dateISOString).toBe(fixedNow.toISOString())
+    expect(store.getState().addReminder.dateISOString).toBe(
+      fixedNow.toISOString(),
+    )
   })
 
   it("opens a reminder flow for a selected date when one is provided", () => {
     const targetDate = new Date(2026, 6, 21, 9, 30, 0)
-    const { store } = renderWithProviders(
-      <AddReminderFab date={targetDate} />,
-    )
+    const { store } = renderWithProviders(<AddReminderFab date={targetDate} />)
 
     fireEvent.click(
       screen.getByRole("button", {
@@ -31,6 +31,8 @@ describe("add reminder quick action", () => {
       }),
     )
 
-    expect(store.getState().addReminder.dateISOString).toBe(targetDate.toISOString())
+    expect(store.getState().addReminder.dateISOString).toBe(
+      targetDate.toISOString(),
+    )
   })
 })

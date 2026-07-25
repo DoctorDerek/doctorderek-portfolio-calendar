@@ -45,7 +45,9 @@ test("has no automated violations across primary calendar states", async ({
   await expectNoAccessibilityViolations(page)
 })
 
-test("has no automated violations on initial light calendar", async ({ page }) => {
+test("has no automated violations on initial light calendar", async ({
+  page,
+}) => {
   await expectNoAccessibilityViolations(page)
 })
 
@@ -69,4 +71,3 @@ test("has no automated violations on Agenda dialog", async ({ page }) => {
 
   await expectNoAccessibilityViolations(page)
 })
-
