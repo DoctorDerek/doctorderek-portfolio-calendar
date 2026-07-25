@@ -36,7 +36,9 @@ describe("calendar grid keyboard navigation", () => {
     expect(onVisibleMonthChange).not.toHaveBeenCalled()
     const finalCallCount = onActiveDateChange.mock.calls.length
     expect(finalCallCount).toBeGreaterThan(initialCallCount + 1)
-    const [nextDate] = onActiveDateChange.mock.calls[finalCallCount - 1] as [Date]
+    const [nextDate] = onActiveDateChange.mock.calls[finalCallCount - 1] as [
+      Date,
+    ]
     expect(nextDate.getFullYear()).toBe(2026)
     expect(nextDate.getMonth()).toBe(6)
     expect(nextDate.getDate()).toBe(18)
