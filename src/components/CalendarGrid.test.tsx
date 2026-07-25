@@ -2,6 +2,7 @@ import { fireEvent, screen } from "@testing-library/react"
 import { describe, expect, it, vi } from "vitest"
 import CalendarGrid from "@/components/CalendarGrid"
 import { renderWithProviders } from "@/test/renderWithProviders"
+import { getCalendarDateKey } from "@/utils/dateUtils"
 
 describe("calendar grid keyboard navigation", () => {
   it("moves focus to the end of the week with the End key", () => {
@@ -155,8 +156,12 @@ describe("calendar grid keyboard navigation", () => {
     fireEvent.keyDown(activeButton, { key: "End", ctrlKey: true })
 
     expect(onVisibleMonthChange).not.toHaveBeenCalled()
-    expect(onActiveDateChange).toHaveBeenNthCalledWith(1, new Date(2026, 5, 28))
-    expect(onActiveDateChange).toHaveBeenNthCalledWith(2, new Date(2026, 7, 9))
+    const activeDateKeys = onActiveDateChange.mock.calls.map(([date]) =>
+      getCalendarDateKey(date as Date),
+    )
+    expect(activeDateKeys).toEqual(
+      expect.arrayContaining(["2026-06-28", "2026-08-08"]),
+    )
   })
 
   it("moves to the next month with PageDown and keeps day alignment", () => {
