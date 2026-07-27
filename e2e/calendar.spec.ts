@@ -240,6 +240,37 @@ test("saves a selected reminder color and exposes it in the agenda list", async 
   )
 })
 
+test("respects the reduced-motion preference for reminder lifecycle transitions", async ({
+  page,
+}) => {
+  await page.emulateMedia({ reducedMotion: "reduce" })
+  await page.reload()
+
+  await page.getByRole("button", { name: "Add Reminder" }).click()
+  await page
+    .getByRole("textbox", { name: "Reminder" })
+    .fill("Reduced motion review")
+  await page.getByRole("button", { name: "Save Reminder" }).click()
+
+  const currentDateButton = page.locator('button[aria-current="date"]')
+  await currentDateButton.click()
+
+  const agendaDialog = page.getByRole("dialog", { name: /^Agenda:/ })
+  const reminderItem = agendaDialog.locator("li", {
+    hasText: "Reduced motion review",
+  })
+  await expect(reminderItem).toBeVisible()
+
+  const reducedMotionState = await reminderItem.evaluate((element) => ({
+    animationCount: element.getAnimations().length,
+    transform: getComputedStyle(element).transform,
+  }))
+  expect(reducedMotionState).toEqual({
+    animationCount: 0,
+    transform: "none",
+  })
+})
+
 test("opens agenda-scoped Add Reminder using the day-specific action", async ({
   page,
 }) => {
