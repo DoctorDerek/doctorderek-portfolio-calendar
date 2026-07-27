@@ -1,7 +1,7 @@
 import CloseIcon from "@mui/icons-material/Close"
 import dayjs from "dayjs"
-import { AnimatePresence, MotionConfig, motion } from "motion/react"
-import type { CSSProperties } from "react"
+import { AnimatePresence, motion, MotionConfig } from "motion/react"
+import { forwardRef, type CSSProperties } from "react"
 import AddReminderFab from "@/components/AddReminderFab"
 import CustomDialog from "@/components/CustomDialog"
 import CustomIcon from "@/components/CustomIcon"
@@ -48,7 +48,7 @@ export default function AgendaDay() {
         <MotionConfig reducedMotion="user">
           <ul
             aria-label={reminderListLabel}
-            className="flex flex-col space-y-1"
+            className="relative flex flex-col space-y-1"
           >
             <AnimatePresence initial={false} mode="popLayout">
               {agendaReminders.map((reminder) => (
@@ -71,36 +71,38 @@ export default function AgendaDay() {
   )
 }
 
-function AgendaReminder({
-  reminder,
-  onDeleteReminder,
-}: {
+type AgendaReminderProps = {
   reminder: Reminder
   onDeleteReminder: (id: string) => void
-}) {
-  const { id, dateISOString, color, text } = reminder
-  const time = formatReminderTime(dayjs(dateISOString).toDate())
-  const reminderColorStyle: AgendaReminderColorStyle = {
-    "--agenda-reminder-color": color,
-  }
-  return (
-    <motion.li
-      className="flex items-start justify-between gap-2 rounded-2xl border-0 border-solid bg-[var(--agenda-reminder-color)] py-1 pr-2 pl-3 text-base sm:items-center sm:rounded-3xl sm:text-xl dark:border dark:border-[var(--agenda-reminder-color)] dark:bg-transparent dark:pr-1 dark:pl-2"
-      style={reminderColorStyle}
-      initial={{ opacity: 0, y: 8 }}
-      animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, y: -4 }}
-      layout="position"
-      transition={AGENDA_REMINDER_MOTION_TRANSITION}
-    >
-      <ReminderInterior
-        text={text}
-        time={time}
-        onDelete={() => onDeleteReminder(id)}
-      />
-    </motion.li>
-  )
 }
+
+const AgendaReminder = forwardRef<HTMLLIElement, AgendaReminderProps>(
+  function AgendaReminder({ reminder, onDeleteReminder }, ref) {
+    const { id, dateISOString, color, text } = reminder
+    const time = formatReminderTime(dayjs(dateISOString).toDate())
+    const reminderColorStyle: AgendaReminderColorStyle = {
+      "--agenda-reminder-color": color,
+    }
+    return (
+      <motion.li
+        ref={ref}
+        className="flex items-start justify-between gap-2 rounded-2xl border-0 border-solid bg-[var(--agenda-reminder-color)] py-1 pr-2 pl-3 text-base sm:items-center sm:rounded-3xl sm:text-xl dark:border dark:border-[var(--agenda-reminder-color)] dark:bg-transparent dark:pr-1 dark:pl-2"
+        style={reminderColorStyle}
+        initial={{ opacity: 0, y: 8 }}
+        animate={{ opacity: 1, y: 0 }}
+        exit={{ opacity: 0, y: -4 }}
+        layout="position"
+        transition={AGENDA_REMINDER_MOTION_TRANSITION}
+      >
+        <ReminderInterior
+          text={text}
+          time={time}
+          onDelete={() => onDeleteReminder(id)}
+        />
+      </motion.li>
+    )
+  },
+)
 
 function ReminderInterior({
   text,
