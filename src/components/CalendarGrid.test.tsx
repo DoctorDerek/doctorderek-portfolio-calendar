@@ -5,6 +5,27 @@ import { renderWithProviders } from "@/test/renderWithProviders"
 import { getCalendarDateKey } from "@/utils/dateUtils"
 
 describe("calendar grid keyboard navigation", () => {
+  it("centers weekday headers within their calendar columns", () => {
+    const activeDate = new Date(2026, 6, 15, 12)
+
+    renderWithProviders(
+      <CalendarGrid
+        actualToday={activeDate}
+        activeDate={activeDate}
+        onActiveDateChange={vi.fn()}
+        onVisibleMonthChange={vi.fn()}
+        visibleMonth={new Date(2026, 6, 1)}
+      />,
+    )
+
+    const weekdayHeaders = screen.getAllByRole("columnheader")
+
+    expect(weekdayHeaders).toHaveLength(7)
+    weekdayHeaders.forEach((weekdayHeader) => {
+      expect(weekdayHeader).toHaveClass("text-center")
+    })
+  })
+
   it("moves focus to the end of the week with the End key", () => {
     const onActiveDateChange = vi.fn()
     const onVisibleMonthChange = vi.fn()
