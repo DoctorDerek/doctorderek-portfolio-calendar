@@ -15,6 +15,15 @@ describe("calendar reminder display toggle", () => {
     expect(showHoursButton).toHaveAttribute("aria-pressed", "false")
     expect(screen.getByText("Icons")).toBeInTheDocument()
 
+    const toggleThumb = showHoursButton.querySelector("div")
+    expect(showHoursButton).toHaveClass("transition-colors", "duration-200")
+    expect(toggleThumb).toHaveClass(
+      "transition-transform",
+      "duration-200",
+      "ease-out",
+      "translate-x-14",
+    )
+
     fireEvent.click(showHoursButton)
 
     expect(
@@ -23,6 +32,7 @@ describe("calendar reminder display toggle", () => {
       }),
     ).toHaveAttribute("aria-pressed", "true")
     expect(screen.getByText("Hours")).toBeInTheDocument()
+    expect(toggleThumb).toHaveClass("translate-x-0")
 
     fireEvent.click(
       screen.getByRole("button", {
@@ -36,5 +46,6 @@ describe("calendar reminder display toggle", () => {
       }),
     ).toHaveAttribute("aria-pressed", "false")
     expect(screen.getByText("Icons")).toBeInTheDocument()
+    expect(toggleThumb).toHaveClass("translate-x-14")
   })
 })
