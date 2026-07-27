@@ -271,6 +271,46 @@ test("respects the reduced-motion preference for reminder lifecycle transitions"
   })
 })
 
+test("preserves neighboring agenda reminders after a Motion exit", async ({
+  page,
+}) => {
+  for (const reminderText of [
+    "First lifecycle reminder",
+    "Second lifecycle reminder",
+  ]) {
+    await page.getByRole("button", { name: "Add Reminder" }).click()
+    await page.getByRole("textbox", { name: "Reminder" }).fill(reminderText)
+    await page.getByRole("button", { name: "Save Reminder" }).click()
+    await expect(
+      page.getByRole("dialog", { name: "Add Reminder" }),
+    ).toBeHidden()
+  }
+
+  const currentDateButton = page.locator('button[aria-current="date"]')
+  await currentDateButton.focus()
+  await currentDateButton.press("Enter")
+  const agendaDialog = page.getByRole("dialog", { name: /^Agenda:/ })
+  await expect(agendaDialog).toBeVisible()
+  const reminderList = agendaDialog.getByRole("list", {
+    name: /^Reminders for /,
+  })
+  await expect(reminderList.getByRole("listitem")).toHaveCount(2)
+
+  await reminderList
+    .getByRole("button", {
+      name: /Delete reminder .* First lifecycle reminder/,
+    })
+    .click()
+
+  await expect(reminderList.getByText("First lifecycle reminder")).toHaveCount(
+    0,
+  )
+  await expect(
+    reminderList.getByText("Second lifecycle reminder"),
+  ).toBeVisible()
+  await expect(reminderList.getByRole("listitem")).toHaveCount(1)
+})
+
 test("opens agenda-scoped Add Reminder using the day-specific action", async ({
   page,
 }) => {
