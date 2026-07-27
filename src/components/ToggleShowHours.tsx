@@ -29,7 +29,7 @@ export default function ToggleShowHours() {
       aria-pressed={showHours}
       title={ariaLabel}
       className={combineClassNames(
-        "relative h-10 w-24 rounded-full border-0 bg-transparent p-0 text-base font-bold backdrop-blur backdrop-filter transition-all duration-500 focus-visible:ring-2 focus-visible:ring-purple-500",
+        "relative h-10 w-24 rounded-full border-0 bg-transparent p-0 text-base font-bold backdrop-blur backdrop-filter transition-colors duration-200 ease-out focus-visible:ring-2 focus-visible:ring-purple-500",
         color === "gray" &&
           "border-gray-300 text-gray-500 hover:border-gray-500 hover:bg-gray-300 hover:text-gray-700",
         color === "purple" &&
@@ -43,7 +43,7 @@ export default function ToggleShowHours() {
       )}
       <div
         className={combineClassNames(
-          "dark:bg-opacity-80 flex h-10 w-10 items-center justify-center rounded-full border border-solid bg-gray-100 fill-current transition-all duration-500",
+          "dark:bg-opacity-80 flex h-10 w-10 items-center justify-center rounded-full border border-solid bg-gray-100 fill-current transition-transform duration-200 ease-out",
           color === "gray" &&
             "border-gray-300 text-gray-500 hover:border-gray-500 hover:bg-gray-300 hover:text-gray-700",
           color === "purple" &&
