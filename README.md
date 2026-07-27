@@ -17,15 +17,15 @@ A responsive TypeScript calendar for creating, color-coding, reviewing, and dele
 
 ## Technology
 
-| Domain                 | Implementation                                                       |
-| ---------------------- | -------------------------------------------------------------------- |
-| Application            | Next.js 16 and React 19                                              |
-| State                  | Redux Toolkit 2 and React Redux 9                                    |
-| Interface              | Material UI 6, MUI X 7, Tailwind CSS 4, and Emotion 11               |
-| Interaction            | next-themes 0.4, native CSS transitions, and reduced-motion support  |
-| Dates                  | Day.js 1                                                             |
-| Tooling                | TypeScript 6, ESLint 9, Prettier 3, Node.js 24, and pnpm 11          |
-| Quality infrastructure | Vitest 4, Playwright 1, GitHub Actions, Vercel previews, and Codecov |
+| Domain                 | Implementation                                                                                                |
+| ---------------------- | ------------------------------------------------------------------------------------------------------------- |
+| Application            | Next.js 16 and React 19                                                                                       |
+| State                  | Redux Toolkit 2 and React Redux 9                                                                             |
+| Interface              | Material UI 6, MUI X 7, Tailwind CSS 4, and Emotion 11                                                        |
+| Interaction            | next-themes 0.4, Motion reminder-list choreography, native CSS transitions, and system reduced-motion support |
+| Dates                  | Day.js 1                                                                                                      |
+| Tooling                | TypeScript 6, ESLint 9, Prettier 3, Node.js 24, and pnpm 11                                                   |
+| Quality infrastructure | Vitest 4, Playwright 1, GitHub Actions, Vercel previews, and Codecov                                          |
 
 Production builds run strict TypeScript validation. Pull requests run ESLint and Vitest coverage, while successful Vercel preview deployments trigger Playwright across Chromium, Firefox, and WebKit. The test suite covers calendar navigation and day selection, theme and display toggles, reminder persistence and workflows, keyboard interaction, accessibility-sensitive behavior, and reduced-motion behavior.
 
