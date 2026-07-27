@@ -21,6 +21,12 @@ describe("add reminder quick action", () => {
     )
   })
 
+  it("shows the add reminder action beside its plus icon", () => {
+    renderWithProviders(<AddReminderFab />)
+
+    expect(screen.getByText("Add Reminder")).toBeVisible()
+  })
+
   it("opens a reminder flow for a selected date when one is provided", () => {
     const targetDate = new Date(2026, 6, 21, 9, 30, 0)
     const { store } = renderWithProviders(<AddReminderFab date={targetDate} />)
