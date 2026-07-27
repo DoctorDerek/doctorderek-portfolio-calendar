@@ -56,7 +56,7 @@ function CalendarGridDaysRow() {
       {CALENDAR_WEEKDAY_NAMES.map((weekdayName) => (
         <Typography
           aria-label={weekdayName}
-          className="mx-auto text-xs font-semibold text-gray-900 drop-shadow-sm sm:text-base lg:text-lg dark:text-gray-100"
+          className="mx-auto text-center text-xs font-semibold text-gray-900 drop-shadow-sm sm:text-base lg:text-lg dark:text-gray-100"
           key={weekdayName}
           role="columnheader"
         >
