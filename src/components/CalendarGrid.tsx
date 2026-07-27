@@ -4,8 +4,8 @@ import { useEffect, useRef, type KeyboardEvent } from "react"
 import CalendarDay from "@/components/CalendarDay"
 import {
   CALENDAR_WEEKDAY_NAMES,
-  getCalendarDateKey,
   getCalendarDateInMonth,
+  getCalendarDateKey,
   getMonthCells,
 } from "@/utils/dateUtils"
 
@@ -126,9 +126,7 @@ function CalendarGridMonth({
         case "Home":
           return event.ctrlKey ? 0 : selectedWeekStartIndex
         case "End":
-          return event.ctrlKey
-            ? calendarCells.length - 1
-            : selectedWeekEndIndex
+          return event.ctrlKey ? calendarCells.length - 1 : selectedWeekEndIndex
         case "PageDown":
           return { direction: event.shiftKey ? 12 : 1, selectedDate }
         case "PageUp":
@@ -210,4 +208,3 @@ function CalendarGridMonth({
     </div>
   )
 }
-

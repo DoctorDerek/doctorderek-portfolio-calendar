@@ -41,4 +41,3 @@ const storageStatusSlice = createSlice({
 export const { storageFailureReported, storageRecovered } =
   storageStatusSlice.actions
 export default storageStatusSlice.reducer
-

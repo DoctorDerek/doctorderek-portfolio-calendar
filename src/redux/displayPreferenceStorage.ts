@@ -86,4 +86,3 @@ export const persistDisplayPreference = (
     return { status: "failure", errorMessage: getErrorMessage(error) }
   }
 }
-

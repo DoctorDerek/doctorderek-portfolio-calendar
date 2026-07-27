@@ -15,7 +15,11 @@ vi.mock("next-themes", () => ({
 
 function MaterialThemeMode() {
   const materialTheme = useMaterialTheme()
-  return <output aria-label="Material theme mode">{materialTheme.palette.mode}</output>
+  return (
+    <output aria-label="Material theme mode">
+      {materialTheme.palette.mode}
+    </output>
+  )
 }
 
 describe("Material UI color scheme", () => {
@@ -50,8 +54,6 @@ describe("Material UI color scheme", () => {
     render(<NextIndexWrapper />)
 
     expect(screen.getByRole("heading", { level: 1 })).toBeInTheDocument()
-    expect(
-      screen.getByRole("region", { name: "Calendar" }),
-    ).toBeInTheDocument()
+    expect(screen.getByRole("region", { name: "Calendar" })).toBeInTheDocument()
   })
 })

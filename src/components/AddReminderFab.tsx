@@ -23,4 +23,3 @@ export default function AddReminderFab({ date }: { date?: Date | null }) {
     </Fab>
   )
 }
-

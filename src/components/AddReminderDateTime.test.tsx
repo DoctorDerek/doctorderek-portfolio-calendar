@@ -65,4 +65,3 @@ describe("reminder date and time selection", () => {
     expect(store.getState().reminders.reminders).toEqual([])
   })
 })
-

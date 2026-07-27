@@ -28,4 +28,3 @@ describe("storage status domains", () => {
     })
   })
 })
-
