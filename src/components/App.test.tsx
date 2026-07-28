@@ -41,6 +41,18 @@ describe("calendar month navigation", () => {
     expect(within(calendarGrid).getAllByRole("gridcell")).toHaveLength(42)
   })
 
+  it("serves the decorative background from the precompressed static asset", () => {
+    renderWithProviders(<App />)
+
+    const backgroundImage = document.querySelector('img[alt=""]')
+
+    expect(backgroundImage).toHaveAttribute(
+      "src",
+      "/benjamin-patin-dOzoyaYjCbM-unsplash-1920.webp",
+    )
+    expect(backgroundImage).not.toHaveAttribute("srcset")
+  })
+
   it("keeps one active date in the tab order across month changes", () => {
     vi.useFakeTimers()
     vi.setSystemTime(new Date(2026, 0, 31, 12))
