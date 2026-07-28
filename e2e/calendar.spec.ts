@@ -216,3 +216,269 @@ test("persists reminder creation and deletion across reloads", async ({
   ).toHaveText("No reminders yet.")
 })
 
+test("saves a selected reminder color and exposes it in the agenda list", async ({
+  page,
+}) => {
+  await page.getByRole("button", { name: "Add Reminder" }).click()
+  await page.getByRole("textbox", { name: "Reminder" }).fill("Violet mode")
+  await page.getByRole("button", { name: "Select color Tomato" }).click()
+  await page.getByRole("button", { name: "Save Reminder" }).click()
+
+  await expect(page.getByRole("dialog", { name: "Add Reminder" })).toBeHidden()
+
+  const currentDateButton = page.locator('button[aria-current="date"]')
+  await currentDateButton.click()
+
+  const agendaDialog = page.getByRole("dialog", { name: /^Agenda:/ })
+  await expect(agendaDialog).toBeVisible()
+
+  const reminderItem = agendaDialog.locator("li", { hasText: "Violet mode" })
+  await expect(reminderItem).toBeVisible()
+  await expect(reminderItem).toHaveAttribute(
+    "style",
+    /--agenda-reminder-color:\s*Tomato/,
+  )
+})
+
+test("respects the reduced-motion preference for reminder lifecycle transitions", async ({
+  page,
+}) => {
+  await page.emulateMedia({ reducedMotion: "reduce" })
+  await page.reload()
+
+  await page.getByRole("button", { name: "Add Reminder" }).click()
+  await page
+    .getByRole("textbox", { name: "Reminder" })
+    .fill("Reduced motion review")
+  await page.getByRole("button", { name: "Save Reminder" }).click()
+
+  const currentDateButton = page.locator('button[aria-current="date"]')
+  await currentDateButton.click()
+
+  const agendaDialog = page.getByRole("dialog", { name: /^Agenda:/ })
+  const reminderItem = agendaDialog.locator("li", {
+    hasText: "Reduced motion review",
+  })
+  await expect(reminderItem).toBeVisible()
+
+  const reducedMotionState = await reminderItem.evaluate((element) => ({
+    animationCount: element.getAnimations().length,
+    transform: getComputedStyle(element).transform,
+  }))
+  expect(reducedMotionState).toEqual({
+    animationCount: 0,
+    transform: "none",
+  })
+})
+
+test("preserves neighboring agenda reminders after a Motion exit", async ({
+  page,
+}) => {
+  for (const reminderText of [
+    "First lifecycle reminder",
+    "Second lifecycle reminder",
+  ]) {
+    await page.getByRole("button", { name: "Add Reminder" }).click()
+    await page.getByRole("textbox", { name: "Reminder" }).fill(reminderText)
+    await page.getByRole("button", { name: "Save Reminder" }).click()
+    await expect(
+      page.getByRole("dialog", { name: "Add Reminder" }),
+    ).toBeHidden()
+  }
+
+  const currentDateButton = page.locator('button[aria-current="date"]')
+  await currentDateButton.focus()
+  await currentDateButton.press("Enter")
+  const agendaDialog = page.getByRole("dialog", { name: /^Agenda:/ })
+  await expect(agendaDialog).toBeVisible()
+  const reminderList = agendaDialog.getByRole("list", {
+    name: /^Reminders for /,
+  })
+  await expect(reminderList.getByRole("listitem")).toHaveCount(2)
+
+  await reminderList
+    .getByRole("button", {
+      name: /Delete reminder .* First lifecycle reminder/,
+    })
+    .click()
+
+  await expect(reminderList.getByText("First lifecycle reminder")).toHaveCount(
+    0,
+  )
+  await expect(
+    reminderList.getByText("Second lifecycle reminder"),
+  ).toBeVisible()
+  await expect(reminderList.getByRole("listitem")).toHaveCount(1)
+})
+
+test("opens agenda-scoped Add Reminder using the day-specific action", async ({
+  page,
+}) => {
+  const currentDateButton = page.locator('button[aria-current="date"]')
+  await currentDateButton.click()
+
+  const agendaDialog = page.getByRole("dialog", { name: /^Agenda:/ })
+  await expect(agendaDialog).toBeVisible()
+
+  const agendaReminderButton = agendaDialog.getByRole("button", {
+    name: /^Add Reminder for /,
+  })
+  await agendaReminderButton.click()
+
+  const addReminderDialog = page.getByRole("dialog", { name: "Add Reminder" })
+  await expect(addReminderDialog).toBeVisible()
+  await page
+    .getByRole("textbox", { name: "Reminder" })
+    .fill("Agenda-scoped reminder")
+  await page.getByRole("button", { name: "Save Reminder" }).click()
+
+  await expect(addReminderDialog).toBeHidden()
+  await expect(agendaDialog.getByText("Agenda-scoped reminder")).toBeVisible()
+})
+
+test("supports calendar keyboard traversal and opens agenda on Enter", async ({
+  page,
+}) => {
+  const currentDateButton = page.locator('button[aria-current="date"]')
+  await expect(currentDateButton).toHaveCount(1)
+
+  const initialFocusedLabel = await currentDateButton.getAttribute("aria-label")
+  expect(initialFocusedLabel).toBeTruthy()
+
+  await currentDateButton.focus()
+  await page.keyboard.press("ArrowRight")
+
+  const rightFocusLabel = await page.evaluate(() => {
+    return document.activeElement?.getAttribute("aria-label")
+  })
+  expect(rightFocusLabel).toBeTruthy()
+  expect(rightFocusLabel).not.toBe(initialFocusedLabel)
+
+  await page.keyboard.press("ArrowDown")
+  const downFocusLabel = await page.evaluate(() => {
+    return document.activeElement?.getAttribute("aria-label")
+  })
+  expect(downFocusLabel).toBeTruthy()
+  expect(downFocusLabel).not.toBe(rightFocusLabel)
+
+  await page.keyboard.press("Home")
+  const homeFocusLabel = await page.evaluate(() => {
+    return document.activeElement?.getAttribute("aria-label")
+  })
+  expect(homeFocusLabel).toBeTruthy()
+  expect(homeFocusLabel).not.toBe(downFocusLabel)
+
+  await page.keyboard.press("Enter")
+  const agendaDialog = page.getByRole("dialog", { name: /^Agenda:/ })
+  await expect(agendaDialog).toBeVisible()
+
+  const closeAgenda = agendaDialog.getByRole("button", {
+    name: /^Close Agenda: /,
+  })
+  await expect(closeAgenda).toBeVisible()
+  await page.keyboard.press("Escape")
+  await expect(agendaDialog).toBeHidden()
+
+  const nextFocusedLabel = await page.evaluate(() => {
+    return document.activeElement?.getAttribute("aria-label")
+  })
+  expect(nextFocusedLabel).toBe(homeFocusLabel)
+})
+
+test("moves focus out of calendar with Tab", async ({ page }) => {
+  const activeDateButton = page.locator('button[aria-current="date"]')
+  await activeDateButton.focus()
+  await page.keyboard.press("Tab")
+
+  await expect(page.getByRole("button", { name: "Add Reminder" })).toBeFocused()
+})
+
+test("moves focus back to month controls with Shift+Tab", async ({ page }) => {
+  const activeDateButton = page.locator('button[aria-current="date"]')
+  await activeDateButton.focus()
+  await page.keyboard.press("Shift+Tab")
+
+  await expect(page.getByRole("button", { name: "Next Month" })).toBeFocused()
+})
+
+test("does not wrap focus when navigating calendar edges", async ({ page }) => {
+  const calendar = page.getByRole("grid")
+  const buttons = calendar.getByRole("button")
+  const buttonCount = await buttons.count()
+
+  const firstGridButton = buttons.first()
+  const firstLabel = await firstGridButton.getAttribute("aria-label")
+  await firstGridButton.focus()
+  await page.keyboard.press("ArrowLeft")
+  await expect(firstGridButton).toBeFocused()
+  expect(await firstGridButton.getAttribute("aria-label")).toBe(firstLabel)
+
+  const lastGridButton = buttons.nth(buttonCount - 1)
+  const lastLabel = await lastGridButton.getAttribute("aria-label")
+  await lastGridButton.focus()
+  await page.keyboard.press("ArrowRight")
+  await expect(lastGridButton).toBeFocused()
+  expect(await lastGridButton.getAttribute("aria-label")).toBe(lastLabel)
+})
+
+test("returns focus to Add Reminder after closing with Escape", async ({
+  page,
+}) => {
+  const addReminderButton = page.getByRole("button", { name: "Add Reminder" })
+
+  await addReminderButton.focus()
+  await page.keyboard.press("Enter")
+
+  const addReminderDialog = page.getByRole("dialog", { name: "Add Reminder" })
+  await expect(addReminderDialog).toBeVisible()
+  await page.keyboard.press("Escape")
+
+  await expect(addReminderDialog).toBeHidden()
+  await expect(addReminderButton).toBeFocused()
+})
+
+test("returns focus to the active date after closing agenda with Escape", async ({
+  page,
+}) => {
+  const currentDateButton = page.locator('button[aria-current="date"]')
+  await currentDateButton.focus()
+  await page.keyboard.press("Enter")
+
+  const agendaDialog = page.getByRole("dialog", { name: /^Agenda:/ })
+  await expect(agendaDialog).toBeVisible()
+
+  await page.keyboard.press("Escape")
+  await expect(agendaDialog).toBeHidden()
+  await expect(currentDateButton).toBeFocused()
+})
+
+test("returns focus to the active date after clicking agenda close", async ({
+  page,
+}) => {
+  const currentDateButton = page.locator('button[aria-current="date"]')
+  await currentDateButton.focus()
+  await page.keyboard.press("Enter")
+
+  const agendaDialog = page.getByRole("dialog", { name: /^Agenda:/ })
+  await expect(agendaDialog).toBeVisible()
+
+  await agendaDialog.getByRole("button", { name: /^Close Agenda: / }).click()
+
+  await expect(agendaDialog).toBeHidden()
+  await expect(currentDateButton).toBeFocused()
+})
+
+test("submits reminder with Enter and closes Add Reminder dialog", async ({
+  page,
+}) => {
+  const addReminderButton = page.getByRole("button", { name: "Add Reminder" })
+  await addReminderButton.click()
+
+  const reminderInput = page.getByRole("textbox", { name: "Reminder" })
+  await reminderInput.fill("Enter-saves reminder")
+  await page.keyboard.press("Enter")
+
+  const addReminderDialog = page.getByRole("dialog", { name: "Add Reminder" })
+  await expect(addReminderDialog).toBeHidden()
+  await expect(page.getByText("Enter-saves reminder")).toBeVisible()
+})

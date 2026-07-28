@@ -17,4 +17,3 @@ describe("calendar date identity", () => {
     ).toBe("2026-02-28")
   })
 })
-

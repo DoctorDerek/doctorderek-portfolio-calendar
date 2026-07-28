@@ -1,11 +1,7 @@
 import AccessAlarmIcon from "@mui/icons-material/AccessAlarm"
 import { Avatar } from "@mui/material"
 import dayjs from "dayjs"
-import {
-  useState,
-  type KeyboardEventHandler,
-  type RefCallback,
-} from "react"
+import { useState, type KeyboardEventHandler, type RefCallback } from "react"
 import { openAgenda } from "@/redux/agendaSlice"
 import { useAppDispatch, useAppSelector } from "@/redux/hooks"
 import type { ReminderColor } from "@/reminderTypes"
@@ -150,4 +146,3 @@ function ReminderIcon({ color }: { color: ReminderColor }) {
     </Avatar>
   )
 }
-

@@ -1,23 +1,9 @@
 import { fireEvent, screen } from "@testing-library/react"
-import { beforeEach, describe, expect, it, vi } from "vitest"
+import { describe, expect, it } from "vitest"
 import ToggleShowHours from "@/components/ToggleShowHours"
 import { renderWithProviders } from "@/test/renderWithProviders"
 
-const reducedMotionState = vi.hoisted(() => ({ enabled: false }))
-
-vi.mock("motion/react", async (importOriginal) => {
-  const motionModule = await importOriginal<typeof import("motion/react")>()
-  return {
-    ...motionModule,
-    useReducedMotion: () => reducedMotionState.enabled,
-  }
-})
-
 describe("calendar reminder display toggle", () => {
-  beforeEach(() => {
-    reducedMotionState.enabled = false
-  })
-
   it("switches between icon and hour presentation through one accessible button", () => {
     renderWithProviders(<ToggleShowHours />)
 
@@ -29,6 +15,15 @@ describe("calendar reminder display toggle", () => {
     expect(showHoursButton).toHaveAttribute("aria-pressed", "false")
     expect(screen.getByText("Icons")).toBeInTheDocument()
 
+    const toggleThumb = showHoursButton.querySelector("div")
+    expect(showHoursButton).toHaveClass("transition-colors", "duration-200")
+    expect(toggleThumb).toHaveClass(
+      "transition-transform",
+      "duration-200",
+      "ease-out",
+      "translate-x-14",
+    )
+
     fireEvent.click(showHoursButton)
 
     expect(
@@ -37,6 +32,7 @@ describe("calendar reminder display toggle", () => {
       }),
     ).toHaveAttribute("aria-pressed", "true")
     expect(screen.getByText("Hours")).toBeInTheDocument()
+    expect(toggleThumb).toHaveClass("translate-x-0")
 
     fireEvent.click(
       screen.getByRole("button", {
@@ -50,18 +46,6 @@ describe("calendar reminder display toggle", () => {
       }),
     ).toHaveAttribute("aria-pressed", "false")
     expect(screen.getByText("Icons")).toBeInTheDocument()
-  })
-
-  it("remains operable when reduced motion is preferred", () => {
-    reducedMotionState.enabled = true
-    renderWithProviders(<ToggleShowHours />)
-
-    fireEvent.click(
-      screen.getByRole("button", {
-        name: "Show reminder hours on the calendar",
-      }),
-    )
-
-    expect(screen.getByText("Hours")).toBeInTheDocument()
+    expect(toggleThumb).toHaveClass("translate-x-14")
   })
 })

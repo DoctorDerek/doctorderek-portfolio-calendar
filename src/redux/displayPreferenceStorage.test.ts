@@ -144,5 +144,28 @@ describe("calendar display preference persistence", () => {
       expect.any(String),
     )
   })
-})
 
+  it("fails to load display preferences when storage is unavailable", () => {
+    vi.stubGlobal("window", undefined)
+    try {
+      expect(loadDisplayPreference()).toEqual({
+        status: "failure",
+        errorMessage: "Browser storage is unavailable",
+      })
+    } finally {
+      vi.unstubAllGlobals()
+    }
+  })
+
+  it("fails to persist display preferences when storage is unavailable", () => {
+    vi.stubGlobal("window", undefined)
+    try {
+      expect(persistDisplayPreference(false)).toEqual({
+        status: "failure",
+        errorMessage: "Browser storage is unavailable",
+      })
+    } finally {
+      vi.unstubAllGlobals()
+    }
+  })
+})

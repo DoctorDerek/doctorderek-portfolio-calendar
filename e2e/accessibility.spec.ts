@@ -45,3 +45,29 @@ test("has no automated violations across primary calendar states", async ({
   await expectNoAccessibilityViolations(page)
 })
 
+test("has no automated violations on initial light calendar", async ({
+  page,
+}) => {
+  await expectNoAccessibilityViolations(page)
+})
+
+test("has no automated violations on dark calendar", async ({ page }) => {
+  await page.getByRole("button", { name: "Switch to dark theme" }).click()
+  await expect(page.locator("html")).toHaveClass(/dark/)
+
+  await expectNoAccessibilityViolations(page)
+})
+
+test("has no automated violations on Add Reminder dialog", async ({ page }) => {
+  await page.getByRole("button", { name: "Add Reminder" }).click()
+  await expect(page.getByRole("dialog", { name: "Add Reminder" })).toBeVisible()
+
+  await expectNoAccessibilityViolations(page)
+})
+
+test("has no automated violations on Agenda dialog", async ({ page }) => {
+  await page.locator('button[aria-current="date"]').click()
+  await expect(page.getByRole("dialog", { name: /^Agenda:/ })).toBeVisible()
+
+  await expectNoAccessibilityViolations(page)
+})

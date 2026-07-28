@@ -26,4 +26,3 @@ export const resolveCalendarStorage = (
     return { status: "failure", errorMessage: getErrorMessage(error) }
   }
 }
-

@@ -37,4 +37,17 @@ describe("theme toggle interactions", () => {
 
     expect(themeState.setTheme).toHaveBeenCalledWith("light")
   })
+
+  it("treats non-dark resolved themes as the light control state", () => {
+    themeState.resolvedTheme = "system"
+    render(<ToggleDarkMode />)
+
+    const themeToggle = screen.getByRole("button", {
+      name: "Switch to dark theme",
+    })
+    fireEvent.click(themeToggle)
+
+    expect(themeToggle).toHaveClass("theme-toggle--light")
+    expect(themeState.setTheme).toHaveBeenCalledWith("dark")
+  })
 })

@@ -8,4 +8,3 @@ describe("class name composition", () => {
     )
   })
 })
-

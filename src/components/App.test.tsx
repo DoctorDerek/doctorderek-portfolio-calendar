@@ -128,7 +128,9 @@ describe("calendar month navigation", () => {
     })
     januaryThirtyFirst.focus()
 
-    fireEvent.keyDown(document.activeElement ?? document.body, { key: "PageDown" })
+    fireEvent.keyDown(document.activeElement ?? document.body, {
+      key: "PageDown",
+    })
     expect(screen.getByText("February 2026")).toBeInTheDocument()
     expect(
       screen.getByRole("button", {
@@ -191,6 +193,134 @@ describe("calendar month navigation", () => {
     expect(screen.getByText("July 2026")).toBeInTheDocument()
   })
 
+  it("does not move focus when navigating left from the first calendar cell", () => {
+    vi.useFakeTimers()
+    vi.setSystemTime(new Date(2026, 6, 15, 12))
+
+    renderWithProviders(<App />)
+
+    const firstGridCell = within(
+      screen.getByRole("grid", { name: "July 2026" }),
+    ).getAllByRole("button")[0]
+
+    firstGridCell.focus()
+    expect(firstGridCell).toHaveFocus()
+
+    fireEvent.keyDown(firstGridCell, { key: "ArrowLeft" })
+    expect(firstGridCell).toHaveFocus()
+  })
+
+  it("does not move focus when navigating right from the last calendar cell", () => {
+    vi.useFakeTimers()
+    vi.setSystemTime(new Date(2026, 6, 15, 12))
+
+    renderWithProviders(<App />)
+
+    const calendarGrid = screen.getByRole("grid", { name: "July 2026" })
+    const calendarButtons = within(calendarGrid).getAllByRole("button")
+    const lastGridCell = calendarButtons[calendarButtons.length - 1]!
+
+    lastGridCell.focus()
+    expect(lastGridCell).toHaveFocus()
+
+    fireEvent.keyDown(lastGridCell, { key: "ArrowRight" })
+    expect(lastGridCell).toHaveFocus()
+  })
+
+  it("does not move focus when navigating up from the top calendar row", () => {
+    vi.useFakeTimers()
+    vi.setSystemTime(new Date(2026, 6, 15, 12))
+
+    renderWithProviders(<App />)
+
+    const calendarGrid = screen.getByRole("grid", { name: "July 2026" })
+    const firstRowButton = within(calendarGrid).getAllByRole("button")[0]!
+
+    firstRowButton.focus()
+    expect(firstRowButton).toHaveFocus()
+
+    fireEvent.keyDown(firstRowButton, { key: "ArrowUp" })
+    expect(firstRowButton).toHaveFocus()
+  })
+
+  it("does not move focus when navigating down from the bottom calendar row", () => {
+    vi.useFakeTimers()
+    vi.setSystemTime(new Date(2026, 6, 15, 12))
+
+    renderWithProviders(<App />)
+
+    const calendarGrid = screen.getByRole("grid", { name: "July 2026" })
+    const calendarButtons = within(calendarGrid).getAllByRole("button")
+    const lastRowButton = calendarButtons[calendarButtons.length - 1]!
+
+    lastRowButton.focus()
+    expect(lastRowButton).toHaveFocus()
+
+    fireEvent.keyDown(lastRowButton, { key: "ArrowDown" })
+    expect(lastRowButton).toHaveFocus()
+  })
+
+  it("does not move focus when pressing Home or End at row edge cells", () => {
+    vi.useFakeTimers()
+    vi.setSystemTime(new Date(2026, 6, 15, 12))
+
+    renderWithProviders(<App />)
+
+    const calendarGrid = screen.getByRole("grid", { name: "July 2026" })
+    const calendarButtons = within(calendarGrid).getAllByRole("button")
+    const firstCell = calendarButtons[0]!
+    const lastCell = calendarButtons[calendarButtons.length - 1]!
+
+    firstCell.focus()
+    fireEvent.keyDown(firstCell, { key: "Home" })
+    expect(firstCell).toHaveFocus()
+
+    lastCell.focus()
+    fireEvent.keyDown(lastCell, { key: "End" })
+    expect(lastCell).toHaveFocus()
+  })
+
+  it("ignores non-navigation keys without moving focus", () => {
+    vi.useFakeTimers()
+    vi.setSystemTime(new Date(2026, 6, 15, 12))
+
+    renderWithProviders(<App />)
+
+    const activeDateButton = screen.getByRole("button", {
+      name: formatCalendarDayAccessibleName(new Date(2026, 6, 15)),
+    })
+    activeDateButton.focus()
+
+    fireEvent.keyDown(activeDateButton, { key: "a" })
+    expect(activeDateButton).toHaveFocus()
+  })
+
+  it("moves to calendar extremes with Ctrl+Home and Ctrl+End", () => {
+    vi.useFakeTimers()
+    vi.setSystemTime(new Date(2026, 6, 15, 12))
+
+    renderWithProviders(<App />)
+
+    const activeDateButton = screen.getByRole("button", {
+      name: formatCalendarDayAccessibleName(new Date(2026, 6, 16)),
+    })
+    activeDateButton.focus()
+
+    fireEvent.keyDown(activeDateButton, { key: "Home", ctrlKey: true })
+
+    const firstGridCell = within(
+      screen.getByRole("grid", { name: "July 2026" }),
+    ).getAllByRole("button")[0]
+    expect(firstGridCell).toHaveFocus()
+
+    fireEvent.keyDown(firstGridCell, { key: "End", ctrlKey: true })
+
+    const lastGridCell = within(
+      screen.getByRole("grid", { name: "July 2026" }),
+    ).getAllByRole("button")[41]
+    expect(lastGridCell).toHaveFocus()
+  })
+
   it("resynchronizes today when the page becomes visible or focused", () => {
     vi.useFakeTimers()
     vi.setSystemTime(new Date(2026, 6, 15, 12))
@@ -237,4 +367,3 @@ describe("calendar month navigation", () => {
     expect(screen.getByRole("button", { name: "Add Reminder" })).toBeEnabled()
   })
 })
-

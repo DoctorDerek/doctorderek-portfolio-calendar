@@ -1,4 +1,4 @@
-import { fireEvent, screen, within } from "@testing-library/react"
+import { fireEvent, screen, waitFor, within } from "@testing-library/react"
 import { describe, expect, it } from "vitest"
 import AgendaDay from "@/components/AgendaDay"
 import type { RootState } from "@/redux/store"
@@ -103,5 +103,41 @@ describe("agenda reminder interactions", () => {
     expect(reminderItems[0]).toHaveTextContent("9:00 AMPortfolio review")
     expect(reminderItems[1]).toHaveTextContent("1:30 PMArchitecture review")
   })
-})
 
+  it("removes one reminder while preserving the remaining list semantics", async () => {
+    const remindersWithSibling: RootState = {
+      ...preloadedAgendaState,
+      reminders: {
+        reminders: [
+          ...preloadedAgendaState.reminders.reminders,
+          {
+            id: "architecture-review",
+            dateISOString: "2026-07-15T13:30:00",
+            color: "Tomato",
+            text: "Architecture review",
+          },
+        ],
+      },
+    }
+    renderWithProviders(<AgendaDay />, remindersWithSibling)
+
+    const reminderList = screen.getByRole("list", {
+      name: "Reminders for July 15, 2026",
+    })
+    fireEvent.click(
+      within(reminderList).getByRole("button", {
+        name: "Delete reminder 9:00 AM Portfolio review",
+      }),
+    )
+
+    await waitFor(() => {
+      expect(
+        within(reminderList).queryByText("Portfolio review"),
+      ).not.toBeInTheDocument()
+    })
+    expect(
+      within(reminderList).getByText("Architecture review"),
+    ).toBeInTheDocument()
+    expect(within(reminderList).getAllByRole("listitem")).toHaveLength(1)
+  })
+})

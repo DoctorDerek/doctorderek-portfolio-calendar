@@ -130,4 +130,3 @@ export const persistReminders = (
     return { status: "failure", errorMessage: getErrorMessage(error) }
   }
 }
-

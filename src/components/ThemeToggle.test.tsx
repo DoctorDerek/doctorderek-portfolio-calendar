@@ -25,4 +25,3 @@ describe("theme toggle presentation", () => {
     ).toHaveClass("theme-toggle--dark")
   })
 })
-

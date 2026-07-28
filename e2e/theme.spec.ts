@@ -114,3 +114,53 @@ test("preserves keyboard focus and honors reduced motion", async ({ page }) => {
   expect(sunTransitionDuration).toBeLessThanOrEqual(0.001)
 })
 
+test("suppresses show-hours slider motion under reduced-motion preference", async ({
+  page,
+}) => {
+  await page.emulateMedia({ reducedMotion: "reduce" })
+  await page.goto("/")
+
+  const showHoursButton = page.getByRole("button", {
+    name: "Show reminder hours on the calendar",
+  })
+  const slider = showHoursButton.locator("div").first()
+
+  const transitionDurationBefore = await slider.evaluate((element) =>
+    Number.parseFloat(window.getComputedStyle(element).transitionDuration),
+  )
+  expect(transitionDurationBefore).toBeLessThanOrEqual(0.001)
+
+  await showHoursButton.click()
+
+  const showIconsButton = page.getByRole("button", {
+    name: "Show reminder icons on the calendar",
+  })
+  const toggledSlider = showIconsButton.locator("div").first()
+  const transitionDurationAfter = await toggledSlider.evaluate((element) =>
+    Number.parseFloat(window.getComputedStyle(element).transitionDuration),
+  )
+  expect(transitionDurationAfter).toBeLessThanOrEqual(0.001)
+})
+
+test("toggles and re-toggles theme through keyboard activation", async ({
+  page,
+}) => {
+  await loadWithExplicitTheme(page, "light")
+
+  const darkThemeToggle = page.getByRole("button", {
+    name: "Switch to dark theme",
+  })
+  await darkThemeToggle.focus()
+  await expect(darkThemeToggle).toBeFocused()
+  await page.keyboard.press("Enter")
+
+  const lightThemeToggle = page.getByRole("button", {
+    name: "Switch to light theme",
+  })
+  await expect(page.locator("html")).toHaveClass(/dark/)
+  await expect(lightThemeToggle).toBeFocused()
+
+  await page.keyboard.press("Enter")
+  await expect(page.locator("html")).not.toHaveClass(/dark/)
+  await expect(darkThemeToggle).toBeFocused()
+})

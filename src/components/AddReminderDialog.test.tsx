@@ -87,6 +87,64 @@ describe("reminder dialog interactions", () => {
     expect(screen.queryByText("Dismissed reminder")).not.toBeInTheDocument()
   })
 
+  it("closes the dialog when Escape is pressed", async () => {
+    renderWithProviders(<App />)
+
+    fireEvent.click(screen.getByRole("button", { name: "Add Reminder" }))
+
+    fireEvent.keyDown(screen.getByRole("dialog", { name: "Add Reminder" }), {
+      key: "Escape",
+    })
+
+    await waitFor(() => {
+      expect(
+        screen.queryByRole("dialog", { name: "Add Reminder" }),
+      ).not.toBeInTheDocument()
+    })
+  })
+
+  it("restores focus to the launcher when the dialog is closed", async () => {
+    renderWithProviders(<App />)
+
+    const launcherButton = screen.getByRole("button", { name: "Add Reminder" })
+    launcherButton.focus()
+    fireEvent.click(launcherButton)
+
+    expect(
+      screen.getByRole("dialog", { name: "Add Reminder" }),
+    ).toBeInTheDocument()
+
+    fireEvent.click(screen.getByRole("button", { name: "Close Add Reminder" }))
+
+    await waitFor(() => {
+      expect(
+        screen.queryByRole("dialog", { name: "Add Reminder" }),
+      ).not.toBeInTheDocument()
+    })
+
+    expect(launcherButton).toHaveFocus()
+  })
+
+  it("does not save a draft when Escape closes the dialog", async () => {
+    renderWithProviders(<App />)
+
+    fireEvent.click(screen.getByRole("button", { name: "Add Reminder" }))
+    fireEvent.change(screen.getByRole("textbox", { name: "Reminder" }), {
+      target: { value: "Escape draft" },
+    })
+    fireEvent.keyDown(screen.getByRole("dialog", { name: "Add Reminder" }), {
+      key: "Escape",
+    })
+
+    await waitFor(() => {
+      expect(
+        screen.queryByRole("dialog", { name: "Add Reminder" }),
+      ).not.toBeInTheDocument()
+    })
+
+    expect(screen.queryByText("Escape draft")).not.toBeInTheDocument()
+  })
+
   it("starts a clean draft whenever the dialog reopens", async () => {
     const firstSessionDate = new Date("2026-07-18T16:00:00.000Z")
     const secondSessionDate = new Date("2026-07-19T17:30:00.000Z")
@@ -136,6 +194,44 @@ describe("reminder dialog interactions", () => {
     }
   })
 
+  it("saves the reminder and closes through form submit", async () => {
+    renderWithProviders(<App />)
+
+    fireEvent.click(screen.getByRole("button", { name: "Add Reminder" }))
+    fireEvent.change(screen.getByRole("textbox", { name: "Reminder" }), {
+      target: { value: "Enter saves reminder" },
+    })
+    fireEvent.submit(screen.getByRole("form", { name: "Reminder details" }))
+
+    await waitFor(() => {
+      expect(
+        screen.queryByRole("dialog", { name: "Add Reminder" }),
+      ).not.toBeInTheDocument()
+    })
+
+    expect(screen.getByText("Enter saves reminder")).toBeInTheDocument()
+  })
+
+  it("persists the selected reminder color when saving", async () => {
+    const { store } = renderWithProviders(<App />)
+
+    fireEvent.click(screen.getByRole("button", { name: "Add Reminder" }))
+    fireEvent.click(screen.getByRole("button", { name: "Select color Tomato" }))
+    fireEvent.change(screen.getByRole("textbox", { name: "Reminder" }), {
+      target: { value: "Color persists" },
+    })
+    fireEvent.submit(screen.getByRole("form", { name: "Reminder details" }))
+
+    await waitFor(() => {
+      expect(
+        screen.queryByRole("dialog", { name: "Add Reminder" }),
+      ).not.toBeInTheDocument()
+    })
+
+    expect(screen.getByText("Color persists")).toBeInTheDocument()
+    expect(store.getState().reminders.reminders[0].color).toBe("Tomato")
+  })
+
   it("adds reminder text to the calendar through the explicit save action", async () => {
     renderWithProviders(<App />)
 
@@ -172,5 +268,22 @@ describe("reminder dialog interactions", () => {
       "Planning session",
     )
   })
-})
 
+  it("restores focus to the launcher when Escape closes the dialog", async () => {
+    renderWithProviders(<App />)
+    const launcherButton = screen.getByRole("button", { name: "Add Reminder" })
+    launcherButton.focus()
+
+    fireEvent.click(screen.getByRole("button", { name: "Add Reminder" }))
+    fireEvent.keyDown(screen.getByRole("dialog", { name: "Add Reminder" }), {
+      key: "Escape",
+    })
+
+    await waitFor(() => {
+      expect(
+        screen.queryByRole("dialog", { name: "Add Reminder" }),
+      ).not.toBeInTheDocument()
+    })
+    expect(launcherButton).toHaveFocus()
+  })
+})

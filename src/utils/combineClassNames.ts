@@ -3,4 +3,3 @@ export default function combineClassNames(
 ) {
   return classNames.filter(Boolean).join(" ")
 }
-

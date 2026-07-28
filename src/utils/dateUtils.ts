@@ -57,4 +57,3 @@ export function getMonthCells(visibleMonth: Date) {
 
   return [...previousMonthCells, ...visibleMonthCells, ...nextMonthCells]
 }
-

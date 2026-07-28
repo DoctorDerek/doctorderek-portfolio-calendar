@@ -12,22 +12,22 @@ A responsive TypeScript calendar for creating, color-coding, reviewing, and dele
 - Create reminders with a selected date, time, color, and maximum 30-character description.
 - Keep reminders chronologically ordered and review or delete them from a daily agenda.
 - Switch calendar entries between compact icons and visible appointment times.
-- Choose an explicit light or dark theme independently of the operating-system preference.
+- Choose light or dark mode manually, or follow the operating-system preference by default.
 - Keep theme, display-mode, and navigation controls separated across mobile and desktop headers.
 
 ## Technology
 
-| Domain                 | Implementation                                                       |
-| ---------------------- | -------------------------------------------------------------------- |
-| Application            | Next.js 16 and React 19                                              |
-| State                  | Redux Toolkit 2 and React Redux 9                                    |
-| Interface              | Material UI 6, MUI X 7, Tailwind CSS 4, and Emotion 11               |
-| Interaction            | Motion 12 and next-themes 0.4                                        |
-| Dates                  | Day.js 1                                                             |
-| Tooling                | TypeScript 6, ESLint 9, Prettier 3, Node.js 24, and pnpm 11          |
-| Quality infrastructure | Vitest 4, Playwright 1, GitHub Actions, Vercel previews, and Codecov |
+| Domain                 | Implementation                                                                                                |
+| ---------------------- | ------------------------------------------------------------------------------------------------------------- |
+| Application            | Next.js 16 and React 19                                                                                       |
+| State                  | Redux Toolkit 2 and React Redux 9                                                                             |
+| Interface              | Material UI 6, MUI X 7, Tailwind CSS 4, and Emotion 11                                                        |
+| Interaction            | next-themes 0.4, Motion reminder-list choreography, native CSS transitions, and system reduced-motion support |
+| Dates                  | Day.js 1                                                                                                      |
+| Tooling                | TypeScript 6, ESLint 9, Prettier 3, Node.js 24, and pnpm 11                                                   |
+| Quality infrastructure | Vitest 4, Playwright 1, GitHub Actions, Vercel previews, and Codecov                                          |
 
-Production builds run strict TypeScript validation. Pull requests run ESLint and Vitest coverage, while Playwright is connected to successful Vercel preview deployments. Vitest now covers calendar navigation and day selection, theme and display toggles, and reminder creation, cancellation, validation, ordering, and deletion through accessible controls; expanding end-to-end coverage remains active work.
+Production builds run strict TypeScript validation. Pull requests run ESLint and Vitest coverage, while successful Vercel preview deployments trigger Playwright across Chromium, Firefox, and WebKit. The test suite covers calendar navigation and day selection, theme and display toggles, reminder persistence and workflows, keyboard interaction, accessibility-sensitive behavior, and reduced-motion behavior.
 
 ## Local development
 
@@ -56,7 +56,7 @@ git diff --check
 
 The repository also exposes `pnpm test`, `pnpm test:e2e`, and `pnpm test:e2e:ui` for its configured Vitest and Playwright environments.
 
-## Project history and provenance
+## Provenance
 
 [AmTote](https://github.com/AmTote/calendar-appointments) supplied the original React and Redux calendar as a take-home exercise and instructed candidates to fork it and submit a completed repository link. This portfolio edition preserves that provenance while documenting Dr. Derek Austin’s substantial modernization and product work, including the reminder workflow, Redux Toolkit state, strict TypeScript architecture, Next.js migration, responsive interface, theme system, continuous integration, and Vercel delivery.
 

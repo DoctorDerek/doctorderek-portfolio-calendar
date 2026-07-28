@@ -16,11 +16,12 @@ export default function AddReminderFab({ date }: { date?: Date | null }) {
   return (
     <Fab
       aria-label={ariaLabel}
-      className="static h-14 w-14 shrink-0 bg-green-600 fill-current text-white hover:bg-green-800 sm:h-16 sm:w-16"
+      className="static h-14 shrink-0 gap-1 bg-green-600 fill-current px-4 text-white hover:bg-green-800 sm:h-16"
       onClick={onFabAddClick}
+      variant="extended"
     >
-      <AddIcon className="h-9 w-9 sm:h-12 sm:w-12" />
+      <AddIcon className="h-7 w-7 sm:h-9 sm:w-9" />
+      Add Reminder
     </Fab>
   )
 }
-

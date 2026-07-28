@@ -91,6 +91,39 @@ describe("reminder form controls", () => {
     expect(saveReminderButton).toBeEnabled()
   })
 
+  it("updates remaining character count as reminder text changes", () => {
+    renderWithProviders(<AddReminder />, openReminderFormState)
+
+    const reminderTextField = screen.getByRole("textbox", {
+      name: "Reminder",
+    })
+    const saveReminderButton = screen.getByRole("button", {
+      name: "Save Reminder",
+    })
+
+    expect(screen.getByText("30 characters max")).toHaveTextContent(
+      "30 characters max",
+    )
+    expect(saveReminderButton).toBeDisabled()
+
+    fireEvent.change(reminderTextField, {
+      target: { value: "one" },
+    })
+
+    expect(screen.getByText("27 characters remaining")).toHaveTextContent(
+      "27 characters remaining",
+    )
+    expect(saveReminderButton).toBeEnabled()
+
+    fireEvent.change(reminderTextField, {
+      target: { value: "aaaaaaaaaaaaaaaaaaaaaaaa" },
+    })
+
+    expect(
+      document.getElementById("reminder-character-count"),
+    ).toHaveTextContent("6 characters remaining")
+  })
+
   it("uses the current time when no initiating date was requested", () => {
     vi.useFakeTimers({ toFake: ["Date"] })
     vi.setSystemTime(new Date(2026, 6, 20, 14, 30))
@@ -108,6 +141,20 @@ describe("reminder form controls", () => {
     )
   })
 
+  it("renders nothing when the reminder panel is closed", () => {
+    renderWithProviders(<AddReminder />, {
+      ...openReminderFormState,
+      addReminder: {
+        ...openReminderFormState.addReminder,
+        addReminderIsOpen: false,
+      },
+    })
+
+    expect(
+      screen.queryByRole("dialog", { name: "Add Reminder" }),
+    ).not.toBeInTheDocument()
+  })
+
   it("ignores direct form submission while reminder text is empty", () => {
     const { store } = renderWithProviders(
       <AddReminder />,
@@ -122,4 +169,3 @@ describe("reminder form controls", () => {
     ).toBeInTheDocument()
   })
 })
-
