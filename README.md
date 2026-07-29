@@ -4,7 +4,7 @@
 
 A responsive TypeScript calendar for creating, color-coding, reviewing, and deleting reminders.
 
-[Open the production application →](https://portfolio-calendar.DoctorDerek.com)
+[Open the production application →](https://portfolio-calendar.doctorderek.com)
 
 ## Product highlights
 
@@ -21,13 +21,14 @@ A responsive TypeScript calendar for creating, color-coding, reviewing, and dele
 | ---------------------- | ------------------------------------------------------------------------------------------------------------- |
 | Application            | Next.js 16 and React 19                                                                                       |
 | State                  | Redux Toolkit 2 and React Redux 9                                                                             |
-| Interface              | Material UI 6, MUI X 7, Tailwind CSS 4, and Emotion 11                                                        |
+| Interface              | Material UI 9, MUI X 9, Tailwind CSS 4, and Emotion 11                                                        |
 | Interaction            | next-themes 0.4, Motion reminder-list choreography, native CSS transitions, and system reduced-motion support |
 | Dates                  | Day.js 1                                                                                                      |
+| Delivery               | Bounded responsive WebP optimization, one-year image caching, static asset hashes, and self-hosted Roboto     |
 | Tooling                | TypeScript 6, ESLint 9, Prettier 3, Node.js 24, and pnpm 11                                                   |
-| Quality infrastructure | Vitest 4, Playwright 1, GitHub Actions, Vercel previews, and Codecov                                          |
+| Quality infrastructure | Vitest 4 with 100% measured coverage, Playwright 1, GitHub Actions, Vercel previews, and Codecov              |
 
-Production builds run strict TypeScript validation. Pull requests run ESLint and Vitest coverage, while successful Vercel preview deployments trigger Playwright across Chromium, Firefox, and WebKit. The test suite covers calendar navigation and day selection, theme and display toggles, reminder persistence and workflows, keyboard interaction, accessibility-sensitive behavior, and reduced-motion behavior.
+Production builds run strict TypeScript validation. Pull requests run ESLint and Vitest coverage, while successful protected Vercel preview deployments trigger Playwright across Chromium, Firefox, and WebKit with short-lived GitHub OIDC authentication refreshed for every test. The test suite covers calendar navigation and day selection, theme and display toggles, reminder persistence and workflows, keyboard interaction, accessibility-sensitive behavior, and reduced-motion behavior.
 
 ## Local development
 
