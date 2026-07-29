@@ -41,11 +41,11 @@ test("supports keyboard date and time editing with explicit confirmation", async
   await page
     .getByRole("button", { name: "Choose date, selected date is Aug 20, 2026" })
     .click()
-  await page
-    .getByRole("dialog")
-    .last()
-    .getByRole("button", { name: "OK" })
-    .click()
+  const dateTimePickerDialog = page.getByRole("dialog", {
+    name: "Date and time",
+  })
+  await dateTimePickerDialog.getByRole("button", { name: "OK" }).click()
+  await expect(dateTimePickerDialog).toBeHidden()
 
   await page
     .getByRole("textbox", { name: "Reminder" })
