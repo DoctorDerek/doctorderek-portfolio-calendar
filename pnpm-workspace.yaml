@@ -1,6 +1,11 @@
 packages:
   - "."
 
+overrides:
+  "@napi-rs/wasm-runtime": "1.1.6"
+  "next>postcss": "^8.5.18"
+  "next>sharp": "^0.35.3"
+
 allowBuilds:
   core-js: true
   sharp: true
