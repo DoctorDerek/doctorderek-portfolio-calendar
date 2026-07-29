@@ -112,31 +112,42 @@ test("serves only the canonical root without mobile overflow", async ({
   expect(missingRouteResponse?.status()).toBe(404)
 })
 
-test("serves the decorative background as a cached static asset", async ({
+test("serves the decorative background through bounded responsive WebP optimization", async ({
   page,
 }) => {
-  const imageOptimizationRequests: string[] = []
-  page.on("request", (request) => {
-    if (request.url().includes("/_next/image")) {
-      imageOptimizationRequests.push(request.url())
-    }
-  })
-
-  await page.reload()
-
   const backgroundImage = page.locator('img[alt=""]')
-  await expect(backgroundImage).toHaveAttribute(
-    "src",
-    /benjamin-patin-dOzoyaYjCbM-unsplash-1920\.webp$/,
-  )
-  await expect(backgroundImage).not.toHaveAttribute("srcset")
+  const optimizedSource = await backgroundImage.getAttribute("src")
+  const responsiveSources = await backgroundImage.getAttribute("srcset")
 
-  const assetResponse = await page.request.get(
-    "/benjamin-patin-dOzoyaYjCbM-unsplash-1920.webp",
+  if (!optimizedSource || !responsiveSources) {
+    throw new Error("The decorative background is missing responsive sources")
+  }
+
+  const optimizedSourceUrl = new URL(optimizedSource, page.url())
+  const optimizedBackgroundResponse = await page.request.get(
+    optimizedSourceUrl.toString(),
+    {
+      headers: { accept: "image/webp" },
+    },
   )
-  expect(assetResponse.ok()).toBe(true)
-  expect(assetResponse.headers()["cache-control"]).toContain("max-age=2678400")
-  expect(imageOptimizationRequests).toHaveLength(0)
+
+  expect(optimizedSourceUrl.pathname).toBe("/_next/image")
+  expect(optimizedSourceUrl.searchParams.get("url")).toMatch(
+    /^\/_next\/static\/media\/benjamin-patin-dOzoyaYjCbM-unsplash\.[a-z0-9]+\.jpg$/,
+  )
+  expect([640, 1280, 1920, 2880, 3840]).toContain(
+    Number(optimizedSourceUrl.searchParams.get("w")),
+  )
+  expect(optimizedSourceUrl.searchParams.get("q")).toBe("75")
+  expect(responsiveSources).toContain("w=640&q=75 640w")
+  expect(responsiveSources).toContain("w=1280&q=75 1280w")
+  expect(responsiveSources).toContain("w=1920&q=75 1920w")
+  expect(responsiveSources).toContain("w=2880&q=75 2880w")
+  expect(responsiveSources).toContain("w=3840&q=75 3840w")
+  expect(optimizedBackgroundResponse.ok()).toBe(true)
+  expect(optimizedBackgroundResponse.headers()["content-type"]).toContain(
+    "image/webp",
+  )
 })
 
 test("keeps today anchored while navigating between months", async ({
