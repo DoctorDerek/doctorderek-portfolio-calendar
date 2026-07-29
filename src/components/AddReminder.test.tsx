@@ -136,9 +136,28 @@ describe("reminder form controls", () => {
       },
     })
 
-    expect(screen.getByLabelText("Date and time")).toHaveValue(
-      "07/20/2026 02:30 PM",
+    const dateTimeField = within(
+      screen.getByRole("group", { name: "Date and time" }),
     )
+
+    expect(
+      dateTimeField.getByRole("spinbutton", { name: "Month" }),
+    ).toHaveAttribute("aria-valuenow", "7")
+    expect(
+      dateTimeField.getByRole("spinbutton", { name: "Day" }),
+    ).toHaveAttribute("aria-valuenow", "20")
+    expect(
+      dateTimeField.getByRole("spinbutton", { name: "Year" }),
+    ).toHaveAttribute("aria-valuenow", "2026")
+    expect(
+      dateTimeField.getByRole("spinbutton", { name: "Hours" }),
+    ).toHaveAttribute("aria-valuenow", "2")
+    expect(
+      dateTimeField.getByRole("spinbutton", { name: "Minutes" }),
+    ).toHaveAttribute("aria-valuenow", "30")
+    expect(
+      dateTimeField.getByRole("spinbutton", { name: "Meridiem" }),
+    ).toHaveTextContent("PM")
   })
 
   it("renders nothing when the reminder panel is closed", () => {
