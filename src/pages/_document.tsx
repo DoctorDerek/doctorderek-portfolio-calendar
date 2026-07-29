@@ -25,10 +25,6 @@ class MyDocument extends Document {
           />
           <meta name="theme-color" content="#FFFFFF" />
           <link rel="manifest" href="/favicon-io/site.webmanifest" />
-          <link
-            rel="stylesheet"
-            href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap"
-          />
         </Head>
 
         <body className="h-full w-full subpixel-antialiased">
