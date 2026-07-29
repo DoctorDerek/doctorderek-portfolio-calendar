@@ -1,10 +1,43 @@
 import { act, fireEvent, screen, within } from "@testing-library/react"
+import type { ImageProps } from "next/image"
+import { createElement } from "react"
 import { afterEach, describe, expect, it, vi } from "vitest"
 import App from "@/components/App"
 import { REMINDER_SAVE_FAILURE_MESSAGE } from "@/redux/storageStatusSlice"
 import { rootReducer } from "@/redux/store"
 import { renderWithProviders } from "@/test/renderWithProviders"
 import { formatCalendarDayAccessibleName } from "@/utils/dateUtils"
+
+vi.mock("next/image", () => ({
+  default: ({ alt, className, fill, placeholder, sizes, src }: ImageProps) => {
+    const imageSource =
+      typeof src === "string"
+        ? src
+        : "default" in src
+          ? src.default.src
+          : src.src
+
+    return createElement("img", {
+      alt,
+      className,
+      "data-fill": String(fill),
+      "data-placeholder": placeholder,
+      sizes,
+      src: imageSource,
+    })
+  },
+}))
+
+vi.mock("@/assets/benjamin-patin-dOzoyaYjCbM-unsplash.jpg", () => ({
+  default: {
+    blurDataURL: "data:image/jpeg;base64,Y2FsZW5kYXItYmFja2dyb3VuZA==",
+    blurHeight: 6,
+    blurWidth: 8,
+    height: 3000,
+    src: "/_next/static/media/benjamin-patin-dOzoyaYjCbM-unsplash.test.jpg",
+    width: 4000,
+  },
+}))
 
 describe("calendar month navigation", () => {
   afterEach(() => {
@@ -41,16 +74,18 @@ describe("calendar month navigation", () => {
     expect(within(calendarGrid).getAllByRole("gridcell")).toHaveLength(42)
   })
 
-  it("serves the decorative background from the precompressed static asset", () => {
+  it("serves the decorative background through responsive image optimization", () => {
     renderWithProviders(<App />)
 
     const backgroundImage = document.querySelector('img[alt=""]')
 
+    expect(backgroundImage).toHaveAttribute("sizes", "100vw")
     expect(backgroundImage).toHaveAttribute(
       "src",
-      "/benjamin-patin-dOzoyaYjCbM-unsplash-1920.webp",
+      "/_next/static/media/benjamin-patin-dOzoyaYjCbM-unsplash.test.jpg",
     )
-    expect(backgroundImage).not.toHaveAttribute("srcset")
+    expect(backgroundImage).toHaveAttribute("data-fill", "true")
+    expect(backgroundImage).toHaveAttribute("data-placeholder", "blur")
   })
 
   it("keeps one active date in the tab order across month changes", () => {
