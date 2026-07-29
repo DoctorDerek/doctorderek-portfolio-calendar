@@ -166,7 +166,9 @@ test("self-hosts Roboto without runtime Google font requests", async ({
 
   await page.reload()
 
-  await expect(page.locator('link[href*="fonts.googleapis.com"]')).toHaveCount(0)
+  await expect(page.locator('link[href*="fonts.googleapis.com"]')).toHaveCount(
+    0,
+  )
   expect(
     await page
       .getByRole("heading", { level: 1 })
