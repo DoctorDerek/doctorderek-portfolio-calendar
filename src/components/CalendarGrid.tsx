@@ -106,7 +106,6 @@ function CalendarGridMonth({
     const selectedDateIndex = calendarCells.findIndex(
       (date) => getCalendarDateKey(date) === getCalendarDateKey(selectedDate),
     )
-    if (selectedDateIndex === -1) return
 
     const selectedWeekStartIndex =
       Math.floor(selectedDateIndex / CALENDAR_WEEKDAY_NAMES.length) *

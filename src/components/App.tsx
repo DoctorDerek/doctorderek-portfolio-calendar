@@ -100,10 +100,10 @@ export default function App() {
       </div>
       <div aria-hidden="true" className="fixed inset-0 z-0 h-full w-full">
         <Image
-          src="/benjamin-patin-dOzoyaYjCbM-unsplash.jpg"
+          src="/benjamin-patin-dOzoyaYjCbM-unsplash-1920.webp"
           alt=""
           fill
-          sizes="100vw"
+          unoptimized
           className="object-cover"
         />
         <div className="absolute inset-0 z-0 h-full w-full opacity-0 backdrop-brightness-50 backdrop-filter transition-all duration-500 dark:bg-[rgba(0,0,0,0.3)] dark:opacity-100"></div>

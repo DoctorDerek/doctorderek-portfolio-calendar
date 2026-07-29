@@ -98,6 +98,33 @@ test("serves only the canonical root without mobile overflow", async ({
   expect(missingRouteResponse?.status()).toBe(404)
 })
 
+test("serves the decorative background as a cached static asset", async ({
+  page,
+}) => {
+  const imageOptimizationRequests: string[] = []
+  page.on("request", (request) => {
+    if (request.url().includes("/_next/image")) {
+      imageOptimizationRequests.push(request.url())
+    }
+  })
+
+  await page.reload()
+
+  const backgroundImage = page.locator('img[alt=""]')
+  await expect(backgroundImage).toHaveAttribute(
+    "src",
+    /benjamin-patin-dOzoyaYjCbM-unsplash-1920\.webp$/,
+  )
+  await expect(backgroundImage).not.toHaveAttribute("srcset")
+
+  const assetResponse = await page.request.get(
+    "/benjamin-patin-dOzoyaYjCbM-unsplash-1920.webp",
+  )
+  expect(assetResponse.ok()).toBe(true)
+  expect(assetResponse.headers()["cache-control"]).toContain("max-age=2678400")
+  expect(imageOptimizationRequests).toHaveLength(0)
+})
+
 test("keeps today anchored while navigating between months", async ({
   page,
 }) => {

@@ -214,6 +214,53 @@ describe("calendar grid keyboard navigation", () => {
     expect(onActiveDateChange).toHaveBeenCalledWith(new Date(2026, 7, 15))
   })
 
+  it("retains pending focus across an intermediate month render", () => {
+    const onActiveDateChange = vi.fn()
+    const onVisibleMonthChange = vi.fn()
+    const activeDate = new Date(2026, 6, 15, 12)
+    const { rerender } = renderWithProviders(
+      <CalendarGrid
+        actualToday={activeDate}
+        activeDate={activeDate}
+        onActiveDateChange={onActiveDateChange}
+        onVisibleMonthChange={onVisibleMonthChange}
+        visibleMonth={new Date(2026, 6, 1)}
+      />,
+    )
+
+    fireEvent.keyDown(
+      screen.getByRole("button", {
+        name: "Wednesday July 15, 2026",
+      }),
+      { key: "PageDown" },
+    )
+
+    rerender(
+      <CalendarGrid
+        actualToday={activeDate}
+        activeDate={new Date(2026, 8, 15, 12)}
+        onActiveDateChange={onActiveDateChange}
+        onVisibleMonthChange={onVisibleMonthChange}
+        visibleMonth={new Date(2026, 8, 1)}
+      />,
+    )
+    rerender(
+      <CalendarGrid
+        actualToday={activeDate}
+        activeDate={new Date(2026, 7, 15, 12)}
+        onActiveDateChange={onActiveDateChange}
+        onVisibleMonthChange={onVisibleMonthChange}
+        visibleMonth={new Date(2026, 7, 1)}
+      />,
+    )
+
+    expect(
+      screen.getByRole("button", {
+        name: "Saturday August 15, 2026",
+      }),
+    ).toHaveFocus()
+  })
+
   it("moves one year forward with Shift+PageDown and keeps day alignment", () => {
     const onActiveDateChange = vi.fn()
     const onVisibleMonthChange = vi.fn()
