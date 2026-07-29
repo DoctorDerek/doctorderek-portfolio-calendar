@@ -14,15 +14,29 @@ test("supports keyboard date and time editing with explicit confirmation", async
   page,
 }) => {
   await page.getByRole("button", { name: "Add Reminder" }).click()
-  const dateTimeField = page.getByRole("textbox", {
+  const dateTimeField = page.getByRole("group", {
     name: "Date and time",
   })
+  const month = dateTimeField.getByRole("spinbutton", { name: "Month" })
+  const day = dateTimeField.getByRole("spinbutton", { name: "Day" })
+  const year = dateTimeField.getByRole("spinbutton", { name: "Year" })
+  const hours = dateTimeField.getByRole("spinbutton", { name: "Hours" })
+  const minutes = dateTimeField.getByRole("spinbutton", { name: "Minutes" })
+  const meridiem = dateTimeField.getByRole("spinbutton", { name: "Meridiem" })
 
-  await dateTimeField.focus()
-  await dateTimeField.press("ControlOrMeta+A")
-  await dateTimeField.fill("08/20/2026 03:45 PM")
-  await dateTimeField.press("Tab")
-  await expect(dateTimeField).toHaveValue("08/20/2026 03:45 PM")
+  await month.fill("08")
+  await day.fill("20")
+  await year.fill("2026")
+  await hours.fill("03")
+  await minutes.fill("45")
+  await meridiem.fill("PM")
+
+  await expect(month).toHaveAttribute("aria-valuenow", "8")
+  await expect(day).toHaveAttribute("aria-valuenow", "20")
+  await expect(year).toHaveAttribute("aria-valuenow", "2026")
+  await expect(hours).toHaveAttribute("aria-valuenow", "3")
+  await expect(minutes).toHaveAttribute("aria-valuenow", "45")
+  await expect(meridiem).toHaveText("PM")
 
   await page
     .getByRole("button", { name: "Choose date, selected date is Aug 20, 2026" })
