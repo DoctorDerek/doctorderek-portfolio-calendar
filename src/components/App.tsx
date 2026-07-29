@@ -5,6 +5,7 @@ import dayjs from "dayjs"
 import dynamic from "next/dynamic"
 import Image from "next/image"
 import { useState } from "react"
+import calendarBackground from "@/assets/benjamin-patin-dOzoyaYjCbM-unsplash.jpg"
 import AddReminder from "@/components/AddReminder"
 import AddReminderFab from "@/components/AddReminderFab"
 import AgendaDay from "@/components/AgendaDay"
@@ -100,11 +101,12 @@ export default function App() {
       </div>
       <div aria-hidden="true" className="fixed inset-0 z-0 h-full w-full">
         <Image
-          src="/benjamin-patin-dOzoyaYjCbM-unsplash-1920.webp"
+          src={calendarBackground}
           alt=""
           fill
-          unoptimized
           className="object-cover"
+          placeholder="blur"
+          sizes="100vw"
         />
         <div className="absolute inset-0 z-0 h-full w-full opacity-0 backdrop-brightness-50 backdrop-filter transition-all duration-500 dark:bg-[rgba(0,0,0,0.3)] dark:opacity-100"></div>
       </div>
