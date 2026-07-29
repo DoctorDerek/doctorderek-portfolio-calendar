@@ -150,6 +150,31 @@ test("serves the decorative background through bounded responsive WebP optimizat
   )
 })
 
+test("self-hosts Roboto without runtime Google font requests", async ({
+  page,
+}) => {
+  const googleFontRequests: string[] = []
+  page.on("request", (request) => {
+    const requestHostname = new URL(request.url()).hostname
+    if (
+      requestHostname === "fonts.googleapis.com" ||
+      requestHostname === "fonts.gstatic.com"
+    ) {
+      googleFontRequests.push(request.url())
+    }
+  })
+
+  await page.reload()
+
+  await expect(page.locator('link[href*="fonts.googleapis.com"]')).toHaveCount(0)
+  expect(
+    await page
+      .getByRole("heading", { level: 1 })
+      .evaluate((heading) => getComputedStyle(heading).fontFamily),
+  ).toContain("Roboto")
+  expect(googleFontRequests).toHaveLength(0)
+})
+
 test("keeps today anchored while navigating between months", async ({
   page,
 }) => {
