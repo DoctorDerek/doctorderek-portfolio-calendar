@@ -1,43 +1,10 @@
 import { act, fireEvent, screen, within } from "@testing-library/react"
-import type { ImageProps } from "next/image"
-import { createElement } from "react"
 import { afterEach, describe, expect, it, vi } from "vitest"
 import App from "@/components/App"
 import { REMINDER_SAVE_FAILURE_MESSAGE } from "@/redux/storageStatusSlice"
 import { rootReducer } from "@/redux/store"
 import { renderWithProviders } from "@/test/renderWithProviders"
 import { formatCalendarDayAccessibleName } from "@/utils/dateUtils"
-
-vi.mock("next/image", () => ({
-  default: ({ alt, className, fill, placeholder, sizes, src }: ImageProps) => {
-    const imageSource =
-      typeof src === "string"
-        ? src
-        : "default" in src
-          ? src.default.src
-          : src.src
-
-    return createElement("img", {
-      alt,
-      className,
-      "data-fill": String(fill),
-      "data-placeholder": placeholder,
-      sizes,
-      src: imageSource,
-    })
-  },
-}))
-
-vi.mock("@/assets/benjamin-patin-dOzoyaYjCbM-unsplash.jpg", () => ({
-  default: {
-    blurDataURL: "data:image/jpeg;base64,Y2FsZW5kYXItYmFja2dyb3VuZA==",
-    blurHeight: 6,
-    blurWidth: 8,
-    height: 3000,
-    src: "/_next/static/media/benjamin-patin-dOzoyaYjCbM-unsplash.test.jpg",
-    width: 4000,
-  },
-}))
 
 describe("calendar month navigation", () => {
   afterEach(() => {
