@@ -48,6 +48,9 @@ Open [http://localhost:3000](http://localhost:3000).
 Run the project’s current quality gates before submitting changes:
 
 ```bash
+pnpm audit --prod
+pnpm peers check
+pnpm exec vitest run --coverage
 pnpm build
 pnpm lint
 pnpm format
