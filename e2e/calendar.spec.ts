@@ -139,11 +139,46 @@ test("serves the decorative background through bounded responsive WebP optimizat
     Number(optimizedSourceUrl.searchParams.get("w")),
   )
   expect(optimizedSourceUrl.searchParams.get("q")).toBe("75")
-  expect(responsiveSources).toContain("w=640&q=75 640w")
-  expect(responsiveSources).toContain("w=1280&q=75 1280w")
-  expect(responsiveSources).toContain("w=1920&q=75 1920w")
-  expect(responsiveSources).toContain("w=2880&q=75 2880w")
-  expect(responsiveSources).toContain("w=3840&q=75 3840w")
+
+  const responsiveSourceCandidates = responsiveSources
+    .split(",")
+    .map((responsiveSourceCandidate) => {
+      const normalizedSourceCandidate = responsiveSourceCandidate.trim()
+      const descriptorSeparatorIndex =
+        normalizedSourceCandidate.lastIndexOf(" ")
+
+      if (descriptorSeparatorIndex === -1) {
+        throw new Error(
+          `Responsive image candidate has no width descriptor: ${normalizedSourceCandidate}`,
+        )
+      }
+
+      return {
+        sourceUrl: new URL(
+          normalizedSourceCandidate.slice(0, descriptorSeparatorIndex),
+          page.url(),
+        ),
+        widthDescriptor: normalizedSourceCandidate.slice(
+          descriptorSeparatorIndex + 1,
+        ),
+      }
+    })
+
+  expect(
+    responsiveSourceCandidates.map(({ widthDescriptor }) => widthDescriptor),
+  ).toEqual(["640w", "1280w", "1920w", "2880w", "3840w"])
+
+  for (const { sourceUrl, widthDescriptor } of responsiveSourceCandidates) {
+    expect(sourceUrl.pathname).toBe("/_next/image")
+    expect(sourceUrl.searchParams.get("url")).toMatch(
+      /^\/_next\/static\/media\/benjamin-patin-dOzoyaYjCbM-unsplash\.[a-z0-9]+\.jpg$/,
+    )
+    expect(sourceUrl.searchParams.get("w")).toBe(
+      widthDescriptor.replace(/w$/, ""),
+    )
+    expect(sourceUrl.searchParams.get("q")).toBe("75")
+  }
+
   expect(optimizedBackgroundResponse.ok()).toBe(true)
   expect(optimizedBackgroundResponse.headers()["content-type"]).toContain(
     "image/webp",
