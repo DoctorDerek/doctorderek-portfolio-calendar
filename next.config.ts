@@ -1,18 +1,17 @@
 import type { NextConfig } from "next"
 
 const nextConfig: NextConfig = {
-  async headers() {
-    return [
+  images: {
+    deviceSizes: [640, 1280, 1920, 2880, 3840],
+    formats: ["image/webp"],
+    localPatterns: [
       {
-        source: "/benjamin-patin-dOzoyaYjCbM-unsplash-1920.webp",
-        headers: [
-          {
-            key: "Cache-Control",
-            value: "public, max-age=2678400",
-          },
-        ],
+        pathname: "/_next/static/media/**",
+        search: "",
       },
-    ]
+    ],
+    minimumCacheTTL: 31_536_000,
+    qualities: [75],
   },
 }
 

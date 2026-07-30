@@ -1,4 +1,4 @@
-import { expect, test } from "@playwright/test"
+import { expect, test } from "./playwright"
 
 test.beforeEach(async ({ page }) => {
   await page.goto("/")
@@ -14,24 +14,38 @@ test("supports keyboard date and time editing with explicit confirmation", async
   page,
 }) => {
   await page.getByRole("button", { name: "Add Reminder" }).click()
-  const dateTimeField = page.getByRole("textbox", {
+  const dateTimeField = page.getByRole("group", {
     name: "Date and time",
   })
+  const month = dateTimeField.getByRole("spinbutton", { name: "Month" })
+  const day = dateTimeField.getByRole("spinbutton", { name: "Day" })
+  const year = dateTimeField.getByRole("spinbutton", { name: "Year" })
+  const hours = dateTimeField.getByRole("spinbutton", { name: "Hours" })
+  const minutes = dateTimeField.getByRole("spinbutton", { name: "Minutes" })
+  const meridiem = dateTimeField.getByRole("spinbutton", { name: "Meridiem" })
 
-  await dateTimeField.focus()
-  await dateTimeField.press("ControlOrMeta+A")
-  await dateTimeField.fill("08/20/2026 03:45 PM")
-  await dateTimeField.press("Tab")
-  await expect(dateTimeField).toHaveValue("08/20/2026 03:45 PM")
+  await month.fill("08")
+  await day.fill("20")
+  await year.fill("2026")
+  await hours.fill("03")
+  await minutes.fill("45")
+  await meridiem.fill("PM")
+
+  await expect(month).toHaveAttribute("aria-valuenow", "8")
+  await expect(day).toHaveAttribute("aria-valuenow", "20")
+  await expect(year).toHaveAttribute("aria-valuenow", "2026")
+  await expect(hours).toHaveAttribute("aria-valuenow", "3")
+  await expect(minutes).toHaveAttribute("aria-valuenow", "45")
+  await expect(meridiem).toHaveText("PM")
 
   await page
     .getByRole("button", { name: "Choose date, selected date is Aug 20, 2026" })
     .click()
-  await page
-    .getByRole("dialog")
-    .last()
-    .getByRole("button", { name: "OK" })
-    .click()
+  const dateTimePickerDialog = page.getByRole("dialog", {
+    name: "Date and time",
+  })
+  await dateTimePickerDialog.getByRole("button", { name: "OK" }).click()
+  await expect(dateTimePickerDialog).toBeHidden()
 
   await page
     .getByRole("textbox", { name: "Reminder" })
@@ -98,31 +112,104 @@ test("serves only the canonical root without mobile overflow", async ({
   expect(missingRouteResponse?.status()).toBe(404)
 })
 
-test("serves the decorative background as a cached static asset", async ({
+test("serves the decorative background through bounded responsive WebP optimization", async ({
   page,
 }) => {
-  const imageOptimizationRequests: string[] = []
+  const backgroundImage = page.locator('img[alt=""]')
+  const optimizedSource = await backgroundImage.getAttribute("src")
+  const responsiveSources = await backgroundImage.getAttribute("srcset")
+
+  if (!optimizedSource || !responsiveSources) {
+    throw new Error("The decorative background is missing responsive sources")
+  }
+
+  const optimizedSourceUrl = new URL(optimizedSource, page.url())
+  const optimizedBackgroundResponse = await page.request.get(
+    optimizedSourceUrl.toString(),
+    {
+      headers: { accept: "image/webp" },
+    },
+  )
+
+  expect(optimizedSourceUrl.pathname).toBe("/_next/image")
+  expect(optimizedSourceUrl.searchParams.get("url")).toMatch(
+    /^\/_next\/static\/media\/benjamin-patin-dOzoyaYjCbM-unsplash\.[a-z0-9]+\.jpg$/,
+  )
+  expect([640, 1280, 1920, 2880, 3840]).toContain(
+    Number(optimizedSourceUrl.searchParams.get("w")),
+  )
+  expect(optimizedSourceUrl.searchParams.get("q")).toBe("75")
+
+  const responsiveSourceCandidates = responsiveSources
+    .split(",")
+    .map((responsiveSourceCandidate) => {
+      const normalizedSourceCandidate = responsiveSourceCandidate.trim()
+      const descriptorSeparatorIndex =
+        normalizedSourceCandidate.lastIndexOf(" ")
+
+      if (descriptorSeparatorIndex === -1) {
+        throw new Error(
+          `Responsive image candidate has no width descriptor: ${normalizedSourceCandidate}`,
+        )
+      }
+
+      return {
+        sourceUrl: new URL(
+          normalizedSourceCandidate.slice(0, descriptorSeparatorIndex),
+          page.url(),
+        ),
+        widthDescriptor: normalizedSourceCandidate.slice(
+          descriptorSeparatorIndex + 1,
+        ),
+      }
+    })
+
+  expect(
+    responsiveSourceCandidates.map(({ widthDescriptor }) => widthDescriptor),
+  ).toEqual(["640w", "1280w", "1920w", "2880w", "3840w"])
+
+  for (const { sourceUrl, widthDescriptor } of responsiveSourceCandidates) {
+    expect(sourceUrl.pathname).toBe("/_next/image")
+    expect(sourceUrl.searchParams.get("url")).toMatch(
+      /^\/_next\/static\/media\/benjamin-patin-dOzoyaYjCbM-unsplash\.[a-z0-9]+\.jpg$/,
+    )
+    expect(sourceUrl.searchParams.get("w")).toBe(
+      widthDescriptor.replace(/w$/, ""),
+    )
+    expect(sourceUrl.searchParams.get("q")).toBe("75")
+  }
+
+  expect(optimizedBackgroundResponse.ok()).toBe(true)
+  expect(optimizedBackgroundResponse.headers()["content-type"]).toContain(
+    "image/webp",
+  )
+})
+
+test("self-hosts Roboto without runtime Google font requests", async ({
+  page,
+}) => {
+  const googleFontRequests: string[] = []
   page.on("request", (request) => {
-    if (request.url().includes("/_next/image")) {
-      imageOptimizationRequests.push(request.url())
+    const requestHostname = new URL(request.url()).hostname
+    if (
+      requestHostname === "fonts.googleapis.com" ||
+      requestHostname === "fonts.gstatic.com"
+    ) {
+      googleFontRequests.push(request.url())
     }
   })
 
   await page.reload()
 
-  const backgroundImage = page.locator('img[alt=""]')
-  await expect(backgroundImage).toHaveAttribute(
-    "src",
-    /benjamin-patin-dOzoyaYjCbM-unsplash-1920\.webp$/,
+  await expect(page.locator('link[href*="fonts.googleapis.com"]')).toHaveCount(
+    0,
   )
-  await expect(backgroundImage).not.toHaveAttribute("srcset")
-
-  const assetResponse = await page.request.get(
-    "/benjamin-patin-dOzoyaYjCbM-unsplash-1920.webp",
-  )
-  expect(assetResponse.ok()).toBe(true)
-  expect(assetResponse.headers()["cache-control"]).toContain("max-age=2678400")
-  expect(imageOptimizationRequests).toHaveLength(0)
+  expect(
+    await page
+      .getByRole("heading", { level: 1 })
+      .evaluate((heading) => getComputedStyle(heading).fontFamily),
+  ).toContain("Roboto")
+  expect(googleFontRequests).toHaveLength(0)
 })
 
 test("keeps today anchored while navigating between months", async ({

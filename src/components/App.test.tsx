@@ -41,16 +41,18 @@ describe("calendar month navigation", () => {
     expect(within(calendarGrid).getAllByRole("gridcell")).toHaveLength(42)
   })
 
-  it("serves the decorative background from the precompressed static asset", () => {
+  it("serves the decorative background through responsive image optimization", () => {
     renderWithProviders(<App />)
 
     const backgroundImage = document.querySelector('img[alt=""]')
 
+    expect(backgroundImage).toHaveAttribute("sizes", "100vw")
     expect(backgroundImage).toHaveAttribute(
       "src",
-      "/benjamin-patin-dOzoyaYjCbM-unsplash-1920.webp",
+      "/_next/static/media/benjamin-patin-dOzoyaYjCbM-unsplash.test.jpg",
     )
-    expect(backgroundImage).not.toHaveAttribute("srcset")
+    expect(backgroundImage).toHaveAttribute("data-fill", "true")
+    expect(backgroundImage).toHaveAttribute("data-placeholder", "blur")
   })
 
   it("keeps one active date in the tab order across month changes", () => {
