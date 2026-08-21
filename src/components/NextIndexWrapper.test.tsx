@@ -5,6 +5,7 @@ import { renderToString } from "react-dom/server"
 import { beforeEach, describe, expect, it, vi } from "vitest"
 import NextIndexWrapper, {
   MaterialUIWrapper,
+  ReduxWrapper,
 } from "@/components/NextIndexWrapper"
 import { DISPLAY_PREFERENCE_STORAGE_KEY } from "@/redux/displayPreferenceStorage"
 
@@ -80,5 +81,21 @@ describe("Material UI color scheme", () => {
         '[aria-label="Show reminder hours on the calendar"]',
       ),
     ).toHaveAttribute("aria-pressed", "false")
+  })
+
+  it("reuses deterministic state when browser storage does not exist", () => {
+    vi.stubGlobal("window", undefined)
+
+    try {
+      expect(
+        renderToString(
+          <ReduxWrapper>
+            <output>Server calendar state</output>
+          </ReduxWrapper>,
+        ),
+      ).toContain("Server calendar state")
+    } finally {
+      vi.unstubAllGlobals()
+    }
   })
 })
