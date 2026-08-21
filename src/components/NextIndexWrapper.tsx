@@ -7,10 +7,14 @@ import {
   ThemeProvider as NextThemeProvider,
   useTheme as useNextTheme,
 } from "next-themes"
-import { useMemo } from "react"
+import { useMemo, useSyncExternalStore } from "react"
 import { Provider } from "react-redux"
 import App from "@/components/App"
-import store from "@/redux/store"
+import { createCalendarStore } from "@/redux/store"
+
+const subscribeToHydration = () => () => undefined
+const getBrowserHydrationSnapshot = () => true
+const getServerHydrationSnapshot = () => false
 
 export default function NextIndexWrapper() {
   return (
@@ -44,5 +48,30 @@ export function MaterialUIWrapper({ children }: { children: React.ReactNode }) {
 }
 
 export function ReduxWrapper({ children }: { children: React.ReactNode }) {
-  return <Provider store={store}>{children}</Provider>
+  const initialCalendarStore = useMemo(
+    () => createCalendarStore({ calendarStorage: null }),
+    [],
+  )
+  const persistedCalendarStore = useMemo(
+    () =>
+      typeof window === "undefined"
+        ? initialCalendarStore
+        : createCalendarStore(),
+    [initialCalendarStore],
+  )
+  const hydrationIsComplete = useSyncExternalStore(
+    subscribeToHydration,
+    getBrowserHydrationSnapshot,
+    getServerHydrationSnapshot,
+  )
+
+  return (
+    <Provider
+      store={
+        hydrationIsComplete ? persistedCalendarStore : initialCalendarStore
+      }
+    >
+      {children}
+    </Provider>
+  )
 }

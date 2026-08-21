@@ -128,8 +128,5 @@ export function createCalendarStore({
   return calendarStore
 }
 
-const store = createCalendarStore()
-
-export type AppDispatch = typeof store.dispatch
-
-export default store
+export type CalendarStore = ReturnType<typeof createCalendarStore>
+export type AppDispatch = CalendarStore["dispatch"]
