@@ -16,12 +16,18 @@ const subscribeToHydration = () => () => undefined
 const getBrowserHydrationSnapshot = () => true
 const getServerHydrationSnapshot = () => false
 
-export default function NextIndexWrapper() {
+type NextIndexWrapperProps = {
+  initialCurrentDateKey?: string
+}
+
+export default function NextIndexWrapper({
+  initialCurrentDateKey,
+}: NextIndexWrapperProps) {
   return (
     <NextThemeProvider attribute="class" defaultTheme="system" enableSystem>
       <MaterialUIWrapper>
         <ReduxWrapper>
-          <App />
+          <App initialCurrentDateKey={initialCurrentDateKey} />
         </ReduxWrapper>
       </MaterialUIWrapper>
     </NextThemeProvider>

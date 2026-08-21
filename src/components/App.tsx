@@ -13,7 +13,7 @@ import CalendarGrid from "@/components/CalendarGrid"
 import CustomIcon from "@/components/CustomIcon"
 import StorageStatus from "@/components/StorageStatus"
 import ToggleShowHours from "@/components/ToggleShowHours"
-import useCurrentDate from "@/hooks/useCurrentDate"
+import useCurrentDate, { useInitialCurrentDate } from "@/hooks/useCurrentDate"
 import {
   formatCalendarMonthHeading,
   getCalendarDateInMonth,
@@ -24,21 +24,23 @@ const ToggleDarkMode = dynamic(() => import("@/components/ToggleDarkMode"), {
 })
 
 export default function App({
-  initialCurrentDateISOString,
+  initialCurrentDateKey,
 }: {
-  initialCurrentDateISOString?: string
+  initialCurrentDateKey?: string
 }) {
-  const actualToday = useCurrentDate(initialCurrentDateISOString)
-  const [visibleMonth, setVisibleMonth] = useState(actualToday)
-  const [activeDate, setActiveDate] = useState(actualToday)
+  const actualToday = useCurrentDate(initialCurrentDateKey)
+  const initialCurrentDate = useInitialCurrentDate(initialCurrentDateKey)
+  const [visibleMonthOverride, setVisibleMonth] = useState<Date>()
+  const [activeDateOverride, setActiveDate] = useState<Date>()
+  const visibleMonth = visibleMonthOverride ?? initialCurrentDate
+  const activeDate = activeDateOverride ?? initialCurrentDate
+
   const showMonth = (monthOffset: number) => {
     const nextVisibleMonth = dayjs(visibleMonth)
       .add(monthOffset, "month")
       .toDate()
     setVisibleMonth(nextVisibleMonth)
-    setActiveDate((currentActiveDate) =>
-      getCalendarDateInMonth(currentActiveDate, nextVisibleMonth),
-    )
+    setActiveDate(getCalendarDateInMonth(activeDate, nextVisibleMonth))
   }
   const showPreviousMonth = () => {
     showMonth(-1)

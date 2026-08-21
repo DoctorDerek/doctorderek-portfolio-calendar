@@ -17,6 +17,7 @@ const parseLocalDateKey = (localDateKey: string) => {
 }
 
 const getCurrentLocalDateKey = () => formatLocalDateKey(new Date())
+const subscribeToInitialCurrentDate = () => () => undefined
 
 const getMillisecondsUntilNextLocalDate = (currentDate: Date) => {
   const nextLocalDate = new Date(currentDate)
@@ -59,15 +60,10 @@ const subscribeToCurrentDate = (notifyCurrentDateChange: () => void) => {
   }
 }
 
-export default function useCurrentDate(initialCurrentDateISOString?: string) {
+export default function useCurrentDate(initialCurrentDateKey?: string) {
   const initialLocalDateKey = useMemo(
-    () =>
-      formatLocalDateKey(
-        initialCurrentDateISOString
-          ? new Date(initialCurrentDateISOString)
-          : new Date(),
-      ),
-    [initialCurrentDateISOString],
+    () => initialCurrentDateKey ?? getCurrentLocalDateKey(),
+    [initialCurrentDateKey],
   )
   const getInitialLocalDateKey = useCallback(
     () => initialLocalDateKey,
@@ -82,5 +78,29 @@ export default function useCurrentDate(initialCurrentDateISOString?: string) {
   return useMemo(
     () => parseLocalDateKey(currentLocalDateKey),
     [currentLocalDateKey],
+  )
+}
+
+export function useInitialCurrentDate(initialCurrentDateKey?: string) {
+  const browserInitialLocalDateKey = useMemo(() => getCurrentLocalDateKey(), [])
+  const serverInitialLocalDateKey =
+    initialCurrentDateKey ?? browserInitialLocalDateKey
+  const getBrowserInitialLocalDateKey = useCallback(
+    () => browserInitialLocalDateKey,
+    [browserInitialLocalDateKey],
+  )
+  const getServerInitialLocalDateKey = useCallback(
+    () => serverInitialLocalDateKey,
+    [serverInitialLocalDateKey],
+  )
+  const initialLocalDateKey = useSyncExternalStore(
+    subscribeToInitialCurrentDate,
+    getBrowserInitialLocalDateKey,
+    getServerInitialLocalDateKey,
+  )
+
+  return useMemo(
+    () => parseLocalDateKey(initialLocalDateKey),
+    [initialLocalDateKey],
   )
 }
