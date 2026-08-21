@@ -1,4 +1,4 @@
-import { expect, test, type Page } from "./playwright"
+import { expect, test, waitForCalendarHydration, type Page } from "./playwright"
 
 const loadWithExplicitTheme = async (
   page: Page,
@@ -10,7 +10,7 @@ const loadWithExplicitTheme = async (
     window.localStorage.setItem("theme", theme)
   }, themePreference)
   await page.reload()
-  await expect(page.getByRole("heading", { level: 1 })).toBeVisible()
+  await waitForCalendarHydration(page)
 }
 
 test("persists explicit light and dark theme preferences", async ({ page }) => {

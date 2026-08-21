@@ -1,4 +1,4 @@
-import { test as base, expect } from "@playwright/test"
+import { test as base, expect, type Page } from "@playwright/test"
 
 const trustedOidcHeader = "x-vercel-trusted-oidc-idp-token"
 
@@ -49,6 +49,14 @@ export const test = base.extend<{ authenticateProtectedPreview: void }>({
     { auto: true },
   ],
 })
+
+export const waitForCalendarHydration = async (page: Page) => {
+  await expect(
+    page.getByRole("button", {
+      name: /Switch to (dark|light) theme/,
+    }),
+  ).toBeVisible()
+}
 
 export { expect }
 export type { Page } from "@playwright/test"
