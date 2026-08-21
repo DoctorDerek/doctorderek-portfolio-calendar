@@ -2,8 +2,7 @@ import AccessAlarmIcon from "@mui/icons-material/AccessAlarm"
 import { Avatar } from "@mui/material"
 import dayjs from "dayjs"
 import { useState, type KeyboardEventHandler, type RefCallback } from "react"
-import { useAppSelector } from "@/redux/hooks"
-import type { ReminderColor } from "@/reminderTypes"
+import type { Reminder, ReminderColor } from "@/reminderTypes"
 import combineClassNames from "@/utils/combineClassNames"
 import {
   formatCalendarDayAccessibleName,
@@ -16,7 +15,9 @@ export default function CalendarDay({
   onActive,
   onOpenAgenda,
   onKeyDown,
+  reminders,
   selectedDate,
+  showHours,
   tabIndex,
   visibleMonth,
 }: {
@@ -25,7 +26,9 @@ export default function CalendarDay({
   onActive: () => void
   onOpenAgenda: (date: Date) => void
   onKeyDown?: KeyboardEventHandler<HTMLButtonElement>
+  reminders: readonly Reminder[]
   selectedDate: Date
+  showHours: boolean
   tabIndex: number
   visibleMonth: Date
 }) {
@@ -33,16 +36,6 @@ export default function CalendarDay({
     .hour(dayjs(actualToday).hour())
     .minute(dayjs(actualToday).minute())
     .toDate()
-
-  const { showHours } = useAppSelector(({ showHours }) => showHours)
-
-  const { reminders } = useAppSelector(({ reminders }) => reminders)
-  const calendarDayReminders = reminders.filter((reminder) => {
-    return dayjs(reminder.dateISOString).isSame(
-      selectedDateAtCurrentTime,
-      "day",
-    )
-  })
 
   const [focused, setFocused] = useState(false)
   const showReminderDetails = () => setFocused(true)
@@ -59,14 +52,12 @@ export default function CalendarDay({
   const isToday = dayjs(selectedDateAtCurrentTime).isSame(actualToday, "day")
 
   const reminderCountLabel =
-    calendarDayReminders.length === 1
-      ? "1 reminder"
-      : `${calendarDayReminders.length} reminders`
+    reminders.length === 1 ? "1 reminder" : `${reminders.length} reminders`
   const formattedCalendarDate = formatCalendarDayAccessibleName(
     selectedDateAtCurrentTime,
   )
   const ariaLabel =
-    calendarDayReminders.length > 0
+    reminders.length > 0
       ? `${formattedCalendarDate}, ${reminderCountLabel}`
       : formattedCalendarDate
 
@@ -105,7 +96,7 @@ export default function CalendarDay({
       >
         {dayjs(selectedDateAtCurrentTime).date()}
       </span>
-      {calendarDayReminders.map(({ id, dateISOString, color, text }) => (
+      {reminders.map(({ id, dateISOString, color, text }) => (
         <div
           className={combineClassNames(
             "flex min-w-0",

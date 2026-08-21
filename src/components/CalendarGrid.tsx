@@ -1,15 +1,24 @@
 import Typography from "@mui/material/Typography"
 import dayjs from "dayjs"
-import { useCallback, useEffect, useRef, type KeyboardEvent } from "react"
+import {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  type KeyboardEvent,
+} from "react"
 import CalendarDay from "@/components/CalendarDay"
 import { openAgenda } from "@/redux/agendaSlice"
-import { useAppDispatch } from "@/redux/hooks"
+import { useAppDispatch, useAppSelector } from "@/redux/hooks"
+import type { Reminder } from "@/reminderTypes"
 import {
   CALENDAR_WEEKDAY_NAMES,
   getCalendarDateInMonth,
   getCalendarDateKey,
   getMonthCells,
 } from "@/utils/dateUtils"
+
+const EMPTY_CALENDAR_DAY_REMINDERS: readonly Reminder[] = []
 
 export default function CalendarGrid({
   activeDate,
@@ -26,6 +35,26 @@ export default function CalendarGrid({
 }) {
   const calendarCells = getMonthCells(visibleMonth)
   const dispatch = useAppDispatch()
+  const { reminders } = useAppSelector(({ reminders }) => reminders)
+  const { showHours } = useAppSelector(({ showHours }) => showHours)
+  const remindersByDate = useMemo(() => {
+    const groupedReminders = new Map<string, Reminder[]>()
+
+    reminders.forEach((reminder) => {
+      const calendarDateKey = getCalendarDateKey(
+        new Date(reminder.dateISOString),
+      )
+      const calendarDayReminders = groupedReminders.get(calendarDateKey)
+
+      if (calendarDayReminders) {
+        calendarDayReminders.push(reminder)
+      } else {
+        groupedReminders.set(calendarDateKey, [reminder])
+      }
+    })
+
+    return groupedReminders
+  }, [reminders])
   const openCalendarDayAgenda = useCallback(
     (date: Date) => dispatch(openAgenda(date.toISOString())),
     [dispatch],
@@ -49,6 +78,8 @@ export default function CalendarGrid({
           onActiveDateChange={onActiveDateChange}
           onOpenAgenda={openCalendarDayAgenda}
           onVisibleMonthChange={onVisibleMonthChange}
+          remindersByDate={remindersByDate}
+          showHours={showHours}
           visibleMonth={visibleMonth}
         />
       </div>
@@ -87,6 +118,8 @@ function CalendarGridMonth({
   onActiveDateChange,
   onOpenAgenda,
   onVisibleMonthChange,
+  remindersByDate,
+  showHours,
   visibleMonth,
 }: {
   calendarCells: Date[]
@@ -95,6 +128,8 @@ function CalendarGridMonth({
   onActiveDateChange: (date: Date) => void
   onOpenAgenda: (date: Date) => void
   onVisibleMonthChange: (month: Date) => void
+  remindersByDate: ReadonlyMap<string, readonly Reminder[]>
+  showHours: boolean
   visibleMonth: Date
 }) {
   const activeDateKey = getCalendarDateKey(activeDate)
@@ -208,7 +243,12 @@ function CalendarGridMonth({
                 onActive={() => onActiveDateChange(date)}
                 onOpenAgenda={onOpenAgenda}
                 onKeyDown={(event) => moveCalendarFocus(event, date)}
+                reminders={
+                  remindersByDate.get(getCalendarDateKey(date)) ??
+                  EMPTY_CALENDAR_DAY_REMINDERS
+                }
                 selectedDate={date}
+                showHours={showHours}
                 tabIndex={getCalendarDateKey(date) === activeDateKey ? 0 : -1}
                 visibleMonth={visibleMonth}
               />

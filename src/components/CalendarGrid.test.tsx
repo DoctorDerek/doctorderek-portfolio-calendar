@@ -1,10 +1,59 @@
 import { fireEvent, screen } from "@testing-library/react"
 import { describe, expect, it, vi } from "vitest"
 import CalendarGrid from "@/components/CalendarGrid"
+import type { RootState } from "@/redux/store"
 import { renderWithProviders } from "@/test/renderWithProviders"
 import { getCalendarDateKey } from "@/utils/dateUtils"
 
 describe("calendar grid keyboard navigation", () => {
+  it("groups reminders under their matching local calendar dates", () => {
+    const activeDate = new Date(2026, 6, 15, 12)
+    const reminderState: RootState = {
+      addReminder: { addReminderIsOpen: false, dateISOString: "" },
+      agenda: { agendaIsOpen: false, dateISOString: "" },
+      reminders: {
+        reminders: [
+          {
+            id: "first-day",
+            dateISOString: new Date(2026, 6, 15, 9).toISOString(),
+            color: "DodgerBlue",
+            text: "First day",
+          },
+          {
+            id: "second-day",
+            dateISOString: new Date(2026, 6, 16, 9).toISOString(),
+            color: "Orange",
+            text: "Second day",
+          },
+        ],
+      },
+      showHours: { showHours: false },
+      storageStatus: { failureMessages: {} },
+    }
+
+    renderWithProviders(
+      <CalendarGrid
+        actualToday={activeDate}
+        activeDate={activeDate}
+        onActiveDateChange={vi.fn()}
+        onVisibleMonthChange={vi.fn()}
+        visibleMonth={new Date(2026, 6, 1)}
+      />,
+      reminderState,
+    )
+
+    expect(
+      screen.getByRole("button", {
+        name: "Wednesday July 15, 2026, 1 reminder",
+      }),
+    ).toHaveTextContent("First day")
+    expect(
+      screen.getByRole("button", {
+        name: "Thursday July 16, 2026, 1 reminder",
+      }),
+    ).toHaveTextContent("Second day")
+  })
+
   it("centers weekday headers within their calendar columns", () => {
     const activeDate = new Date(2026, 6, 15, 12)
 

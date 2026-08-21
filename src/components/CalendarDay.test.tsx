@@ -1,8 +1,10 @@
 import { fireEvent, screen } from "@testing-library/react"
 import { describe, expect, it, vi } from "vitest"
 import CalendarDay from "@/components/CalendarDay"
-import type { RootState } from "@/redux/store"
+import type { Reminder } from "@/reminderTypes"
 import { renderWithProviders } from "@/test/renderWithProviders"
+
+const noReminders: readonly Reminder[] = []
 
 describe("calendar day interactions", () => {
   it("opens the matching daily agenda through the named day control", () => {
@@ -14,7 +16,9 @@ describe("calendar day interactions", () => {
         actualToday={selectedDate}
         onActive={() => undefined}
         onOpenAgenda={onOpenAgenda}
+        reminders={noReminders}
         selectedDate={selectedDate}
+        showHours={false}
         tabIndex={0}
         visibleMonth={selectedDate}
       />,
@@ -30,33 +34,24 @@ describe("calendar day interactions", () => {
   it("reveals icon-only reminder details when the day receives keyboard focus", () => {
     const actualToday = new Date(2026, 6, 14, 12)
     const selectedDate = new Date(2026, 6, 15, 12)
-    const reminderState: RootState = {
-      addReminder: { addReminderIsOpen: false, dateISOString: "" },
-      agenda: { agendaIsOpen: false, dateISOString: "" },
-      reminders: {
-        reminders: [
+    renderWithProviders(
+      <CalendarDay
+        actualToday={actualToday}
+        onActive={() => undefined}
+        onOpenAgenda={() => undefined}
+        reminders={[
           {
             id: "keyboard-review",
             dateISOString: "2026-07-15T09:00:00.000Z",
             color: "DodgerBlue",
             text: "Keyboard review",
           },
-        ],
-      },
-      showHours: { showHours: false },
-      storageStatus: { failureMessages: {} },
-    }
-
-    renderWithProviders(
-      <CalendarDay
-        actualToday={actualToday}
-        onActive={() => undefined}
-        onOpenAgenda={() => undefined}
+        ]}
         selectedDate={selectedDate}
+        showHours={false}
         tabIndex={0}
         visibleMonth={selectedDate}
       />,
-      reminderState,
     )
 
     const calendarDay = screen.getByRole("button", {
@@ -91,7 +86,9 @@ describe("calendar day interactions", () => {
         actualToday={selectedDate}
         onActive={() => undefined}
         onOpenAgenda={() => undefined}
+        reminders={noReminders}
         selectedDate={selectedDate}
+        showHours={false}
         tabIndex={0}
         visibleMonth={selectedDate}
       />,
@@ -122,7 +119,9 @@ describe("calendar day interactions", () => {
         actualToday={selectedDate}
         onActive={onActive}
         onOpenAgenda={() => undefined}
+        reminders={noReminders}
         selectedDate={selectedDate}
+        showHours={false}
         tabIndex={0}
         visibleMonth={selectedDate}
       />,
@@ -150,7 +149,9 @@ describe("calendar day interactions", () => {
         onActive={() => undefined}
         onOpenAgenda={() => undefined}
         onKeyDown={onKeyDown}
+        reminders={noReminders}
         selectedDate={selectedDate}
+        showHours={false}
         tabIndex={0}
         visibleMonth={selectedDate}
       />,
@@ -167,33 +168,24 @@ describe("calendar day interactions", () => {
 
   it("shows reminder details immediately when hour view is enabled", () => {
     const selectedDate = new Date(2026, 6, 15, 12)
-    const reminderState: RootState = {
-      addReminder: { addReminderIsOpen: false, dateISOString: "" },
-      agenda: { agendaIsOpen: false, dateISOString: "" },
-      reminders: {
-        reminders: [
+    renderWithProviders(
+      <CalendarDay
+        actualToday={selectedDate}
+        onActive={() => undefined}
+        onOpenAgenda={() => undefined}
+        reminders={[
           {
             id: "hour-view",
             dateISOString: "2026-07-15T09:00:00.000Z",
             color: "DodgerBlue",
             text: "Hour view reminder",
           },
-        ],
-      },
-      showHours: { showHours: true },
-      storageStatus: { failureMessages: {} },
-    }
-
-    renderWithProviders(
-      <CalendarDay
-        actualToday={selectedDate}
-        onActive={() => undefined}
-        onOpenAgenda={() => undefined}
+        ]}
         selectedDate={selectedDate}
+        showHours={true}
         tabIndex={0}
         visibleMonth={selectedDate}
       />,
-      reminderState,
     )
 
     expect(screen.getByText(/Hour view reminder/)).not.toHaveClass("sr-only")
