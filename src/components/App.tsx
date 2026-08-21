@@ -23,8 +23,12 @@ const ToggleDarkMode = dynamic(() => import("@/components/ToggleDarkMode"), {
   ssr: false,
 })
 
-export default function App() {
-  const actualToday = useCurrentDate()
+export default function App({
+  initialCurrentDateISOString,
+}: {
+  initialCurrentDateISOString?: string
+}) {
+  const actualToday = useCurrentDate(initialCurrentDateISOString)
   const [visibleMonth, setVisibleMonth] = useState(actualToday)
   const [activeDate, setActiveDate] = useState(actualToday)
   const showMonth = (monthOffset: number) => {
