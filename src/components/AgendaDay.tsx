@@ -22,11 +22,11 @@ type AgendaReminderColorStyle = CSSProperties & {
 
 export default function AgendaDay() {
   const { agendaIsOpen, dateISOString } = useAppSelector(({ agenda }) => agenda)
-  const date = dateISOString ? dayjs(dateISOString).toDate() : null
+  const date = dayjs(dateISOString).toDate()
 
   const { reminders } = useAppSelector(({ reminders }) => reminders)
   const agendaReminders = reminders.filter((reminder) => {
-    return date && dayjs(reminder.dateISOString).isSame(date, "day")
+    return dayjs(reminder.dateISOString).isSame(date, "day")
   })
 
   const dispatch = useAppDispatch()
@@ -37,17 +37,18 @@ export default function AgendaDay() {
     dispatch(deleteReminder(id))
   }
 
-  const dialogTitle = date ? "Agenda: " + formatCalendarDate(date) : "Closing"
-  const reminderListLabel = date
-    ? "Reminders for " + formatCalendarDate(date)
-    : "Reminders"
+  const formattedAgendaDate = formatCalendarDate(date)
 
   return (
-    <CustomDialog title={dialogTitle} open={agendaIsOpen} onClose={onClose}>
+    <CustomDialog
+      title={`Agenda: ${formattedAgendaDate}`}
+      open={agendaIsOpen}
+      onClose={onClose}
+    >
       {agendaReminders.length > 0 ? (
         <MotionConfig reducedMotion="user">
           <ul
-            aria-label={reminderListLabel}
+            aria-label={`Reminders for ${formattedAgendaDate}`}
             className="relative flex flex-col space-y-1"
           >
             <AnimatePresence initial={false} mode="popLayout">
