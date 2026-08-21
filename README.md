@@ -30,6 +30,12 @@ A responsive TypeScript calendar for creating, color-coding, reviewing, and dele
 
 Production builds run strict TypeScript validation. Pull requests run ESLint and Vitest coverage, while successful protected Vercel preview deployments trigger Playwright across Chromium, Firefox, and WebKit with short-lived GitHub OIDC authentication refreshed for every test. The test suite covers calendar navigation and day selection, theme and display toggles, reminder persistence and workflows, keyboard interaction, accessibility-sensitive behavior, and reduced-motion behavior.
 
+## Mobile Web Lighthouse Measurements
+
+Latest successful automated Lighthouse scores for the canonical production website, measured with Lighthouse’s standard mobile emulation. The badges and linked HTML report come from the audit with the median performance score among five production runs.
+
+[![Mobile Web Lighthouse Performance](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fdoctorderek.github.io%2Fdoctorderek-portfolio-calendar%2Flighthouse-results.json&query=%24.performance&label=performance&suffix=%2F100&logo=lighthouse&logoColor=white&color=informational)](https://doctorderek.github.io/doctorderek-portfolio-calendar/) [![Mobile Web Lighthouse Accessibility](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fdoctorderek.github.io%2Fdoctorderek-portfolio-calendar%2Flighthouse-results.json&query=%24.accessibility&label=accessibility&suffix=%2F100&logo=lighthouse&logoColor=white&color=informational)](https://doctorderek.github.io/doctorderek-portfolio-calendar/) [![Mobile Web Lighthouse Best Practices](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fdoctorderek.github.io%2Fdoctorderek-portfolio-calendar%2Flighthouse-results.json&query=%24.bestPractices&label=best%20practices&suffix=%2F100&logo=lighthouse&logoColor=white&color=informational)](https://doctorderek.github.io/doctorderek-portfolio-calendar/) [![Mobile Web Lighthouse SEO](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fdoctorderek.github.io%2Fdoctorderek-portfolio-calendar%2Flighthouse-results.json&query=%24.seo&label=SEO&suffix=%2F100&logo=lighthouse&logoColor=white&color=informational)](https://doctorderek.github.io/doctorderek-portfolio-calendar/)
+
 ## Local development
 
 The repository pins Node.js 24 in `.node-version` and pnpm 11 in `package.json`.
