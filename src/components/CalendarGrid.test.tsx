@@ -25,6 +25,12 @@ describe("calendar grid keyboard navigation", () => {
             color: "Orange",
             text: "Second day",
           },
+          {
+            id: "first-day-follow-up",
+            dateISOString: new Date(2026, 6, 15, 13).toISOString(),
+            color: "Tomato",
+            text: "First day follow-up",
+          },
         ],
       },
       showHours: { showHours: false },
@@ -44,9 +50,14 @@ describe("calendar grid keyboard navigation", () => {
 
     expect(
       screen.getByRole("button", {
-        name: "Wednesday July 15, 2026, 1 reminder",
+        name: "Wednesday July 15, 2026, 2 reminders",
       }),
     ).toHaveTextContent("First day")
+    expect(
+      screen.getByRole("button", {
+        name: "Wednesday July 15, 2026, 2 reminders",
+      }),
+    ).toHaveTextContent("First day follow-up")
     expect(
       screen.getByRole("button", {
         name: "Thursday July 16, 2026, 1 reminder",
