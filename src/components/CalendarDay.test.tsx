@@ -30,7 +30,7 @@ describe("calendar day interactions", () => {
     expect(onOpenAgenda).toHaveBeenCalledWith(selectedDate)
   })
 
-  it("reveals icon-only reminder details when the day receives keyboard focus", () => {
+  it("defines hover and focus disclosure for icon-only reminder details", () => {
     const actualToday = new Date(2026, 6, 14, 12)
     const selectedDate = new Date(2026, 6, 15, 12)
     render(
@@ -59,25 +59,12 @@ describe("calendar day interactions", () => {
     const reminderDetails = screen.getByText(/Keyboard review/)
 
     expect(reminderDetails).toHaveClass("sr-only")
-
-    fireEvent.mouseEnter(calendarDay)
-
-    expect(reminderDetails).not.toHaveClass("sr-only")
-
-    fireEvent.mouseLeave(calendarDay)
-
-    expect(reminderDetails).toHaveClass("sr-only")
-
-    fireEvent.focus(calendarDay)
-
-    expect(reminderDetails).not.toHaveClass("sr-only")
-
-    fireEvent.blur(calendarDay)
-
-    expect(reminderDetails).toHaveClass("sr-only")
+    expect(reminderDetails).toHaveClass("group-hover:not-sr-only")
+    expect(reminderDetails).toHaveClass("group-focus:not-sr-only")
+    expect(calendarDay).toHaveClass("group")
   })
 
-  it("strengthens the current-date treatment while the day is focused", () => {
+  it("defines hover and focus emphasis for the current date", () => {
     const selectedDate = new Date(2026, 6, 15, 12)
 
     render(
@@ -99,14 +86,9 @@ describe("calendar day interactions", () => {
     const dateBadge = screen.getByText("15")
 
     expect(dateBadge).toHaveClass("bg-purple-700")
-
-    fireEvent.focus(calendarDay)
-
-    expect(dateBadge).toHaveClass("bg-purple-800")
-
-    fireEvent.blur(calendarDay)
-
-    expect(dateBadge).toHaveClass("bg-purple-700")
+    expect(dateBadge).toHaveClass("group-hover:bg-purple-800")
+    expect(dateBadge).toHaveClass("group-focus:bg-purple-800")
+    expect(calendarDay).toHaveClass("group")
   })
 
   it("calls the active-date callback on focus and click", () => {

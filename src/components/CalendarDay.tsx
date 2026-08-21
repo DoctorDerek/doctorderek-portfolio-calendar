@@ -1,7 +1,7 @@
 import AccessAlarmIcon from "@mui/icons-material/AccessAlarm"
 import { Avatar } from "@mui/material"
 import dayjs from "dayjs"
-import { useState, type KeyboardEventHandler, type RefCallback } from "react"
+import type { KeyboardEventHandler, RefCallback } from "react"
 import type { Reminder, ReminderColor } from "@/reminderTypes"
 import combineClassNames from "@/utils/combineClassNames"
 import {
@@ -37,13 +37,6 @@ export default function CalendarDay({
     .minute(dayjs(actualToday).minute())
     .toDate()
 
-  const [focused, setFocused] = useState(false)
-  const showReminderDetails = () => setFocused(true)
-  const hideReminderDetails = () => setFocused(false)
-  const onFocus = () => {
-    showReminderDetails()
-    onActive()
-  }
   const onClick = () => {
     onActive()
     onOpenAgenda(selectedDateAtCurrentTime)
@@ -65,15 +58,12 @@ export default function CalendarDay({
     <button
       type="button"
       ref={buttonRef}
-      onMouseEnter={showReminderDetails}
-      onFocus={onFocus}
-      onMouseLeave={hideReminderDetails}
-      onBlur={hideReminderDetails}
+      onFocus={onActive}
       onClick={onClick}
       onKeyDown={onKeyDown}
       tabIndex={tabIndex}
       className={combineClassNames(
-        "relative flex h-full min-h-12 w-full cursor-pointer flex-wrap items-center justify-center border border-solid border-gray-300 p-0.5 sm:min-h-20 sm:p-1 lg:min-h-24 dark:border-gray-700",
+        "group relative flex h-full min-h-12 w-full cursor-pointer flex-wrap items-center justify-center border border-solid border-gray-300 p-0.5 sm:min-h-20 sm:p-1 lg:min-h-24 dark:border-gray-700",
         dayjs(selectedDateAtCurrentTime).isSame(visibleMonth, "month")
           ? "bg-white/65 dark:bg-gray-900/75"
           : "bg-gray-300/65 dark:bg-gray-950/85",
@@ -85,13 +75,9 @@ export default function CalendarDay({
       <span
         className={combineClassNames(
           "flex h-8 w-8 items-center justify-center rounded-full border border-solid border-transparent text-sm sm:h-10 sm:w-10 sm:text-base",
-          isToday && focused
-            ? "m-px border-current bg-purple-800 text-white shadow-xl md:mx-0.5"
-            : isToday
-              ? "m-px border-current bg-purple-700 text-white shadow-xl md:mx-0.5"
-              : focused
-                ? "border-current bg-gray-300 text-gray-950 shadow-xl dark:bg-gray-700 dark:text-white"
-                : "bg-transparent text-gray-900 dark:text-gray-100",
+          isToday
+            ? "m-px border-current bg-purple-700 text-white shadow-xl group-hover:bg-purple-800 group-focus:bg-purple-800 md:mx-0.5"
+            : "bg-transparent text-gray-900 group-hover:border-current group-hover:bg-gray-300 group-hover:text-gray-950 group-hover:shadow-xl group-focus:border-current group-focus:bg-gray-300 group-focus:text-gray-950 group-focus:shadow-xl dark:text-gray-100 dark:group-hover:bg-gray-700 dark:group-hover:text-white dark:group-focus:bg-gray-700 dark:group-focus:text-white",
         )}
       >
         {dayjs(selectedDateAtCurrentTime).date()}
@@ -100,16 +86,18 @@ export default function CalendarDay({
         <div
           className={combineClassNames(
             "flex min-w-0",
-            showHours || focused ? "w-full" : "w-auto",
+            showHours
+              ? "w-full"
+              : "w-auto group-hover:w-full group-focus:w-full",
           )}
           key={id}
         >
-          {!showHours && !focused && <ReminderIcon color={color} />}
+          {!showHours && <ReminderIcon color={color} />}
           <div
             className={combineClassNames(
-              showHours || focused
-                ? "line-clamp-1 w-full rounded-sm px-1 text-left text-[0.625rem] sm:text-xs lg:text-sm"
-                : "sr-only",
+              "line-clamp-1 w-full rounded-sm px-1 text-left text-[0.625rem] sm:text-xs lg:text-sm",
+              !showHours &&
+                "sr-only group-hover:not-sr-only group-focus:not-sr-only",
             )}
             style={{ backgroundColor: color }}
           >
@@ -128,7 +116,7 @@ function ReminderIcon({ color }: { color: ReminderColor }) {
   return (
     <Avatar
       style={{ backgroundColor: color }}
-      className="m-px h-5 w-5 border border-solid border-gray-300 md:mx-0.5"
+      className="m-px h-5 w-5 border border-solid border-gray-300 group-hover:hidden group-focus:hidden md:mx-0.5"
     >
       <AccessAlarmIcon className="h-4 w-4" />
     </Avatar>
