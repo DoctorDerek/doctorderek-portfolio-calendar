@@ -1,4 +1,3 @@
-import Typography from "@mui/material/Typography"
 import dayjs from "dayjs"
 import {
   useCallback,
@@ -94,7 +93,7 @@ function CalendarGridDaysRow() {
       role="row"
     >
       {CALENDAR_WEEKDAY_NAMES.map((weekdayName) => (
-        <Typography
+        <div
           aria-label={weekdayName}
           className="mx-auto text-center text-xs font-semibold text-gray-900 drop-shadow-sm sm:text-base lg:text-lg dark:text-gray-100"
           key={weekdayName}
@@ -105,7 +104,7 @@ function CalendarGridDaysRow() {
           <span className="hidden sm:block md:hidden">
             {weekdayName.slice(0, 3)}
           </span>
-        </Typography>
+        </div>
       ))}
     </div>
   )
