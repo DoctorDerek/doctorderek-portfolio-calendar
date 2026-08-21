@@ -7,7 +7,6 @@ import Image from "next/image"
 import { useState } from "react"
 import calendarBackground from "@/assets/benjamin-patin-dOzoyaYjCbM-unsplash.jpg"
 import AddReminderFab from "@/components/AddReminderFab"
-import AgendaDay from "@/components/AgendaDay"
 import CalendarGrid from "@/components/CalendarGrid"
 import CustomIcon from "@/components/CustomIcon"
 import StorageStatus from "@/components/StorageStatus"
@@ -23,6 +22,7 @@ const ToggleDarkMode = dynamic(() => import("@/components/ToggleDarkMode"), {
   ssr: false,
 })
 const AddReminder = dynamic(() => import("@/components/AddReminder"))
+const AgendaDay = dynamic(() => import("@/components/AgendaDay"))
 
 export default function App({
   initialCurrentDateKey,
@@ -38,6 +38,7 @@ export default function App({
   const addReminderIsOpen = useAppSelector(
     ({ addReminder }) => addReminder.addReminderIsOpen,
   )
+  const agendaIsOpen = useAppSelector(({ agenda }) => agenda.agendaIsOpen)
 
   const showMonth = (monthOffset: number) => {
     const nextVisibleMonth = dayjs(visibleMonth)
@@ -106,7 +107,7 @@ export default function App({
             <AddReminderFab />
           </div>
         </Paper>
-        <AgendaDay />
+        {agendaIsOpen ? <AgendaDay /> : null}
         {addReminderIsOpen ? <AddReminder /> : null}
       </div>
       <div aria-hidden="true" className="fixed inset-0 z-0 h-full w-full">
