@@ -72,7 +72,7 @@ export default function App({
                 Icon={KeyboardArrowLeftIcon}
               />
             </div>
-            <div className="col-start-1 row-start-2 justify-self-start md:col-start-2 md:row-start-1">
+            <div className="col-start-1 row-start-2 h-11 w-20 justify-self-start sm:w-28 md:col-start-2 md:row-start-1 lg:w-36">
               <ToggleDarkMode />
             </div>
             <h1
