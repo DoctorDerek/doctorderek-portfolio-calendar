@@ -1,8 +1,7 @@
-import { fireEvent, screen } from "@testing-library/react"
+import { fireEvent, render, screen } from "@testing-library/react"
 import { describe, expect, it, vi } from "vitest"
 import CalendarDay from "@/components/CalendarDay"
 import type { Reminder } from "@/reminderTypes"
-import { renderWithProviders } from "@/test/renderWithProviders"
 
 const noReminders: readonly Reminder[] = []
 
@@ -11,7 +10,7 @@ describe("calendar day interactions", () => {
     const selectedDate = new Date(2026, 6, 15, 12)
     const onOpenAgenda = vi.fn()
 
-    renderWithProviders(
+    render(
       <CalendarDay
         actualToday={selectedDate}
         onActive={() => undefined}
@@ -34,7 +33,7 @@ describe("calendar day interactions", () => {
   it("reveals icon-only reminder details when the day receives keyboard focus", () => {
     const actualToday = new Date(2026, 6, 14, 12)
     const selectedDate = new Date(2026, 6, 15, 12)
-    renderWithProviders(
+    render(
       <CalendarDay
         actualToday={actualToday}
         onActive={() => undefined}
@@ -81,7 +80,7 @@ describe("calendar day interactions", () => {
   it("strengthens the current-date treatment while the day is focused", () => {
     const selectedDate = new Date(2026, 6, 15, 12)
 
-    renderWithProviders(
+    render(
       <CalendarDay
         actualToday={selectedDate}
         onActive={() => undefined}
@@ -114,7 +113,7 @@ describe("calendar day interactions", () => {
     const onActive = vi.fn()
     const selectedDate = new Date(2026, 6, 15, 12)
 
-    renderWithProviders(
+    render(
       <CalendarDay
         actualToday={selectedDate}
         onActive={onActive}
@@ -143,7 +142,7 @@ describe("calendar day interactions", () => {
     const onKeyDown = vi.fn()
     const selectedDate = new Date(2026, 6, 15, 12)
 
-    renderWithProviders(
+    render(
       <CalendarDay
         actualToday={selectedDate}
         onActive={() => undefined}
@@ -168,7 +167,7 @@ describe("calendar day interactions", () => {
 
   it("shows reminder details immediately when hour view is enabled", () => {
     const selectedDate = new Date(2026, 6, 15, 12)
-    renderWithProviders(
+    render(
       <CalendarDay
         actualToday={selectedDate}
         onActive={() => undefined}
