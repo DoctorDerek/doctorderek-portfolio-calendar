@@ -4,7 +4,10 @@ import App from "@/components/App"
 import { REMINDER_SAVE_FAILURE_MESSAGE } from "@/redux/storageStatusSlice"
 import { rootReducer } from "@/redux/store"
 import { renderWithProviders } from "@/test/renderWithProviders"
-import { formatCalendarDayAccessibleName } from "@/utils/dateUtils"
+import {
+  formatCalendarDate,
+  formatCalendarDayAccessibleName,
+} from "@/utils/dateUtils"
 
 describe("calendar month navigation", () => {
   afterEach(() => {
@@ -379,5 +382,35 @@ describe("calendar month navigation", () => {
       REMINDER_SAVE_FAILURE_MESSAGE,
     )
     expect(screen.getByRole("button", { name: "Add Reminder" })).toBeEnabled()
+  })
+
+  it("loads the reminder editor after its named action is requested", async () => {
+    renderWithProviders(<App />)
+
+    expect(screen.queryByRole("dialog", { name: "Add Reminder" })).toBeNull()
+
+    fireEvent.click(screen.getByRole("button", { name: "Add Reminder" }))
+
+    expect(
+      await screen.findByRole("dialog", { name: "Add Reminder" }),
+    ).toBeInTheDocument()
+  })
+
+  it("loads the agenda after a calendar day is chosen", async () => {
+    const currentDate = new Date()
+    renderWithProviders(<App />)
+
+    const agendaTitle = `Agenda: ${formatCalendarDate(currentDate)}`
+    expect(screen.queryByRole("dialog", { name: agendaTitle })).toBeNull()
+
+    fireEvent.click(
+      screen.getByRole("button", {
+        name: formatCalendarDayAccessibleName(currentDate),
+      }),
+    )
+
+    expect(
+      await screen.findByRole("dialog", { name: agendaTitle }),
+    ).toBeInTheDocument()
   })
 })

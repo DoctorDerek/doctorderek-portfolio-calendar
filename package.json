@@ -3,10 +3,13 @@
   "version": "0.9.2",
   "private": true,
   "dependencies": {
+    "@emotion/cache": "^11",
     "@emotion/react": "^11",
+    "@emotion/server": "^11",
     "@emotion/styled": "^11",
     "@mui/icons-material": "^9",
     "@mui/material": "^9",
+    "@mui/material-nextjs": "^9",
     "@mui/x-date-pickers": "^9",
     "@reduxjs/toolkit": "^2",
     "dayjs": "^1",

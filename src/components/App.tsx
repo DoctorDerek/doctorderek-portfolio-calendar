@@ -6,14 +6,13 @@ import dynamic from "next/dynamic"
 import Image from "next/image"
 import { useState } from "react"
 import calendarBackground from "@/assets/benjamin-patin-dOzoyaYjCbM-unsplash.jpg"
-import AddReminder from "@/components/AddReminder"
 import AddReminderFab from "@/components/AddReminderFab"
-import AgendaDay from "@/components/AgendaDay"
 import CalendarGrid from "@/components/CalendarGrid"
 import CustomIcon from "@/components/CustomIcon"
 import StorageStatus from "@/components/StorageStatus"
 import ToggleShowHours from "@/components/ToggleShowHours"
-import useCurrentDate from "@/hooks/useCurrentDate"
+import useCurrentDate, { useInitialCurrentDate } from "@/hooks/useCurrentDate"
+import { useAppSelector } from "@/redux/hooks"
 import {
   formatCalendarMonthHeading,
   getCalendarDateInMonth,
@@ -22,19 +21,31 @@ import {
 const ToggleDarkMode = dynamic(() => import("@/components/ToggleDarkMode"), {
   ssr: false,
 })
+const AddReminder = dynamic(() => import("@/components/AddReminder"))
+const AgendaDay = dynamic(() => import("@/components/AgendaDay"))
 
-export default function App() {
-  const actualToday = useCurrentDate()
-  const [visibleMonth, setVisibleMonth] = useState(actualToday)
-  const [activeDate, setActiveDate] = useState(actualToday)
+export default function App({
+  initialCurrentDateKey,
+}: {
+  initialCurrentDateKey?: string
+}) {
+  const actualToday = useCurrentDate(initialCurrentDateKey)
+  const initialCurrentDate = useInitialCurrentDate(initialCurrentDateKey)
+  const [visibleMonthOverride, setVisibleMonth] = useState<Date>()
+  const [activeDateOverride, setActiveDate] = useState<Date>()
+  const visibleMonth = visibleMonthOverride ?? initialCurrentDate
+  const activeDate = activeDateOverride ?? initialCurrentDate
+  const addReminderIsOpen = useAppSelector(
+    ({ addReminder }) => addReminder.addReminderIsOpen,
+  )
+  const agendaIsOpen = useAppSelector(({ agenda }) => agenda.agendaIsOpen)
+
   const showMonth = (monthOffset: number) => {
     const nextVisibleMonth = dayjs(visibleMonth)
       .add(monthOffset, "month")
       .toDate()
     setVisibleMonth(nextVisibleMonth)
-    setActiveDate((currentActiveDate) =>
-      getCalendarDateInMonth(currentActiveDate, nextVisibleMonth),
-    )
+    setActiveDate(getCalendarDateInMonth(activeDate, nextVisibleMonth))
   }
   const showPreviousMonth = () => {
     showMonth(-1)
@@ -96,8 +107,8 @@ export default function App() {
             <AddReminderFab />
           </div>
         </Paper>
-        <AgendaDay />
-        <AddReminder />
+        {agendaIsOpen ? <AgendaDay /> : null}
+        {addReminderIsOpen ? <AddReminder /> : null}
       </div>
       <div aria-hidden="true" className="fixed inset-0 z-0 h-full w-full">
         <Image

@@ -1,4 +1,4 @@
-import { expect, test } from "./playwright"
+import { expect, test, waitForCalendarHydration } from "./playwright"
 
 test.beforeEach(async ({ page }) => {
   await page.goto("/")
@@ -7,7 +7,7 @@ test.beforeEach(async ({ page }) => {
     window.localStorage.setItem("theme", "light")
   })
   await page.reload()
-  await expect(page.getByRole("heading", { level: 1 })).toBeVisible()
+  await waitForCalendarHydration(page)
 })
 
 test("supports keyboard date and time editing with explicit confirmation", async ({

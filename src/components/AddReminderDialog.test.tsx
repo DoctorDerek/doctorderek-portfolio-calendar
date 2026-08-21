@@ -4,15 +4,16 @@ import App from "@/components/App"
 import type { RootState } from "@/redux/store"
 import { renderWithProviders } from "@/test/renderWithProviders"
 
+const openReminderDialog = async () => {
+  fireEvent.click(screen.getByRole("button", { name: "Add Reminder" }))
+  return screen.findByRole("dialog", { name: "Add Reminder" })
+}
+
 describe("reminder dialog interactions", () => {
   it("opens and closes through the named application controls", async () => {
     renderWithProviders(<App />)
 
-    fireEvent.click(screen.getByRole("button", { name: "Add Reminder" }))
-
-    expect(
-      screen.getByRole("dialog", { name: "Add Reminder" }),
-    ).toBeInTheDocument()
+    expect(await openReminderDialog()).toBeInTheDocument()
 
     fireEvent.click(screen.getByRole("button", { name: "Close Add Reminder" }))
 
@@ -56,7 +57,7 @@ describe("reminder dialog interactions", () => {
   it("cancels typed reminder text without adding it to the calendar", async () => {
     renderWithProviders(<App />)
 
-    fireEvent.click(screen.getByRole("button", { name: "Add Reminder" }))
+    await openReminderDialog()
     fireEvent.change(screen.getByRole("textbox", { name: "Reminder" }), {
       target: { value: "Cancelled reminder" },
     })
@@ -73,7 +74,7 @@ describe("reminder dialog interactions", () => {
   it("dismisses typed reminder text without adding it to the calendar", async () => {
     renderWithProviders(<App />)
 
-    fireEvent.click(screen.getByRole("button", { name: "Add Reminder" }))
+    await openReminderDialog()
     fireEvent.change(screen.getByRole("textbox", { name: "Reminder" }), {
       target: { value: "Dismissed reminder" },
     })
@@ -90,11 +91,9 @@ describe("reminder dialog interactions", () => {
   it("closes the dialog when Escape is pressed", async () => {
     renderWithProviders(<App />)
 
-    fireEvent.click(screen.getByRole("button", { name: "Add Reminder" }))
+    const reminderDialog = await openReminderDialog()
 
-    fireEvent.keyDown(screen.getByRole("dialog", { name: "Add Reminder" }), {
-      key: "Escape",
-    })
+    fireEvent.keyDown(reminderDialog, { key: "Escape" })
 
     await waitFor(() => {
       expect(
@@ -111,7 +110,7 @@ describe("reminder dialog interactions", () => {
     fireEvent.click(launcherButton)
 
     expect(
-      screen.getByRole("dialog", { name: "Add Reminder" }),
+      await screen.findByRole("dialog", { name: "Add Reminder" }),
     ).toBeInTheDocument()
 
     fireEvent.click(screen.getByRole("button", { name: "Close Add Reminder" }))
@@ -128,13 +127,11 @@ describe("reminder dialog interactions", () => {
   it("does not save a draft when Escape closes the dialog", async () => {
     renderWithProviders(<App />)
 
-    fireEvent.click(screen.getByRole("button", { name: "Add Reminder" }))
+    const reminderDialog = await openReminderDialog()
     fireEvent.change(screen.getByRole("textbox", { name: "Reminder" }), {
       target: { value: "Escape draft" },
     })
-    fireEvent.keyDown(screen.getByRole("dialog", { name: "Add Reminder" }), {
-      key: "Escape",
-    })
+    fireEvent.keyDown(reminderDialog, { key: "Escape" })
 
     await waitFor(() => {
       expect(
@@ -154,7 +151,7 @@ describe("reminder dialog interactions", () => {
       vi.setSystemTime(firstSessionDate)
       const { store } = renderWithProviders(<App />)
 
-      fireEvent.click(screen.getByRole("button", { name: "Add Reminder" }))
+      await openReminderDialog()
       fireEvent.change(screen.getByRole("textbox", { name: "Reminder" }), {
         target: { value: "Discard this draft" },
       })
@@ -173,7 +170,7 @@ describe("reminder dialog interactions", () => {
       })
 
       vi.setSystemTime(secondSessionDate)
-      fireEvent.click(screen.getByRole("button", { name: "Add Reminder" }))
+      await openReminderDialog()
 
       expect(screen.getByRole("textbox", { name: "Reminder" })).toHaveValue("")
       expect(
@@ -197,7 +194,7 @@ describe("reminder dialog interactions", () => {
   it("saves the reminder and closes through form submit", async () => {
     renderWithProviders(<App />)
 
-    fireEvent.click(screen.getByRole("button", { name: "Add Reminder" }))
+    await openReminderDialog()
     fireEvent.change(screen.getByRole("textbox", { name: "Reminder" }), {
       target: { value: "Enter saves reminder" },
     })
@@ -215,7 +212,7 @@ describe("reminder dialog interactions", () => {
   it("persists the selected reminder color when saving", async () => {
     const { store } = renderWithProviders(<App />)
 
-    fireEvent.click(screen.getByRole("button", { name: "Add Reminder" }))
+    await openReminderDialog()
     fireEvent.click(screen.getByRole("button", { name: "Select color Tomato" }))
     fireEvent.change(screen.getByRole("textbox", { name: "Reminder" }), {
       target: { value: "Color persists" },
@@ -235,7 +232,7 @@ describe("reminder dialog interactions", () => {
   it("adds reminder text to the calendar through the explicit save action", async () => {
     renderWithProviders(<App />)
 
-    fireEvent.click(screen.getByRole("button", { name: "Add Reminder" }))
+    await openReminderDialog()
     fireEvent.change(screen.getByRole("textbox", { name: "Reminder" }), {
       target: { value: "Portfolio review" },
     })
@@ -252,7 +249,7 @@ describe("reminder dialog interactions", () => {
   it("normalizes reminder text submitted through the named form", async () => {
     const { store } = renderWithProviders(<App />)
 
-    fireEvent.click(screen.getByRole("button", { name: "Add Reminder" }))
+    await openReminderDialog()
     fireEvent.change(screen.getByRole("textbox", { name: "Reminder" }), {
       target: { value: "   Planning session   " },
     })
@@ -274,10 +271,8 @@ describe("reminder dialog interactions", () => {
     const launcherButton = screen.getByRole("button", { name: "Add Reminder" })
     launcherButton.focus()
 
-    fireEvent.click(screen.getByRole("button", { name: "Add Reminder" }))
-    fireEvent.keyDown(screen.getByRole("dialog", { name: "Add Reminder" }), {
-      key: "Escape",
-    })
+    const reminderDialog = await openReminderDialog()
+    fireEvent.keyDown(reminderDialog, { key: "Escape" })
 
     await waitFor(() => {
       expect(

@@ -1,10 +1,21 @@
-import dynamic from "next/dynamic"
+import type { GetStaticProps, InferGetStaticPropsType } from "next"
+import NextIndexWrapper from "@/components/NextIndexWrapper"
 
-const NextIndexWrapper = dynamic(
-  () => import("@/components/NextIndexWrapper"),
-  { ssr: false },
-)
+const CURRENT_DATE_REVALIDATION_SECONDS = 60 * 60
 
-export default function Page() {
-  return <NextIndexWrapper />
+type PageProps = {
+  initialCurrentDateKey: string
+}
+
+export const getStaticProps = (() => ({
+  props: {
+    initialCurrentDateKey: new Date().toISOString().slice(0, 10),
+  },
+  revalidate: CURRENT_DATE_REVALIDATION_SECONDS,
+})) satisfies GetStaticProps<PageProps>
+
+export default function Page({
+  initialCurrentDateKey,
+}: InferGetStaticPropsType<typeof getStaticProps>) {
+  return <NextIndexWrapper initialCurrentDateKey={initialCurrentDateKey} />
 }
