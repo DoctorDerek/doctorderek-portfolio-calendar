@@ -11,7 +11,12 @@ export default defineConfig({
   },
   test: {
     coverage: {
-      exclude: ["src/pages/**", "src/test/**", "src/**/*.test.{ts,tsx}"],
+      exclude: [
+        "src/pages/**",
+        "src/test/**",
+        "src/**/*.test.{ts,tsx}",
+        "src/**/*.cli.ts",
+      ],
       include: ["src/**/*.{ts,tsx}"],
       provider: "v8",
       reporter: ["text", "json", "html", "lcov"],
