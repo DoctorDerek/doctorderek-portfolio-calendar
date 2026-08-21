@@ -1,7 +1,9 @@
 import Typography from "@mui/material/Typography"
 import dayjs from "dayjs"
-import { useEffect, useRef, type KeyboardEvent } from "react"
+import { useCallback, useEffect, useRef, type KeyboardEvent } from "react"
 import CalendarDay from "@/components/CalendarDay"
+import { openAgenda } from "@/redux/agendaSlice"
+import { useAppDispatch } from "@/redux/hooks"
 import {
   CALENDAR_WEEKDAY_NAMES,
   getCalendarDateInMonth,
@@ -23,6 +25,12 @@ export default function CalendarGrid({
   visibleMonth: Date
 }) {
   const calendarCells = getMonthCells(visibleMonth)
+  const dispatch = useAppDispatch()
+  const openCalendarDayAgenda = useCallback(
+    (date: Date) => dispatch(openAgenda(date.toISOString())),
+    [dispatch],
+  )
+
   return (
     <section
       aria-label="Calendar"
@@ -39,6 +47,7 @@ export default function CalendarGrid({
           activeDate={activeDate}
           calendarCells={calendarCells}
           onActiveDateChange={onActiveDateChange}
+          onOpenAgenda={openCalendarDayAgenda}
           onVisibleMonthChange={onVisibleMonthChange}
           visibleMonth={visibleMonth}
         />
@@ -76,6 +85,7 @@ function CalendarGridMonth({
   activeDate,
   actualToday,
   onActiveDateChange,
+  onOpenAgenda,
   onVisibleMonthChange,
   visibleMonth,
 }: {
@@ -83,6 +93,7 @@ function CalendarGridMonth({
   activeDate: Date
   actualToday: Date
   onActiveDateChange: (date: Date) => void
+  onOpenAgenda: (date: Date) => void
   onVisibleMonthChange: (month: Date) => void
   visibleMonth: Date
 }) {
@@ -195,6 +206,7 @@ function CalendarGridMonth({
                   }
                 }}
                 onActive={() => onActiveDateChange(date)}
+                onOpenAgenda={onOpenAgenda}
                 onKeyDown={(event) => moveCalendarFocus(event, date)}
                 selectedDate={date}
                 tabIndex={getCalendarDateKey(date) === activeDateKey ? 0 : -1}

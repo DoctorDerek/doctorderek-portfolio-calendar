@@ -2,8 +2,7 @@ import AccessAlarmIcon from "@mui/icons-material/AccessAlarm"
 import { Avatar } from "@mui/material"
 import dayjs from "dayjs"
 import { useState, type KeyboardEventHandler, type RefCallback } from "react"
-import { openAgenda } from "@/redux/agendaSlice"
-import { useAppDispatch, useAppSelector } from "@/redux/hooks"
+import { useAppSelector } from "@/redux/hooks"
 import type { ReminderColor } from "@/reminderTypes"
 import combineClassNames from "@/utils/combineClassNames"
 import {
@@ -15,6 +14,7 @@ export default function CalendarDay({
   actualToday,
   buttonRef,
   onActive,
+  onOpenAgenda,
   onKeyDown,
   selectedDate,
   tabIndex,
@@ -23,6 +23,7 @@ export default function CalendarDay({
   actualToday: Date
   buttonRef?: RefCallback<HTMLButtonElement>
   onActive: () => void
+  onOpenAgenda: (date: Date) => void
   onKeyDown?: KeyboardEventHandler<HTMLButtonElement>
   selectedDate: Date
   tabIndex: number
@@ -43,10 +44,6 @@ export default function CalendarDay({
     )
   })
 
-  const dispatch = useAppDispatch()
-  const onDayClick = (selectedDate: Date) => {
-    dispatch(openAgenda(selectedDate.toISOString()))
-  }
   const [focused, setFocused] = useState(false)
   const showReminderDetails = () => setFocused(true)
   const hideReminderDetails = () => setFocused(false)
@@ -56,7 +53,7 @@ export default function CalendarDay({
   }
   const onClick = () => {
     onActive()
-    onDayClick(selectedDateAtCurrentTime)
+    onOpenAgenda(selectedDateAtCurrentTime)
   }
 
   const isToday = dayjs(selectedDateAtCurrentTime).isSame(actualToday, "day")

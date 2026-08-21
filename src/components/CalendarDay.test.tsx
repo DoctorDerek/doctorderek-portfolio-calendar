@@ -1,6 +1,5 @@
 import { fireEvent, screen } from "@testing-library/react"
 import { describe, expect, it, vi } from "vitest"
-import AgendaDay from "@/components/AgendaDay"
 import CalendarDay from "@/components/CalendarDay"
 import type { RootState } from "@/redux/store"
 import { renderWithProviders } from "@/test/renderWithProviders"
@@ -8,27 +7,24 @@ import { renderWithProviders } from "@/test/renderWithProviders"
 describe("calendar day interactions", () => {
   it("opens the matching daily agenda through the named day control", () => {
     const selectedDate = new Date(2026, 6, 15, 12)
+    const onOpenAgenda = vi.fn()
 
     renderWithProviders(
-      <>
-        <CalendarDay
-          actualToday={selectedDate}
-          onActive={() => undefined}
-          selectedDate={selectedDate}
-          tabIndex={0}
-          visibleMonth={selectedDate}
-        />
-        <AgendaDay />
-      </>,
+      <CalendarDay
+        actualToday={selectedDate}
+        onActive={() => undefined}
+        onOpenAgenda={onOpenAgenda}
+        selectedDate={selectedDate}
+        tabIndex={0}
+        visibleMonth={selectedDate}
+      />,
     )
 
     fireEvent.click(
       screen.getByRole("button", { name: "Wednesday July 15, 2026" }),
     )
 
-    expect(
-      screen.getByRole("dialog", { name: "Agenda: July 15, 2026" }),
-    ).toBeInTheDocument()
+    expect(onOpenAgenda).toHaveBeenCalledWith(selectedDate)
   })
 
   it("reveals icon-only reminder details when the day receives keyboard focus", () => {
@@ -55,6 +51,7 @@ describe("calendar day interactions", () => {
       <CalendarDay
         actualToday={actualToday}
         onActive={() => undefined}
+        onOpenAgenda={() => undefined}
         selectedDate={selectedDate}
         tabIndex={0}
         visibleMonth={selectedDate}
@@ -93,6 +90,7 @@ describe("calendar day interactions", () => {
       <CalendarDay
         actualToday={selectedDate}
         onActive={() => undefined}
+        onOpenAgenda={() => undefined}
         selectedDate={selectedDate}
         tabIndex={0}
         visibleMonth={selectedDate}
@@ -123,6 +121,7 @@ describe("calendar day interactions", () => {
       <CalendarDay
         actualToday={selectedDate}
         onActive={onActive}
+        onOpenAgenda={() => undefined}
         selectedDate={selectedDate}
         tabIndex={0}
         visibleMonth={selectedDate}
@@ -149,6 +148,7 @@ describe("calendar day interactions", () => {
       <CalendarDay
         actualToday={selectedDate}
         onActive={() => undefined}
+        onOpenAgenda={() => undefined}
         onKeyDown={onKeyDown}
         selectedDate={selectedDate}
         tabIndex={0}
@@ -188,6 +188,7 @@ describe("calendar day interactions", () => {
       <CalendarDay
         actualToday={selectedDate}
         onActive={() => undefined}
+        onOpenAgenda={() => undefined}
         selectedDate={selectedDate}
         tabIndex={0}
         visibleMonth={selectedDate}
