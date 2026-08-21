@@ -15,6 +15,10 @@ export default function MyApp({ Component, pageProps }: AppProps) {
       <Head>
         <title>Calendar</title>
         <meta
+          name="description"
+          content="A responsive TypeScript calendar for creating, color-coding, reviewing, and deleting reminders."
+        />
+        <meta
           name="viewport"
           content="width=device-width, initial-scale=1, shrink-to-fit=no"
         />
