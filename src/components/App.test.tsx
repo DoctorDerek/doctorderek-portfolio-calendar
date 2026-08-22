@@ -58,6 +58,21 @@ describe("calendar month navigation", () => {
     expect(backgroundImage).toHaveAttribute("data-placeholder", "blur")
   })
 
+  it("reserves the responsive theme toggle space before hydration", async () => {
+    renderWithProviders(<App />)
+
+    const themeToggle = await screen.findByRole("button", {
+      name: /Switch to (light|dark) theme/,
+    })
+
+    expect(themeToggle.parentElement).toHaveClass(
+      "h-11",
+      "w-20",
+      "sm:w-28",
+      "lg:w-36",
+    )
+  })
+
   it("keeps one active date in the tab order across month changes", () => {
     vi.useFakeTimers()
     vi.setSystemTime(new Date(2026, 0, 31, 12))
