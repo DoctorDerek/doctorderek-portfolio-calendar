@@ -239,6 +239,9 @@ jobs:
           token: ${{ secrets.CODECOV_TOKEN }}
           flags: vitest
 
+      - name: Run Blocking XState Analyzer Tests
+        run: pnpm test:xstate-diff
+
       - name: Enforce Test and Tooling Results
         if: always()
         run: |
