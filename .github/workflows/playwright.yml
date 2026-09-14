@@ -17,6 +17,8 @@ jobs:
     steps:
       - name: Checkout Repository
         uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
+        with:
+          ref: ${{ github.event.deployment.sha }}
 
       - name: Setup pnpm
         uses: pnpm/action-setup@a3252b78c470c02df07e9d59298aecedc3ccdd6d # v3
@@ -57,7 +59,7 @@ jobs:
 
       - name: Run Playwright Tests and Capture Summary
         id: playwright
-        if: always()
+        if: ${{ !cancelled() && steps.github-oidc-token.outcome == 'success' }}
         run: |
           set +e
           pnpm exec playwright test --pass-with-no-tests 2>&1 | tee "$RUNNER_TEMP/playwright-output.txt"
@@ -66,20 +68,47 @@ jobs:
 
           echo "PLAYWRIGHT_EXIT_CODE=$PLAYWRIGHT_EXIT_CODE" >> "$GITHUB_ENV"
           echo "PLAYWRIGHT_OUTPUT_FILE=$RUNNER_TEMP/playwright-output.txt" >> "$GITHUB_ENV"
+          exit "$PLAYWRIGHT_EXIT_CODE"
         env:
           PLAYWRIGHT_TEST_BASE_URL: ${{ github.event.deployment_status.target_url }}
           PLAYWRIGHT_VERCEL_TRUSTED_OIDC_TOKEN: ${{ steps.github-oidc-token.outputs.token }}
 
+      - name: Inspect Playwright Evidence
+        if: ${{ !cancelled() }}
+        run: |
+          echo "### Playwright test evidence" >> "$GITHUB_STEP_SUMMARY"
+          echo "Deployment: $DEPLOYMENT_SHA" >> "$GITHUB_STEP_SUMMARY"
+          echo "Checkout: $(git rev-parse HEAD)" >> "$GITHUB_STEP_SUMMARY"
+          echo "Runner exit: ${PLAYWRIGHT_EXIT_CODE:-unavailable}" >> "$GITHUB_STEP_SUMMARY"
+
+          for REPORT in playwright-report/index.html test-results/.last-run.json; do
+            if [ -s "$REPORT" ]; then
+              echo "- Available: $REPORT" >> "$GITHUB_STEP_SUMMARY"
+            else
+              echo "::warning::Playwright evidence unavailable: $REPORT"
+              echo "- Unavailable: $REPORT" >> "$GITHUB_STEP_SUMMARY"
+            fi
+          done
+
+          echo "Reports and existing traces are test evidence, not application code coverage. Failed or interrupted runs may have incomplete browser results; unavailable evidence is not a passing result." >> "$GITHUB_STEP_SUMMARY"
+        env:
+          DEPLOYMENT_SHA: ${{ github.event.deployment.sha }}
+
       - name: Upload Playwright Report
-        if: always()
+        if: ${{ !cancelled() }}
+        timeout-minutes: 3
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
           name: playwright-report
-          path: playwright-report/
+          path: |
+            playwright-report/
+            test-results/
+          include-hidden-files: true
+          if-no-files-found: warn
           retention-days: 14
 
       - name: Post Playwright PR Comment
-        if: always()
+        if: ${{ !cancelled() }}
         continue-on-error: true
         uses: actions/github-script@373c709c69115d41ff229c7e5df9f8788daa9553 # v9
         with:
@@ -165,7 +194,7 @@ jobs:
             }
 
       - name: Enforce Playwright Result
-        if: always()
+        if: ${{ !cancelled() }}
         run: |
           if ! [[ "$PLAYWRIGHT_EXIT_CODE" =~ ^[0-9]+$ ]] || [ "$PLAYWRIGHT_EXIT_CODE" -ne 0 ]; then
             echo "Playwright tests failed or the runner could not complete."
