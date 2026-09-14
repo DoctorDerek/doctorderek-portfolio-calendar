@@ -20,7 +20,9 @@ export default defineConfig({
       ],
       include: ["src/**/*.{ts,tsx}"],
       provider: "v8",
+      reportOnFailure: true,
       reporter: ["text", "json", "html", "lcov"],
+      reportsDirectory: "coverage/vitest",
     },
     environment: "happy-dom",
     exclude: [

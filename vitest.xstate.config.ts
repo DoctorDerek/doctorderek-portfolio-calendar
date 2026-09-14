@@ -12,7 +12,9 @@ export default defineConfig({
     coverage: {
       include: ["src/scripts/xstate-diff/**/*.ts"],
       exclude: ["src/scripts/xstate-diff/xstateDiff.cli.ts"],
-      reporter: ["text", "json-summary"],
+      reportOnFailure: true,
+      reporter: ["text", "json-summary", "lcov"],
+      reportsDirectory: "coverage/xstate",
       thresholds: {
         branches: 100,
         functions: 100,
