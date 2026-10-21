@@ -22,7 +22,7 @@
   },
   "scripts": {
     "dev": "next dev",
-    "lint": "eslint src",
+    "lint": "eslint .",
     "start": "next start",
     "build": "next build",
     "test": "vitest",
