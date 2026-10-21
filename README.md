@@ -66,6 +66,16 @@ git diff --check
 
 The repository also exposes `pnpm test`, `pnpm test:e2e`, and `pnpm test:e2e:ui` for its configured Vitest and Playwright environments.
 
+### TypeScript lint coverage
+
+`pnpm lint` scans the whole repository, including application code, tests, and root configuration. The shared DoctorDerekCICD quality workflow separately checks that every tracked `.ts`, `.tsx`, `.mts`, and `.cts` file has an effective ESLint configuration with enabled TypeScript rules, or an explicit ignore. Missing configuration coverage fails that check; ordinary lint findings retain the existing advisory policy.
+
+`eslint.config.ts` owns the application’s rules. It combines Next.js Core Web Vitals with the installed Next.js TypeScript preset, scoped to TypeScript files. Generated output and private scratch files remain ignored. Calendar needs no additional rule exceptions; future justified exceptions belong in this configuration, not inline suppressions or whole-file ignores.
+
+The installed Prettier 9 configuration has no TypeScript declarations, so its existing import-level type workaround remains in `eslint.config.ts`. This is a compiler compatibility boundary, not an ESLint rule exemption. The documented `eslint-plugin-only-warn` side-effect import preserves advisory diagnostics without pretending it is an ESLint plugin object.
+
+`eslint.config.test.ts` exercises the real ESLint configuration against valid JSX, unsafe types, unused imports, invalid Hooks usage, fatal syntax errors, and scope boundaries. Configuration coverage is not type-aware linting or runtime correctness: strict TypeScript checking and the existing Vitest and Playwright checks retain those separate responsibilities.
+
 ## Provenance
 
 [AmTote](https://github.com/AmTote/calendar-appointments) supplied the original React and Redux calendar as a take-home exercise and instructed candidates to fork it and submit a completed repository link. This portfolio edition preserves that provenance while documenting Dr. Derek Austin’s substantial modernization and product work, including the reminder workflow, Redux Toolkit state, strict TypeScript architecture, Next.js migration, responsive interface, theme system, continuous integration, and Vercel delivery.
