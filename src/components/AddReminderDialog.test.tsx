@@ -1,4 +1,4 @@
-import { fireEvent, screen, waitFor, within } from "@testing-library/react"
+import { act, fireEvent, screen, waitFor, within } from "@testing-library/react"
 import { describe, expect, it, vi } from "vitest"
 import App from "@/components/App"
 import type { RootState } from "@/redux/store"
@@ -6,6 +6,7 @@ import { renderWithProviders } from "@/test/renderWithProviders"
 
 const openReminderDialog = async () => {
   fireEvent.click(screen.getByRole("button", { name: "Add Reminder" }))
+  await act(() => vi.dynamicImportSettled())
   return screen.findByRole("dialog", { name: "Add Reminder" })
 }
 
@@ -107,11 +108,8 @@ describe("reminder dialog interactions", () => {
 
     const launcherButton = screen.getByRole("button", { name: "Add Reminder" })
     launcherButton.focus()
-    fireEvent.click(launcherButton)
 
-    expect(
-      await screen.findByRole("dialog", { name: "Add Reminder" }),
-    ).toBeInTheDocument()
+    expect(await openReminderDialog()).toBeInTheDocument()
 
     fireEvent.click(screen.getByRole("button", { name: "Close Add Reminder" }))
 

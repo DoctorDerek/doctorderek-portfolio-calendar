@@ -405,6 +405,7 @@ describe("calendar month navigation", () => {
     expect(screen.queryByRole("dialog", { name: "Add Reminder" })).toBeNull()
 
     fireEvent.click(screen.getByRole("button", { name: "Add Reminder" }))
+    await act(() => vi.dynamicImportSettled())
 
     expect(
       await screen.findByRole("dialog", { name: "Add Reminder" }),
@@ -423,6 +424,7 @@ describe("calendar month navigation", () => {
         name: formatCalendarDayAccessibleName(currentDate),
       }),
     )
+    await act(() => vi.dynamicImportSettled())
 
     expect(
       await screen.findByRole("dialog", { name: agendaTitle }),
