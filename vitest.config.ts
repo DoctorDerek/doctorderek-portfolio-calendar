@@ -11,12 +11,7 @@ export default defineConfig({
   },
   test: {
     coverage: {
-      exclude: [
-        "src/pages/**",
-        "src/test/**",
-        "src/**/*.test.{ts,tsx}",
-        "src/**/*.cli.ts",
-      ],
+      exclude: ["src/test/**", "src/**/*.test.{ts,tsx}", "src/**/*.cli.ts"],
       include: ["src/**/*.{ts,tsx}"],
       provider: "v8",
       reportOnFailure: true,
