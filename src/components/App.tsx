@@ -58,13 +58,13 @@ export default function App({
     <>
       <div className="relative z-10 flex min-h-screen w-full items-start justify-center">
         <Paper
-          className="m-2 flex w-full max-w-[1600px] flex-col items-center justify-center rounded-3xl p-2 sm:m-6 sm:p-4"
+          className="@container m-2 flex w-full max-w-[100rem] min-w-0 flex-col items-center justify-center rounded-3xl p-2 sm:m-6 sm:p-4"
           classes={{
             root: "backdrop-filter backdrop-grayscale backdrop-blur bg-[rgba(255,255,255,0.3)] dark:bg-[rgba(0,0,0,0.3)]",
           }}
         >
           <header className="grid w-full grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-x-2 gap-y-3 py-3 sm:gap-x-3 sm:py-5 md:grid-cols-[auto_auto_minmax(0,1fr)_auto_auto] md:gap-4">
-            <div className="col-start-1 row-start-1 justify-self-start">
+            <div className="col-start-1 row-start-1 justify-self-start @max-3xs:row-start-2">
               <CustomIcon
                 ariaLabel="Previous Month"
                 onClick={showPreviousMonth}
@@ -72,21 +72,23 @@ export default function App({
                 Icon={KeyboardArrowLeftIcon}
               />
             </div>
-            <div className="col-start-1 row-start-2 h-11 w-20 justify-self-start sm:w-28 md:col-start-2 md:row-start-1 lg:w-36">
-              <ToggleDarkMode />
+            <div className="col-span-3 col-start-1 row-start-2 flex min-w-0 flex-wrap items-center justify-between gap-3 md:contents @max-3xs:row-start-3">
+              <div className="h-11 w-20 justify-self-start sm:w-28 md:col-start-2 md:row-start-1 lg:w-36">
+                <ToggleDarkMode />
+              </div>
+              <div className="justify-self-end md:col-start-4 md:row-start-1">
+                <ToggleShowHours />
+              </div>
             </div>
             <h1
-              className="col-start-2 row-start-1 min-w-0 text-center text-2xl font-bold text-gray-900 drop-shadow-lg sm:text-4xl md:col-start-3 lg:text-5xl dark:text-gray-100"
+              className="col-start-2 row-start-1 min-w-0 text-center text-2xl font-bold wrap-anywhere text-gray-900 drop-shadow-lg sm:text-4xl md:col-start-3 lg:text-5xl @max-3xs:col-span-3 @max-3xs:col-start-1 dark:text-gray-100"
               id="calendar-month-heading"
               aria-live="polite"
               aria-atomic="true"
             >
               {formatCalendarMonthHeading(visibleMonth)}
             </h1>
-            <div className="col-start-3 row-start-2 justify-self-end md:col-start-4 md:row-start-1">
-              <ToggleShowHours />
-            </div>
-            <div className="col-start-3 row-start-1 justify-self-end md:col-start-5">
+            <div className="col-start-3 row-start-1 justify-self-end md:col-start-5 @max-3xs:row-start-2">
               <CustomIcon
                 ariaLabel="Next Month"
                 onClick={showNextMonth}
