@@ -16,7 +16,7 @@ export default function AddReminderFab({ date }: { date?: Date | null }) {
   return (
     <Fab
       aria-label={ariaLabel}
-      className="static h-14 shrink-0 gap-1 bg-green-600 fill-current px-4 text-white hover:bg-green-800 sm:h-16"
+      className="static h-auto! min-h-14! max-w-full min-w-0! shrink-0 gap-1 bg-green-600 fill-current px-4 py-3! whitespace-normal! text-white hover:bg-green-800 sm:min-h-16!"
       onClick={onFabAddClick}
       variant="extended"
     >
