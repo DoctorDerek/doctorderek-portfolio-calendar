@@ -10,6 +10,67 @@ test.beforeEach(async ({ page }) => {
   await waitForCalendarHydration(page)
 })
 
+for (const width of [320, 390]) {
+  test(`keeps the calendar and reminder editor usable with enlarged text at ${width}px`, async ({
+    page,
+  }) => {
+    await page.setViewportSize({ width, height: 844 })
+    await page.emulateMedia({ reducedMotion: "reduce" })
+    await page.evaluate(() => {
+      document.documentElement.style.fontSize = "200%"
+    })
+    await page.evaluate(async () => {
+      await document.fonts.ready
+    })
+    const rootWidth = await page.evaluate(() => ({
+      width: document.documentElement.clientWidth,
+      scroll: document.documentElement.scrollWidth,
+    }))
+    expect(rootWidth.scroll).toBeLessThanOrEqual(rootWidth.width)
+    const addReminder = page.getByRole("button", {
+      name: "Add Reminder",
+      exact: true,
+    })
+    expect((await addReminder.boundingBox())!.height).toBeGreaterThanOrEqual(44)
+    await page
+      .getByRole("button", { name: "Add Reminder", exact: true })
+      .click()
+    const dialog = page.getByRole("dialog", {
+      name: "Add Reminder Close Add Reminder",
+      exact: true,
+    })
+    await expect(dialog).toBeVisible()
+    const geometry = await dialog.evaluate((element) => ({
+      width: element.clientWidth,
+      scroll: element.scrollWidth,
+      left: element.getBoundingClientRect().left,
+      right: element.getBoundingClientRect().right,
+    }))
+    expect(geometry.left).toBeGreaterThanOrEqual(0)
+    expect(geometry.right).toBeLessThanOrEqual(width)
+    expect(geometry.scroll).toBeLessThanOrEqual(geometry.width)
+    const hours = dialog.getByRole("spinbutton", { name: "Hours", exact: true })
+    await hours.fill("03")
+    await hours.press("Tab")
+    await expect(hours).toHaveAttribute("aria-valuenow", "3")
+    await dialog
+      .getByRole("textbox", { name: "Reminder", exact: true })
+      .fill("Enlarged text review")
+    await dialog
+      .getByRole("button", { name: "Save Reminder", exact: true })
+      .click()
+    await expect(dialog).toBeHidden()
+    await page.locator('button[aria-current="date"]').click()
+    const agenda = page.getByRole("dialog", { name: /^Agenda:/ })
+    await expect(agenda.getByText("Enlarged text review")).toBeVisible()
+    const agendaWidth = await agenda.evaluate((element) => ({
+      width: element.clientWidth,
+      scroll: element.scrollWidth,
+    }))
+    expect(agendaWidth.scroll).toBeLessThanOrEqual(agendaWidth.width)
+  })
+}
+
 test("supports keyboard date and time editing with explicit confirmation", async ({
   page,
 }) => {

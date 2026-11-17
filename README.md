@@ -13,7 +13,6 @@ A responsive TypeScript calendar for creating, color-coding, reviewing, and dele
 - Keep reminders chronologically ordered and review or delete them from a daily agenda.
 - Switch calendar entries between compact icons and visible appointment times.
 - Choose light or dark mode manually, or follow the operating-system preference by default.
-- Keep theme, display-mode, and navigation controls separated across mobile and desktop headers.
 
 ## Technology
 

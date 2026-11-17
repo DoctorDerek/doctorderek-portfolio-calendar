@@ -65,7 +65,7 @@ function ReminderForm({ dateISOString }: { dateISOString: string }) {
     <CustomDialog title="Add Reminder" open={true} onClose={closeReminder}>
       <form
         aria-label="Reminder details"
-        className="flex flex-col gap-5 sm:gap-6"
+        className="flex min-w-0 flex-col gap-5 sm:gap-6"
         onSubmit={saveReminder}
       >
         <div className="space-y-2">
@@ -80,8 +80,15 @@ function ReminderForm({ dateISOString }: { dateISOString: string }) {
                 onChange={setSelectedDateTime}
                 slotProps={{
                   textField: {
-                    className: "text-base sm:text-lg",
+                    className: "min-w-0 text-base sm:text-lg",
                     fullWidth: true,
+                    slotProps: {
+                      input: {
+                        slotProps: {
+                          input: { className: "w-auto! min-w-0! flex-wrap!" },
+                        },
+                      },
+                    },
                   },
                 }}
               />
@@ -121,7 +128,7 @@ function ReminderForm({ dateISOString }: { dateISOString: string }) {
             onChange={handleReminderChange}
           />
         </div>
-        <div className="flex justify-end gap-4">
+        <div className="flex flex-wrap justify-end gap-4">
           <Button color="inherit" onClick={closeReminder} type="button">
             Cancel
           </Button>

@@ -13,7 +13,8 @@ const roboto = Roboto({
   weight: ["300", "400", "500", "700"],
 })
 
-type MyAppProps = AppProps & EmotionCacheProviderProps
+type MyAppProps = Pick<AppProps, "Component" | "pageProps"> &
+  EmotionCacheProviderProps
 
 export default function MyApp({
   Component,
