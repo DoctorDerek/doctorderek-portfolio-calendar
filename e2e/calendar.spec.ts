@@ -185,6 +185,8 @@ test("serves the decorative background through bounded responsive WebP optimizat
   }
 
   const optimizedSourceUrl = new URL(optimizedSource, page.url())
+  const backgroundSourcePath =
+    /^\/_next\/static\/(?:immutable\/)?media\/benjamin-patin-dOzoyaYjCbM-unsplash\.[a-z0-9]+\.jpg$/
   const optimizedBackgroundResponse = await page.request.get(
     optimizedSourceUrl.toString(),
     {
@@ -194,7 +196,7 @@ test("serves the decorative background through bounded responsive WebP optimizat
 
   expect(optimizedSourceUrl.pathname).toBe("/_next/image")
   expect(optimizedSourceUrl.searchParams.get("url")).toMatch(
-    /^\/_next\/static\/media\/benjamin-patin-dOzoyaYjCbM-unsplash\.[a-z0-9]+\.jpg$/,
+    backgroundSourcePath,
   )
   expect([640, 1280, 1920, 2880, 3840]).toContain(
     Number(optimizedSourceUrl.searchParams.get("w")),
@@ -231,9 +233,7 @@ test("serves the decorative background through bounded responsive WebP optimizat
 
   for (const { sourceUrl, widthDescriptor } of responsiveSourceCandidates) {
     expect(sourceUrl.pathname).toBe("/_next/image")
-    expect(sourceUrl.searchParams.get("url")).toMatch(
-      /^\/_next\/static\/media\/benjamin-patin-dOzoyaYjCbM-unsplash\.[a-z0-9]+\.jpg$/,
-    )
+    expect(sourceUrl.searchParams.get("url")).toMatch(backgroundSourcePath)
     expect(sourceUrl.searchParams.get("w")).toBe(
       widthDescriptor.replace(/w$/, ""),
     )
