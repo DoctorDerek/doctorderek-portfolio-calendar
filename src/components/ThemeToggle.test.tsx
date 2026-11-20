@@ -10,7 +10,7 @@ describe("theme toggle presentation", () => {
     const themeToggle = screen.getByRole("button", {
       name: "Switch to dark theme",
     })
-    expect(themeToggle).toHaveClass("theme-toggle--light")
+    expect(themeToggle).toHaveAttribute("aria-pressed", "false")
 
     fireEvent.click(themeToggle)
 
@@ -22,6 +22,6 @@ describe("theme toggle presentation", () => {
 
     expect(
       screen.getByRole("button", { name: "Switch to light theme" }),
-    ).toHaveClass("theme-toggle--dark")
+    ).toHaveAttribute("aria-pressed", "true")
   })
 })

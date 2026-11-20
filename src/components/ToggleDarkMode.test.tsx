@@ -47,7 +47,7 @@ describe("theme toggle interactions", () => {
     })
     fireEvent.click(themeToggle)
 
-    expect(themeToggle).toHaveClass("theme-toggle--light")
+    expect(themeToggle).toHaveAttribute("aria-pressed", "false")
     expect(themeState.setTheme).toHaveBeenCalledWith("dark")
   })
 })
