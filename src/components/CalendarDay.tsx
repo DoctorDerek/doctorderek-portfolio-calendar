@@ -1,8 +1,11 @@
-import AccessAlarmIcon from "@mui/icons-material/AccessAlarm"
-import { Avatar } from "@mui/material"
 import dayjs from "dayjs"
 import type { KeyboardEventHandler, RefCallback } from "react"
-import type { Reminder, ReminderColor } from "@/reminderTypes"
+import CalendarIcon from "@/components/CalendarIcon"
+import {
+  reminderColorClass,
+  type Reminder,
+  type ReminderColor,
+} from "@/reminderTypes"
 import combineClassNames from "@/utils/combineClassNames"
 import {
   formatCalendarDayAccessibleName,
@@ -95,11 +98,11 @@ export default function CalendarDay({
           {!showHours && <ReminderIcon color={color} />}
           <div
             className={combineClassNames(
-              "line-clamp-1 w-full rounded-sm px-1 text-left text-[0.625rem] sm:text-xs lg:text-sm",
+              reminderColorClass[color],
+              "line-clamp-1 w-full rounded-sm bg-(--reminder-color) px-1 text-left text-[0.625rem] sm:text-xs lg:text-sm",
               !showHours &&
                 "sr-only group-hover:not-sr-only group-focus:not-sr-only",
             )}
-            style={{ backgroundColor: color }}
           >
             <span className="font-medium">
               {formatReminderTime(dayjs(dateISOString).toDate())}
@@ -114,11 +117,13 @@ export default function CalendarDay({
 
 function ReminderIcon({ color }: { color: ReminderColor }) {
   return (
-    <Avatar
-      style={{ backgroundColor: color }}
-      className="m-px h-5 w-5 border border-solid border-gray-300 group-hover:hidden group-focus:hidden md:mx-0.5"
+    <span
+      className={combineClassNames(
+        reminderColorClass[color],
+        "m-px inline-flex h-5 w-5 items-center justify-center rounded-full border border-solid border-gray-300 bg-(--reminder-color) group-hover:hidden group-focus:hidden md:mx-0.5",
+      )}
     >
-      <AccessAlarmIcon className="h-4 w-4" />
-    </Avatar>
+      <CalendarIcon name="alarm" className="h-4 w-4" />
+    </span>
   )
 }

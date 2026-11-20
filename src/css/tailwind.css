@@ -1,6 +1,12 @@
 @import "tailwindcss";
 @custom-variant dark (&:where(.dark, .dark *));
 
+@theme {
+  --color-calendar-paper-night: #1e1e1e;
+  --color-calendar-dialog-night: #383838;
+  --color-calendar-action: #e0e0e0;
+}
+
 :focus-visible {
   outline: 3px solid rgb(5, 150, 105);
   outline-offset: 2px;

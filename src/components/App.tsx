@@ -1,6 +1,3 @@
-import KeyboardArrowLeftIcon from "@mui/icons-material/KeyboardArrowLeft"
-import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight"
-import Paper from "@mui/material/Paper"
 import dayjs from "dayjs"
 import dynamic from "next/dynamic"
 import Image from "next/image"
@@ -57,19 +54,13 @@ export default function App({
   return (
     <>
       <div className="relative z-10 flex min-h-screen w-full items-start justify-center">
-        <Paper
-          className="@container m-2 flex w-full max-w-[100rem] min-w-0 flex-col items-center justify-center rounded-3xl p-2 sm:m-6 sm:p-4"
-          classes={{
-            root: "backdrop-filter backdrop-grayscale backdrop-blur bg-[rgba(255,255,255,0.3)] dark:bg-[rgba(0,0,0,0.3)]",
-          }}
-        >
+        <div className="dark:bg-calendar-paper-night @container m-2 flex w-full max-w-[100rem] min-w-0 flex-col items-center justify-center rounded bg-white p-2 text-black/85 shadow-sm sm:m-6 sm:p-4 dark:text-white">
           <header className="grid w-full grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-x-2 gap-y-3 py-3 sm:gap-x-3 sm:py-5 md:grid-cols-[auto_auto_minmax(0,1fr)_auto_auto] md:gap-4">
             <div className="col-start-1 row-start-1 justify-self-start @max-3xs:row-start-2">
               <CustomIcon
                 ariaLabel="Previous Month"
                 onClick={showPreviousMonth}
-                color="blue"
-                Icon={KeyboardArrowLeftIcon}
+                icon="previous"
               />
             </div>
             <div className="col-span-3 col-start-1 row-start-2 flex min-w-0 flex-wrap items-center justify-between gap-3 md:contents @max-3xs:row-start-3">
@@ -92,8 +83,7 @@ export default function App({
               <CustomIcon
                 ariaLabel="Next Month"
                 onClick={showNextMonth}
-                color="blue"
-                Icon={KeyboardArrowRightIcon}
+                icon="next"
               />
             </div>
           </header>
@@ -108,7 +98,7 @@ export default function App({
             <StorageStatus />
             <AddReminderFab />
           </div>
-        </Paper>
+        </div>
         {agendaIsOpen ? <AgendaDay /> : null}
         {addReminderIsOpen ? <AddReminder /> : null}
       </div>

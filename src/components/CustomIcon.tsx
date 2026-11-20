@@ -1,44 +1,31 @@
-import { SvgIconTypeMap } from "@mui/material"
-import IconButton from "@mui/material/IconButton"
-import { OverridableComponent } from "@mui/material/OverridableComponent"
+import CalendarIcon, { type CalendarIconName } from "@/components/CalendarIcon"
 import combineClassNames from "@/utils/combineClassNames"
-
-type MUIIcon = OverridableComponent<
-  SvgIconTypeMap<Record<string, unknown>, "svg">
-> & {
-  muiName: string
-}
 
 export default function CustomIcon({
   ariaLabel,
   onClick,
-  color,
-  Icon,
+  icon,
   size = "large",
 }: {
   ariaLabel: string
   onClick: () => void
-  color: "blue" | "gray"
-  Icon: MUIIcon
+  icon: CalendarIconName
   size?: "small" | "large"
 }) {
   return (
-    <IconButton
+    <button
+      type="button"
       aria-label={ariaLabel}
       title={ariaLabel}
       className={combineClassNames(
-        "border border-solid fill-current transition-all duration-500",
-        size === "small" ? "h-8 w-8" : "h-12 w-12 sm:h-14 sm:w-14",
-        "dark:bg-opacity-80 bg-gray-100",
-        color === "blue"
-          ? "border-blue-300 text-blue-500 hover:border-blue-500 hover:bg-blue-300 hover:text-blue-700"
-          : "border-gray-300 text-gray-500 hover:border-gray-500 hover:bg-gray-300 hover:text-gray-700",
+        "inline-flex shrink-0 cursor-pointer items-center justify-center rounded-full bg-transparent transition-colors hover:bg-black/5 motion-reduce:transition-none dark:hover:bg-white/10",
+        size === "small"
+          ? "h-8 w-8 text-current"
+          : "h-12 w-12 text-black/55 sm:h-14 sm:w-14 dark:text-white",
       )}
       onClick={onClick}
     >
-      <Icon
-        className={size === "small" ? "h-6 w-6" : "h-9 w-9 sm:h-11 sm:w-11"}
-      />
-    </IconButton>
+      <CalendarIcon name={icon} className="size-6" />
+    </button>
   )
 }
