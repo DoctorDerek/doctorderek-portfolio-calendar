@@ -36,7 +36,7 @@ for (const width of [320, 390]) {
       .getByRole("button", { name: "Add Reminder", exact: true })
       .click()
     const dialog = page.getByRole("dialog", {
-      name: "Add Reminder Close Add Reminder",
+      name: "Add Reminder",
       exact: true,
     })
     await expect(dialog).toBeVisible()
@@ -49,10 +49,11 @@ for (const width of [320, 390]) {
     expect(geometry.left).toBeGreaterThanOrEqual(0)
     expect(geometry.right).toBeLessThanOrEqual(width)
     expect(geometry.scroll).toBeLessThanOrEqual(geometry.width)
-    const hours = dialog.getByRole("spinbutton", { name: "Hours", exact: true })
-    await hours.fill("03")
-    await hours.press("Tab")
-    await expect(hours).toHaveAttribute("aria-valuenow", "3")
+    const dateTime = dialog.getByLabel("Date and time")
+    const date = (await dateTime.inputValue()).split("T")[0]
+    await dateTime.fill(`${date}T03:00`)
+    await dateTime.press("Tab")
+    await expect(dateTime).toHaveValue(`${date}T03:00`)
     await dialog
       .getByRole("textbox", { name: "Reminder", exact: true })
       .fill("Enlarged text review")
@@ -75,38 +76,14 @@ test("supports keyboard date and time editing with explicit confirmation", async
   page,
 }) => {
   await page.getByRole("button", { name: "Add Reminder" }).click()
-  const dateTimeField = page.getByRole("group", {
-    name: "Date and time",
-  })
-  const month = dateTimeField.getByRole("spinbutton", { name: "Month" })
-  const day = dateTimeField.getByRole("spinbutton", { name: "Day" })
-  const year = dateTimeField.getByRole("spinbutton", { name: "Year" })
-  const hours = dateTimeField.getByRole("spinbutton", { name: "Hours" })
-  const minutes = dateTimeField.getByRole("spinbutton", { name: "Minutes" })
-  const meridiem = dateTimeField.getByRole("spinbutton", { name: "Meridiem" })
-
-  await month.fill("08")
-  await day.fill("20")
-  await year.fill("2026")
-  await hours.fill("03")
-  await minutes.fill("45")
-  await meridiem.fill("PM")
-
-  await expect(month).toHaveAttribute("aria-valuenow", "8")
-  await expect(day).toHaveAttribute("aria-valuenow", "20")
-  await expect(year).toHaveAttribute("aria-valuenow", "2026")
-  await expect(hours).toHaveAttribute("aria-valuenow", "3")
-  await expect(minutes).toHaveAttribute("aria-valuenow", "45")
-  await expect(meridiem).toHaveText("PM")
-
-  await page
-    .getByRole("button", { name: "Choose date, selected date is Aug 20, 2026" })
-    .click()
-  const dateTimePickerDialog = page.getByRole("dialog", {
-    name: "Date and time",
-  })
-  await dateTimePickerDialog.getByRole("button", { name: "OK" }).click()
-  await expect(dateTimePickerDialog).toBeHidden()
+  const dateTime = page.getByLabel("Date and time")
+  await dateTime.focus()
+  await dateTime.fill("2026-08-20T15:45")
+  await dateTime.press("Tab")
+  await expect(dateTime).toHaveValue("2026-08-20T15:45")
+  await expect(
+    page.getByRole("button", { name: "Save Reminder" }),
+  ).toBeDisabled()
 
   await page
     .getByRole("textbox", { name: "Reminder" })
@@ -409,10 +386,7 @@ test("saves a selected reminder color and exposes it in the agenda list", async 
 
   const reminderItem = agendaDialog.locator("li", { hasText: "Violet mode" })
   await expect(reminderItem).toBeVisible()
-  await expect(reminderItem).toHaveAttribute(
-    "style",
-    /--agenda-reminder-color:\s*Tomato/,
-  )
+  await expect(reminderItem).toHaveCSS("--reminder-color", "tomato")
 })
 
 test("respects the reduced-motion preference for reminder lifecycle transitions", async ({

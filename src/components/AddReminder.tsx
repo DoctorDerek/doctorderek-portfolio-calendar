@@ -1,11 +1,6 @@
-import CheckIcon from "@mui/icons-material/Check"
-import { Button, TextField } from "@mui/material"
-import Typography from "@mui/material/Typography"
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs"
-import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker"
-import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider"
-import dayjs, { Dayjs } from "dayjs"
+import dayjs from "dayjs"
 import { useState } from "react"
+import CalendarIcon from "@/components/CalendarIcon"
 import CustomDialog from "@/components/CustomDialog"
 import { closeAddReminder } from "@/redux/addReminderSlice"
 import { useAppDispatch, useAppSelector } from "@/redux/hooks"
@@ -13,6 +8,7 @@ import { addNewReminder } from "@/redux/remindersSlice"
 import {
   REMINDER_COLORS,
   REMINDER_MAX_LENGTH,
+  reminderColorClass,
   type ReminderColor,
 } from "@/reminderTypes"
 import combineClassNames from "@/utils/combineClassNames"
@@ -29,14 +25,15 @@ export default function AddReminder() {
 }
 
 function ReminderForm({ dateISOString }: { dateISOString: string }) {
-  const date = dateISOString ? dayjs(dateISOString) : dayjs()
-  const [selectedDateTime, setSelectedDateTime] = useState<Dayjs | null>(date)
+  const [selectedDateTime, setSelectedDateTime] = useState(() =>
+    dayjs(dateISOString || undefined).format("YYYY-MM-DDTHH:mm"),
+  )
   const [selectedColor, setSelectedColor] =
     useState<ReminderColor>("DodgerBlue")
   const [reminder, setReminder] = useState("")
   const normalizedReminder = reminder.trim()
   const reminderCanBeSaved =
-    selectedDateTime !== null && normalizedReminder.length > 0
+    selectedDateTime !== "" && normalizedReminder.length > 0
   const remainingCharacters = REMINDER_MAX_LENGTH - reminder.length
   const handleReminderChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const newReminder = event.target.value
@@ -53,7 +50,7 @@ function ReminderForm({ dateISOString }: { dateISOString: string }) {
 
     dispatch(
       addNewReminder({
-        dateISOString: selectedDateTime.toISOString(),
+        dateISOString: dayjs(selectedDateTime).toISOString(),
         color: selectedColor,
         text: normalizedReminder,
       }),
@@ -69,38 +66,30 @@ function ReminderForm({ dateISOString }: { dateISOString: string }) {
         onSubmit={saveReminder}
       >
         <div className="space-y-2">
-          <Typography className="text-base font-medium sm:text-xl">
-            Select the date and time for the reminder:
-          </Typography>
-          <div className="w-full">
-            <LocalizationProvider dateAdapter={AdapterDayjs}>
-              <DateTimePicker
-                label="Date and time"
-                value={selectedDateTime}
-                onChange={setSelectedDateTime}
-                slotProps={{
-                  textField: {
-                    className: "min-w-0 text-base sm:text-lg",
-                    fullWidth: true,
-                    slotProps: {
-                      input: {
-                        slotProps: {
-                          input: { className: "w-auto! min-w-0! flex-wrap!" },
-                        },
-                      },
-                    },
-                  },
-                }}
-              />
-            </LocalizationProvider>
-          </div>
+          <label
+            htmlFor="reminder-date-time"
+            className="block text-base font-medium sm:text-xl"
+          >
+            Date and time
+          </label>
+          <input
+            id="reminder-date-time"
+            type="datetime-local"
+            required
+            value={selectedDateTime}
+            onChange={(event) => setSelectedDateTime(event.currentTarget.value)}
+            className="block min-h-14 w-full min-w-0 rounded border border-gray-500 bg-transparent px-3 py-2 text-base sm:text-lg dark:scheme-dark"
+          />
         </div>
         <ColorPicker
           selectedColor={selectedColor}
           handleChange={setSelectedColor}
         />
         <div className="space-y-2">
-          <Typography className="flex flex-col gap-1 text-base font-medium sm:flex-row sm:items-end sm:justify-between sm:text-xl">
+          <label
+            htmlFor="reminder-text"
+            className="flex flex-col gap-1 text-base font-medium sm:flex-row sm:items-end sm:justify-between sm:text-xl"
+          >
             Enter your reminder here:
             <span
               aria-live="polite"
@@ -114,32 +103,33 @@ function ReminderForm({ dateISOString }: { dateISOString: string }) {
             >
               {remainingCharacters} characters {reminder ? "remaining" : "max"}
             </span>
-          </Typography>
-          <TextField
-            slotProps={{
-              htmlInput: {
-                "aria-describedby": REMINDER_CHARACTER_COUNT_ID,
-                "aria-label": "Reminder",
-                className: "text-base sm:text-lg",
-              },
-            }}
-            fullWidth={true}
+          </label>
+          <input
+            id="reminder-text"
+            type="text"
+            aria-label="Reminder"
+            aria-describedby={REMINDER_CHARACTER_COUNT_ID}
+            maxLength={REMINDER_MAX_LENGTH}
+            className="block min-h-14 w-full rounded border border-gray-500 bg-transparent px-3 py-2 text-base sm:text-lg"
             value={reminder}
             onChange={handleReminderChange}
           />
         </div>
         <div className="flex flex-wrap justify-end gap-4">
-          <Button color="inherit" onClick={closeReminder} type="button">
+          <button
+            className="min-h-11 cursor-pointer rounded px-3 text-sm font-medium tracking-wide uppercase hover:bg-gray-200 dark:hover:bg-gray-800"
+            onClick={closeReminder}
+            type="button"
+          >
             Cancel
-          </Button>
-          <Button
-            color="success"
+          </button>
+          <button
+            className="min-h-11 cursor-pointer rounded bg-green-700 px-4 text-sm font-medium tracking-wide text-white uppercase hover:bg-green-800 disabled:cursor-default disabled:bg-black/10 disabled:text-black/40 dark:disabled:bg-white/10 dark:disabled:text-white/40"
             disabled={!reminderCanBeSaved}
             type="submit"
-            variant="contained"
           >
             Save Reminder
-          </Button>
+          </button>
         </div>
       </form>
     </CustomDialog>
@@ -155,31 +145,28 @@ function ColorPicker({
 }) {
   return (
     <div aria-label="Reminder color" className="space-y-2" role="group">
-      <Typography className="text-base font-medium sm:text-xl">
+      <p className="text-base font-medium sm:text-xl">
         Select a color for the reminder:
-      </Typography>
+      </p>
       <div className="grid grid-cols-4 gap-2 rounded border border-solid border-gray-400 bg-gray-200 p-2 sm:grid-cols-8 sm:gap-3 dark:bg-gray-800">
         {REMINDER_COLORS.map((color) => (
           <button
             type="button"
             aria-pressed={color === selectedColor}
             className={combineClassNames(
-              "h-11 w-full min-w-0 rounded border-solid border-black sm:h-12",
+              reminderColorClass[color],
+              "flex h-11 w-full min-w-0 cursor-pointer items-center justify-center rounded border-solid border-black bg-(--reminder-color) sm:h-12",
               color === selectedColor ? "border-2" : "border",
             )}
             key={color}
             onClick={() => handleChange(color)}
-            style={{ backgroundColor: color }}
             aria-label={
               (color === selectedColor ? "Selected color is" : "Select color") +
               ` ${color}`
             }
           >
             {color === selectedColor ? (
-              <CheckIcon
-                aria-label={color + " is selected"}
-                className="h-7 w-7 sm:h-8 sm:w-8"
-              />
+              <CalendarIcon name="check" className="h-7 w-7 sm:h-8 sm:w-8" />
             ) : null}
           </button>
         ))}
