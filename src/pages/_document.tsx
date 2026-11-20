@@ -1,24 +1,9 @@
-import {
-  documentGetInitialProps,
-  DocumentHeadTags,
-  type DocumentHeadTagsProps,
-} from "@mui/material-nextjs/v16-pagesRouter"
-import {
-  Head,
-  Html,
-  Main,
-  NextScript,
-  type DocumentContext,
-  type DocumentProps,
-} from "next/document"
+import { Head, Html, Main, NextScript } from "next/document"
 
-type MyDocumentProps = DocumentProps & DocumentHeadTagsProps
-
-export default function MyDocument(props: MyDocumentProps) {
+export default function MyDocument() {
   return (
     <Html lang="en" className="h-full w-full" suppressHydrationWarning>
       <Head>
-        <DocumentHeadTags {...props} />
         <meta charSet="utf-8" />
         <link
           rel="apple-touch-icon"
@@ -49,6 +34,3 @@ export default function MyDocument(props: MyDocumentProps) {
     </Html>
   )
 }
-
-MyDocument.getInitialProps = async (context: DocumentContext) =>
-  documentGetInitialProps(context)
