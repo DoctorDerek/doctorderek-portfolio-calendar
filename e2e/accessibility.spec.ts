@@ -29,6 +29,10 @@ test("has no automated violations across primary calendar states", async ({
   await page.getByRole("button", { name: "Switch to dark theme" }).click()
   await expect(page.locator("html")).toHaveClass(/dark/)
   await expectNoAccessibilityViolations(page)
+  await page
+    .getByRole("button", { name: "Show reminder hours on the calendar" })
+    .click()
+  await expectNoAccessibilityViolations(page)
 
   await page.getByRole("button", { name: "Switch to light theme" }).click()
   await expect(page.locator("html")).not.toHaveClass(/dark/)

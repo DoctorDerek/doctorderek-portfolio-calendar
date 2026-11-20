@@ -1,5 +1,4 @@
-import AddIcon from "@mui/icons-material/Add"
-import { Fab } from "@mui/material"
+import CalendarIcon from "@/components/CalendarIcon"
 import { openAddReminder } from "@/redux/addReminderSlice"
 import { useAppDispatch } from "@/redux/hooks"
 import { formatCalendarDate } from "@/utils/dateUtils"
@@ -14,14 +13,14 @@ export default function AddReminderFab({ date }: { date?: Date | null }) {
     "Add Reminder" + (date ? ` for ${formatCalendarDate(date)}` : "")
 
   return (
-    <Fab
+    <button
+      type="button"
       aria-label={ariaLabel}
-      className="static h-auto! min-h-14! max-w-full min-w-0! shrink-0 gap-1 bg-green-600 fill-current px-4 py-3! whitespace-normal! text-white hover:bg-green-800 sm:min-h-16!"
+      className="bg-calendar-action inline-flex min-h-14 max-w-full min-w-0 shrink-0 cursor-pointer items-center justify-center gap-1 rounded-full px-4 py-3 text-sm font-medium tracking-wide text-black/85 uppercase shadow-md hover:bg-neutral-300 sm:min-h-16"
       onClick={onFabAddClick}
-      variant="extended"
     >
-      <AddIcon className="h-7 w-7 sm:h-9 sm:w-9" />
+      <CalendarIcon name="add" className="size-6" />
       Add Reminder
-    </Fab>
+    </button>
   )
 }

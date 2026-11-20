@@ -94,7 +94,7 @@ describe("reminder dialog interactions", () => {
 
     const reminderDialog = await openReminderDialog()
 
-    fireEvent.keyDown(reminderDialog, { key: "Escape" })
+    fireEvent(reminderDialog, new Event("cancel", { cancelable: true }))
 
     await waitFor(() => {
       expect(
@@ -129,7 +129,7 @@ describe("reminder dialog interactions", () => {
     fireEvent.change(screen.getByRole("textbox", { name: "Reminder" }), {
       target: { value: "Escape draft" },
     })
-    fireEvent.keyDown(reminderDialog, { key: "Escape" })
+    fireEvent(reminderDialog, new Event("cancel", { cancelable: true }))
 
     await waitFor(() => {
       expect(
@@ -270,7 +270,7 @@ describe("reminder dialog interactions", () => {
     launcherButton.focus()
 
     const reminderDialog = await openReminderDialog()
-    fireEvent.keyDown(reminderDialog, { key: "Escape" })
+    fireEvent(reminderDialog, new Event("cancel", { cancelable: true }))
 
     await waitFor(() => {
       expect(

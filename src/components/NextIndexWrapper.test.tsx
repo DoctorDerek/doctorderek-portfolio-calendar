@@ -1,12 +1,8 @@
-import { useTheme as useMaterialTheme } from "@mui/material/styles"
 import { render, screen } from "@testing-library/react"
 import type { ReactNode } from "react"
 import { renderToString } from "react-dom/server"
 import { beforeEach, describe, expect, it, vi } from "vitest"
-import NextIndexWrapper, {
-  MaterialUIWrapper,
-  ReduxWrapper,
-} from "@/components/NextIndexWrapper"
+import NextIndexWrapper, { ReduxWrapper } from "@/components/NextIndexWrapper"
 import { DISPLAY_PREFERENCE_STORAGE_KEY } from "@/redux/displayPreferenceStorage"
 
 const nextThemeState = vi.hoisted(() => ({ resolvedTheme: "light" }))
@@ -16,42 +12,10 @@ vi.mock("next-themes", () => ({
   useTheme: () => nextThemeState,
 }))
 
-function MaterialThemeMode() {
-  const materialTheme = useMaterialTheme()
-  return (
-    <output aria-label="Material theme mode">
-      {materialTheme.palette.mode}
-    </output>
-  )
-}
-
-describe("Material UI color scheme", () => {
+describe("Calendar application shell", () => {
   beforeEach(() => {
     localStorage.clear()
     nextThemeState.resolvedTheme = "light"
-  })
-
-  it("follows light and dark preferences from the application theme", () => {
-    const { rerender } = render(
-      <MaterialUIWrapper>
-        <MaterialThemeMode />
-      </MaterialUIWrapper>,
-    )
-
-    expect(
-      screen.getByRole("status", { name: "Material theme mode" }),
-    ).toHaveTextContent("light")
-
-    nextThemeState.resolvedTheme = "dark"
-    rerender(
-      <MaterialUIWrapper>
-        <MaterialThemeMode />
-      </MaterialUIWrapper>,
-    )
-
-    expect(
-      screen.getByRole("status", { name: "Material theme mode" }),
-    ).toHaveTextContent("dark")
   })
 
   it("composes the themed Redux application shell", () => {

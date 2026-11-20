@@ -1,5 +1,4 @@
-import CloseIcon from "@mui/icons-material/Close"
-import { Dialog, DialogContent, DialogTitle, Divider } from "@mui/material"
+import { useId, useLayoutEffect, useRef, type ReactNode } from "react"
 import CustomIcon from "@/components/CustomIcon"
 
 export default function CustomDialog({
@@ -11,41 +10,45 @@ export default function CustomDialog({
   title: string
   open: boolean
   onClose: () => void
-  children: React.ReactNode
+  children: ReactNode
 }) {
-  const id = title.replace(/\W/g, "-")
+  const titleId = useId()
+  const ref = useRef<HTMLDialogElement>(null)
+  useLayoutEffect(() => {
+    const dialog = ref.current!
+    if (open) dialog.showModal()
+    return () => dialog.close()
+  }, [open])
+
   return (
-    <Dialog
-      open={open}
-      onClose={onClose}
-      aria-labelledby={id}
-      fullWidth={true}
-      maxWidth="md"
-      slotProps={{
-        paper: {
-          classes: {
-            root: "m-4 min-w-0 max-h-[calc(100%-2rem)] rounded-2xl bg-gray-100 dark:bg-gray-900 sm:m-8 sm:max-h-[calc(100%-4rem)]",
-          },
-        },
+    <dialog
+      ref={ref}
+      aria-labelledby={titleId}
+      onCancel={(event) => {
+        event.preventDefault()
+        onClose()
       }}
+      onClick={(event) => {
+        if (event.target === event.currentTarget) onClose()
+      }}
+      className="dark:bg-calendar-dialog-night m-auto max-h-[calc(100dvh-min(4rem,12dvh))] w-[calc(100%-min(4rem,16vw))] max-w-[56.25rem] min-w-0 overflow-y-auto rounded bg-white p-0 text-black/85 shadow-2xl backdrop:bg-black/50 dark:text-white"
     >
-      <DialogTitle
-        id={id}
-        className="flex flex-wrap-reverse items-center justify-end gap-3 rounded-t-2xl px-4 py-3 text-2xl text-gray-900 sm:px-6 sm:py-4 sm:text-4xl dark:text-gray-100"
-      >
-        <span className="min-w-0 grow basis-40 wrap-anywhere">{title}</span>
+      <div className="flex flex-wrap-reverse items-center justify-end gap-3 border-b border-gray-200 px-[min(--spacing(6),6vw)] py-4 dark:border-gray-400">
+        <h2
+          id={titleId}
+          className="min-w-0 grow basis-40 text-xl font-medium wrap-anywhere"
+        >
+          {title}
+        </h2>
         <CustomIcon
           ariaLabel={`Close ${title}`}
-          color="gray"
           onClick={onClose}
-          Icon={CloseIcon}
+          icon="close"
         />
-      </DialogTitle>
-      <Divider className="bg-gray-200 dark:hidden" />
-      <Divider className="hidden bg-gray-400 dark:block" />
-      <DialogContent className="flex min-w-0 flex-col gap-4 px-4 py-4 text-base wrap-anywhere text-gray-900 sm:gap-6 sm:px-6 sm:py-5 sm:text-xl dark:text-gray-100">
+      </div>
+      <div className="flex min-w-0 flex-col gap-4 px-[min(--spacing(6),6vw)] py-5 text-base wrap-anywhere sm:gap-6 sm:text-xl">
         {children}
-      </DialogContent>
-    </Dialog>
+      </div>
+    </dialog>
   )
 }

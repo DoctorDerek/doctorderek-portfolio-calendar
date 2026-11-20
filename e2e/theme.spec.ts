@@ -19,7 +19,7 @@ test("persists explicit light and dark theme preferences", async ({ page }) => {
   const lightThemeToggle = page.getByRole("button", {
     name: "Switch to dark theme",
   })
-  await expect(lightThemeToggle).toHaveClass(/theme-toggle--light/)
+  await expect(lightThemeToggle).toHaveAttribute("aria-pressed", "false")
   await expect(page.locator("html")).not.toHaveClass(/dark/)
 
   await lightThemeToggle.click()
@@ -27,21 +27,21 @@ test("persists explicit light and dark theme preferences", async ({ page }) => {
   const darkThemeToggle = page.getByRole("button", {
     name: "Switch to light theme",
   })
-  await expect(darkThemeToggle).toHaveClass(/theme-toggle--dark/)
+  await expect(darkThemeToggle).toHaveAttribute("aria-pressed", "true")
   await expect(page.locator("html")).toHaveClass(/dark/)
 
   await page.reload()
 
-  await expect(darkThemeToggle).toHaveClass(/theme-toggle--dark/)
+  await expect(darkThemeToggle).toHaveAttribute("aria-pressed", "true")
   await expect(page.locator("html")).toHaveClass(/dark/)
 
   await darkThemeToggle.click()
-  await expect(lightThemeToggle).toHaveClass(/theme-toggle--light/)
+  await expect(lightThemeToggle).toHaveAttribute("aria-pressed", "false")
   await expect(page.locator("html")).not.toHaveClass(/dark/)
 
   await page.reload()
 
-  await expect(lightThemeToggle).toHaveClass(/theme-toggle--light/)
+  await expect(lightThemeToggle).toHaveAttribute("aria-pressed", "false")
   await expect(page.locator("html")).not.toHaveClass(/dark/)
 })
 
@@ -56,14 +56,14 @@ test("resolves the system theme as the operating system scheme changes", async (
 
   await expect(
     page.getByRole("button", { name: "Switch to light theme" }),
-  ).toHaveClass(/theme-toggle--dark/)
+  ).toHaveAttribute("aria-pressed", "true")
   await expect(page.locator("html")).toHaveClass(/dark/)
 
   await page.emulateMedia({ colorScheme: "light" })
 
   await expect(
     page.getByRole("button", { name: "Switch to dark theme" }),
-  ).toHaveClass(/theme-toggle--light/)
+  ).toHaveAttribute("aria-pressed", "false")
   await expect(page.locator("html")).not.toHaveClass(/dark/)
 })
 
@@ -83,7 +83,7 @@ test("hydrates a persisted dark theme without mismatch diagnostics", async ({
 
   await expect(
     page.getByRole("button", { name: "Switch to light theme" }),
-  ).toHaveClass(/theme-toggle--dark/)
+  ).toHaveAttribute("aria-pressed", "true")
   expect(
     browserDiagnostics.filter((diagnostic) =>
       /hydration|did not match|server rendered html/i.test(diagnostic),
@@ -107,7 +107,7 @@ test("preserves keyboard focus and honors reduced motion", async ({ page }) => {
   })
   await expect(darkThemeToggle).toBeFocused()
   const sunTransitionDuration = await page
-    .locator(".sun")
+    .locator("[data-artwork='sun']")
     .evaluate((sun) =>
       Number.parseFloat(window.getComputedStyle(sun).transitionDuration),
     )

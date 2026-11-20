@@ -20,7 +20,7 @@ A responsive TypeScript calendar for creating, color-coding, reviewing, and dele
 | ---------------------- | ------------------------------------------------------------------------------------------------------------- |
 | Application            | Next.js 16 and React 19                                                                                       |
 | State                  | Redux Toolkit 2 and React Redux 9                                                                             |
-| Interface              | Material UI 9, MUI X 9, Tailwind CSS 4, and Emotion 11                                                        |
+| Interface              | Tailwind CSS 4, native HTML dialogs and date/time inputs                                                        |
 | Interaction            | next-themes 0.4, Motion reminder-list choreography, native CSS transitions, and system reduced-motion support |
 | Dates                  | Day.js 1                                                                                                      |
 | Delivery               | Bounded responsive WebP optimization, one-year image caching, static asset hashes, and self-hosted Roboto     |
