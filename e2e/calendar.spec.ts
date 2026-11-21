@@ -72,6 +72,36 @@ for (const width of [320, 390]) {
   })
 }
 
+test("shows all reminder colors and both actions on a short phone", async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 320, height: 568 })
+  const opener = page.getByRole("button", { name: "Add Reminder", exact: true })
+  await opener.click()
+  const editor = page.getByRole("dialog", { name: "Add Reminder" })
+  const colors = editor
+    .getByRole("group", { name: "Reminder color" })
+    .getByRole("button")
+  await expect(colors).toHaveCount(8)
+  for (const color of await colors.all()) {
+    await expect(color).toBeInViewport({ ratio: 1 })
+    const bounds = await color.boundingBox()
+    expect(bounds!.width).toBeGreaterThanOrEqual(44)
+    expect(bounds!.height).toBeGreaterThanOrEqual(44)
+  }
+  const save = editor.getByRole("button", { name: "Save Reminder" })
+  const cancel = editor.getByRole("button", { name: "Cancel" })
+  await expect(save).toBeInViewport({ ratio: 1 })
+  await expect(cancel).toBeInViewport({ ratio: 1 })
+  expect((await save.boundingBox())!.y).toBeCloseTo(
+    (await cancel.boundingBox())!.y,
+    0,
+  )
+  await expect(editor).toHaveJSProperty("scrollTop", 0)
+  await page.keyboard.press("Escape")
+  await expect(opener).toBeFocused()
+})
+
 test("supports keyboard date and time editing with explicit confirmation", async ({
   page,
 }) => {
