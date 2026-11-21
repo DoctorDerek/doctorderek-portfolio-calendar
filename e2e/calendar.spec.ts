@@ -77,7 +77,8 @@ test("shows all reminder colors and both actions on a short phone", async ({
 }) => {
   await page.setViewportSize({ width: 320, height: 568 })
   const opener = page.getByRole("button", { name: "Add Reminder", exact: true })
-  await opener.click()
+  await opener.focus()
+  await page.keyboard.press("Enter")
   const editor = page.getByRole("dialog", { name: "Add Reminder" })
   const colors = editor
     .getByRole("group", { name: "Reminder color" })
@@ -99,7 +100,11 @@ test("shows all reminder colors and both actions on a short phone", async ({
   )
   await expect(editor).toHaveJSProperty("scrollTop", 0)
   await page.keyboard.press("Escape")
+  await expect(editor).toBeHidden()
   await expect(opener).toBeFocused()
+  await opener.click()
+  await cancel.click()
+  await expect(editor).toBeHidden()
 })
 
 test("supports keyboard date and time editing with explicit confirmation", async ({
