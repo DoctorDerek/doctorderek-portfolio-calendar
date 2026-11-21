@@ -518,50 +518,35 @@ test("opens agenda-scoped Add Reminder using the day-specific action", async ({
 test("supports calendar keyboard traversal and opens agenda on Enter", async ({
   page,
 }) => {
-  const currentDateButton = page.locator('button[aria-current="date"]')
-  await expect(currentDateButton).toHaveCount(1)
+  const today = page.locator('button[aria-current="date"]')
+  await expect(today).toHaveCount(1)
+  await expect(today).toHaveAccessibleName(/./)
+  const weeks = page
+    .getByRole("row")
+    .filter({ has: page.getByRole("gridcell") })
+  const thisWeek = weeks.nth(1).getByRole("button")
+  const nextWeek = weeks.nth(2).getByRole("button")
+  const sunday = nextWeek.first()
 
-  const initialFocusedLabel = await currentDateButton.getAttribute("aria-label")
-  expect(initialFocusedLabel).toBeTruthy()
-
-  await currentDateButton.focus()
+  await thisWeek.nth(3).focus()
   await page.keyboard.press("ArrowRight")
-
-  const rightFocusLabel = await page.evaluate(() => {
-    return document.activeElement?.getAttribute("aria-label")
-  })
-  expect(rightFocusLabel).toBeTruthy()
-  expect(rightFocusLabel).not.toBe(initialFocusedLabel)
-
+  await expect(thisWeek.nth(4)).toBeFocused()
   await page.keyboard.press("ArrowDown")
-  const downFocusLabel = await page.evaluate(() => {
-    return document.activeElement?.getAttribute("aria-label")
-  })
-  expect(downFocusLabel).toBeTruthy()
-  expect(downFocusLabel).not.toBe(rightFocusLabel)
-
+  await expect(nextWeek.nth(4)).toBeFocused()
   await page.keyboard.press("Home")
-  const homeFocusLabel = await page.evaluate(() => {
-    return document.activeElement?.getAttribute("aria-label")
-  })
-  expect(homeFocusLabel).toBeTruthy()
-  expect(homeFocusLabel).not.toBe(downFocusLabel)
+  await expect(sunday).toBeFocused()
+  await page.keyboard.press("Home")
+  await expect(sunday).toBeFocused()
 
   await page.keyboard.press("Enter")
   const agendaDialog = page.getByRole("dialog", { name: /^Agenda:/ })
   await expect(agendaDialog).toBeVisible()
-
-  const closeAgenda = agendaDialog.getByRole("button", {
-    name: /^Close Agenda: /,
-  })
-  await expect(closeAgenda).toBeVisible()
+  await expect(
+    agendaDialog.getByRole("button", { name: /^Close Agenda: / }),
+  ).toBeVisible()
   await page.keyboard.press("Escape")
   await expect(agendaDialog).toBeHidden()
-
-  const nextFocusedLabel = await page.evaluate(() => {
-    return document.activeElement?.getAttribute("aria-label")
-  })
-  expect(nextFocusedLabel).toBe(homeFocusLabel)
+  await expect(sunday).toBeFocused()
 })
 
 test("moves focus out of calendar with Tab", async ({ page }) => {
