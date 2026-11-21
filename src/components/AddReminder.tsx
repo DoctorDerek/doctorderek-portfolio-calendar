@@ -61,8 +61,9 @@ function ReminderForm({ dateISOString }: { dateISOString: string }) {
   return (
     <CustomDialog title="Add Reminder" open={true} onClose={closeReminder}>
       <form
+        id="reminder-form"
         aria-label="Reminder details"
-        className="flex min-w-0 flex-col gap-5 sm:gap-6"
+        className="reminder-fit:gap-3 flex min-w-0 flex-col gap-5 sm:gap-6"
         onSubmit={saveReminder}
       >
         <div className="space-y-2">
@@ -115,7 +116,7 @@ function ReminderForm({ dateISOString }: { dateISOString: string }) {
             onChange={handleReminderChange}
           />
         </div>
-        <div className="flex flex-wrap justify-end gap-4">
+        <div className="reminder-fit:gap-2 flex flex-wrap justify-end gap-4">
           <button
             className="min-h-11 cursor-pointer rounded px-3 text-sm font-medium tracking-wide uppercase hover:bg-gray-200 dark:hover:bg-gray-800"
             onClick={closeReminder}
