@@ -21,32 +21,40 @@ test.beforeEach(async ({ page }) => {
   await waitForCalendarHydration(page)
 })
 
-test("has no automated violations across primary calendar states", async ({
-  page,
-}) => {
-  await expectNoAccessibilityViolations(page)
+test.describe("after enabling reminder hours in dark mode", () => {
+  test.beforeEach(async ({ page }) => {
+    await page.getByRole("button", { name: "Switch to dark theme" }).click()
+    await expect(page.locator("html")).toHaveClass(/dark/)
+    await page
+      .getByRole("button", { name: "Show reminder hours on the calendar" })
+      .click()
+  })
 
-  await page.getByRole("button", { name: "Switch to dark theme" }).click()
-  await expect(page.locator("html")).toHaveClass(/dark/)
-  await expectNoAccessibilityViolations(page)
-  await page
-    .getByRole("button", { name: "Show reminder hours on the calendar" })
-    .click()
-  await expectNoAccessibilityViolations(page)
+  test("has no automated violations with reminder hours visible", async ({
+    page,
+  }) => {
+    await expectNoAccessibilityViolations(page)
+  })
 
-  await page.getByRole("button", { name: "Switch to light theme" }).click()
-  await expect(page.locator("html")).not.toHaveClass(/dark/)
-  await expect(
-    page.getByRole("button", { name: "Switch to dark theme" }),
-  ).toBeVisible()
-  await page.getByRole("button", { name: "Add Reminder" }).click()
-  await expect(page.getByRole("dialog", { name: "Add Reminder" })).toBeVisible()
-  await expectNoAccessibilityViolations(page)
+  test("keeps both dialogs accessible after switching back to light", async ({
+    page,
+  }) => {
+    await page.getByRole("button", { name: "Switch to light theme" }).click()
+    await expect(page.locator("html")).not.toHaveClass(/dark/)
+    await expect(
+      page.getByRole("button", { name: "Switch to dark theme" }),
+    ).toBeVisible()
+    await page.getByRole("button", { name: "Add Reminder" }).click()
+    await expect(
+      page.getByRole("dialog", { name: "Add Reminder" }),
+    ).toBeVisible()
+    await expectNoAccessibilityViolations(page)
 
-  await page.getByRole("button", { name: "Close Add Reminder" }).click()
-  await page.locator('button[aria-current="date"]').click()
-  await expect(page.getByRole("dialog", { name: /^Agenda:/ })).toBeVisible()
-  await expectNoAccessibilityViolations(page)
+    await page.getByRole("button", { name: "Close Add Reminder" }).click()
+    await page.locator('button[aria-current="date"]').click()
+    await expect(page.getByRole("dialog", { name: /^Agenda:/ })).toBeVisible()
+    await expectNoAccessibilityViolations(page)
+  })
 })
 
 test("has no automated violations on initial light calendar", async ({

@@ -1,6 +1,14 @@
 @import "tailwindcss";
 @custom-variant dark (&:where(.dark, .dark *));
 
+@custom-variant reminder-fit {
+  @media (height < 40rem) and (width < theme(--breakpoint-xl)) {
+    &:where(dialog:has(#reminder-form), dialog:has(#reminder-form) *) {
+      @slot;
+    }
+  }
+}
+
 @theme {
   --color-calendar-paper-night: #1e1e1e;
   --color-calendar-dialog-night: #383838;
