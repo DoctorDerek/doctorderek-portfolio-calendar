@@ -61,12 +61,11 @@ function ReminderForm({ dateISOString }: { dateISOString: string }) {
   return (
     <CustomDialog title="Add Reminder" open={true} onClose={closeReminder}>
       <form
-        id="reminder-form"
         aria-label="Reminder details"
-        className="reminder-fit:gap-3 flex min-w-0 flex-col gap-5 sm:gap-6"
+        className="flex min-w-0 flex-col gap-2 sm:gap-6"
         onSubmit={saveReminder}
       >
-        <div className="space-y-2">
+        <div className="space-y-1 xl:space-y-2">
           <label
             htmlFor="reminder-date-time"
             className="block text-base font-medium sm:text-xl"
@@ -79,14 +78,14 @@ function ReminderForm({ dateISOString }: { dateISOString: string }) {
             required
             value={selectedDateTime}
             onChange={(event) => setSelectedDateTime(event.currentTarget.value)}
-            className="block min-h-14 w-full min-w-0 rounded border border-gray-500 bg-transparent px-3 py-2 text-base sm:text-lg dark:scheme-dark"
+            className="block min-h-11 w-full min-w-0 rounded border border-gray-500 bg-transparent px-3 py-2 text-base sm:text-lg xl:min-h-14 dark:scheme-dark"
           />
         </div>
         <ColorPicker
           selectedColor={selectedColor}
           handleChange={setSelectedColor}
         />
-        <div className="space-y-2">
+        <div className="space-y-1 xl:space-y-2">
           <label
             htmlFor="reminder-text"
             className="flex flex-col gap-1 text-base font-medium sm:flex-row sm:items-end sm:justify-between sm:text-xl"
@@ -111,12 +110,12 @@ function ReminderForm({ dateISOString }: { dateISOString: string }) {
             aria-label="Reminder"
             aria-describedby={REMINDER_CHARACTER_COUNT_ID}
             maxLength={REMINDER_MAX_LENGTH}
-            className="block min-h-14 w-full rounded border border-gray-500 bg-transparent px-3 py-2 text-base sm:text-lg"
+            className="block min-h-11 w-full rounded border border-gray-500 bg-transparent px-3 py-2 text-base sm:text-lg xl:min-h-14"
             value={reminder}
             onChange={handleReminderChange}
           />
         </div>
-        <div className="reminder-fit:gap-2 flex flex-wrap justify-end gap-4">
+        <div className="flex flex-wrap justify-end gap-2 xl:gap-4">
           <button
             className="min-h-11 cursor-pointer rounded px-3 text-sm font-medium tracking-wide uppercase hover:bg-gray-200 dark:hover:bg-gray-800"
             onClick={closeReminder}
@@ -125,7 +124,7 @@ function ReminderForm({ dateISOString }: { dateISOString: string }) {
             Cancel
           </button>
           <button
-            className="min-h-11 cursor-pointer rounded bg-green-700 px-4 text-sm font-medium tracking-wide text-white uppercase hover:bg-green-800 disabled:cursor-default disabled:bg-black/10 disabled:text-black/40 dark:disabled:bg-white/10 dark:disabled:text-white/40"
+            className="min-h-11 cursor-pointer rounded bg-green-700 px-3 text-sm font-medium tracking-wide text-white uppercase hover:bg-green-800 disabled:cursor-default disabled:bg-black/10 disabled:text-black/40 xl:px-4 dark:disabled:bg-white/10 dark:disabled:text-white/40"
             disabled={!reminderCanBeSaved}
             type="submit"
           >
@@ -145,7 +144,11 @@ function ColorPicker({
   handleChange: React.Dispatch<React.SetStateAction<ReminderColor>>
 }) {
   return (
-    <div aria-label="Reminder color" className="space-y-2" role="group">
+    <div
+      aria-label="Reminder color"
+      className="space-y-1 xl:space-y-2"
+      role="group"
+    >
       <p className="text-base font-medium sm:text-xl">
         Select a color for the reminder:
       </p>
