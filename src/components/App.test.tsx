@@ -22,14 +22,40 @@ describe("calendar month navigation", () => {
 
     expect(screen.getByText("July 2026")).toBeInTheDocument()
 
-    fireEvent.click(screen.getByRole("button", { name: "Next Month" }))
+    const header = within(screen.getByRole("banner"))
+    fireEvent.click(header.getByRole("button", { name: "Next Month" }))
 
     expect(screen.getByText("August 2026")).toBeInTheDocument()
 
-    fireEvent.click(screen.getByRole("button", { name: "Previous Month" }))
-    fireEvent.click(screen.getByRole("button", { name: "Previous Month" }))
+    const previous = header.getByRole("button", { name: "Previous Month" })
+    fireEvent.click(previous)
+    fireEvent.click(previous)
 
     expect(screen.getByText("June 2026")).toBeInTheDocument()
+  })
+
+  it("preserves an explicit focus destination and offers an unfocused month command to its counterpart", () => {
+    renderWithProviders(<App />)
+    const heading = within(screen.getByRole("banner"))
+    const actions = within(
+      screen.getByRole("group", { name: "Month navigation" }),
+    )
+    const headerPrevious = heading.getByRole("button", {
+      name: "Previous Month",
+    })
+    const footerPrevious = actions.getByRole("button", {
+      name: "Previous Month",
+    })
+    const nextMonth = actions.getByRole("button", { name: "Next Month" })
+    headerPrevious.focus()
+    nextMonth.focus()
+    expect(nextMonth).toHaveFocus()
+
+    headerPrevious.focus()
+    headerPrevious.blur()
+    expect(footerPrevious).toHaveFocus()
+    footerPrevious.blur()
+    expect(headerPrevious).toHaveFocus()
   })
 
   it("exposes weekday headers and six weeks through calendar grid semantics", () => {
@@ -90,7 +116,11 @@ describe("calendar month navigation", () => {
       }),
     ])
 
-    fireEvent.click(screen.getByRole("button", { name: "Next Month" }))
+    fireEvent.click(
+      within(screen.getByRole("banner")).getByRole("button", {
+        name: "Next Month",
+      }),
+    )
 
     const februaryGrid = screen.getByRole("grid", { name: "February 2026" })
     expect(
@@ -192,13 +222,21 @@ describe("calendar month navigation", () => {
       screen.getByRole("button", { name: "Wednesday July 15, 2026" }),
     ).toHaveAttribute("aria-current", "date")
 
-    fireEvent.click(screen.getByRole("button", { name: "Next Month" }))
+    fireEvent.click(
+      within(screen.getByRole("banner")).getByRole("button", {
+        name: "Next Month",
+      }),
+    )
 
     expect(
       screen.getByRole("button", { name: "Saturday August 15, 2026" }),
     ).not.toHaveAttribute("aria-current")
 
-    fireEvent.click(screen.getByRole("button", { name: "Previous Month" }))
+    fireEvent.click(
+      within(screen.getByRole("banner")).getByRole("button", {
+        name: "Previous Month",
+      }),
+    )
 
     expect(
       screen.getByRole("button", { name: "Wednesday July 15, 2026" }),

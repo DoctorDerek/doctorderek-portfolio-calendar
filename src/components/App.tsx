@@ -5,7 +5,7 @@ import { useState } from "react"
 import calendarBackground from "@/assets/benjamin-patin-dOzoyaYjCbM-unsplash.jpg"
 import AddReminderFab from "@/components/AddReminderFab"
 import CalendarGrid from "@/components/CalendarGrid"
-import CustomIcon from "@/components/CustomIcon"
+import MonthNavigationButton from "@/components/MonthNavigationButton"
 import StorageStatus from "@/components/StorageStatus"
 import ToggleShowHours from "@/components/ToggleShowHours"
 import useCurrentDate, { useInitialCurrentDate } from "@/hooks/useCurrentDate"
@@ -53,17 +53,23 @@ export default function App({
 
   return (
     <>
-      <div className="relative z-10 flex min-h-screen w-full items-start justify-center">
-        <div className="dark:bg-calendar-paper-night @container m-2 flex w-full max-w-[100rem] min-w-0 flex-col items-center justify-center rounded bg-white p-2 text-black/85 shadow-sm sm:m-6 sm:p-4 dark:text-white">
-          <header className="grid w-full grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-x-2 gap-y-3 py-3 sm:gap-x-3 sm:py-5 md:grid-cols-[auto_auto_minmax(0,1fr)_auto_auto] md:gap-4">
-            <div className="col-start-1 row-start-1 justify-self-start @max-3xs:row-start-2">
-              <CustomIcon
-                ariaLabel="Previous Month"
-                onClick={showPreviousMonth}
-                icon="previous"
-              />
-            </div>
-            <div className="col-span-3 col-start-1 row-start-2 flex min-w-0 flex-wrap items-center justify-between gap-3 md:contents @max-3xs:row-start-3">
+      <div className="@container/calendar-screen relative z-10 flex min-h-dvh w-full items-start justify-center md:min-h-screen">
+        <div className="dark:bg-calendar-paper-night @container m-2 grid h-[calc(100dvh-1rem)] min-h-min w-full max-w-[100rem] min-w-0 grid-cols-[minmax(0,1fr)] grid-rows-[auto_minmax(auto,1fr)_auto] content-start items-stretch justify-stretch gap-1.5 rounded bg-white p-2 pb-[calc(.5rem+env(safe-area-inset-bottom,0px))] text-black/85 shadow-sm md:m-6 md:flex md:h-auto md:min-h-0 md:flex-col md:items-center md:justify-center md:gap-0 md:p-4 @max-3xs/calendar-screen:flex @max-3xs/calendar-screen:h-auto @max-3xs/calendar-screen:min-h-[calc(100dvh-1rem)] @max-3xs/calendar-screen:flex-col @max-3xs/calendar-screen:justify-start dark:text-white">
+          <header className="flex w-full flex-col md:grid md:grid-cols-[auto_auto_minmax(0,1fr)_auto_auto] md:items-center md:gap-4 md:py-5">
+            <MonthNavigationButton
+              direction="previous"
+              placement="header"
+              onClick={showPreviousMonth}
+            />
+            <h1
+              className="min-w-0 text-center text-2xl font-bold wrap-anywhere text-gray-900 drop-shadow-lg max-md:leading-tight sm:text-4xl md:col-start-3 md:row-start-1 lg:text-5xl dark:text-gray-100"
+              id="calendar-month-heading"
+              aria-live="polite"
+              aria-atomic="true"
+            >
+              {formatCalendarMonthHeading(visibleMonth)}
+            </h1>
+            <div className="flex min-w-0 flex-wrap items-center justify-between gap-x-3 gap-y-1 md:contents">
               <div className="h-11 w-20 justify-self-start sm:w-28 md:col-start-2 md:row-start-1 lg:w-36">
                 <ToggleDarkMode />
               </div>
@@ -71,21 +77,11 @@ export default function App({
                 <ToggleShowHours />
               </div>
             </div>
-            <h1
-              className="col-start-2 row-start-1 min-w-0 text-center text-2xl font-bold wrap-anywhere text-gray-900 drop-shadow-lg sm:text-4xl md:col-start-3 lg:text-5xl @max-3xs:col-span-3 @max-3xs:col-start-1 dark:text-gray-100"
-              id="calendar-month-heading"
-              aria-live="polite"
-              aria-atomic="true"
-            >
-              {formatCalendarMonthHeading(visibleMonth)}
-            </h1>
-            <div className="col-start-3 row-start-1 justify-self-end md:col-start-5 @max-3xs:row-start-2">
-              <CustomIcon
-                ariaLabel="Next Month"
-                onClick={showNextMonth}
-                icon="next"
-              />
-            </div>
+            <MonthNavigationButton
+              direction="next"
+              placement="header"
+              onClick={showNextMonth}
+            />
           </header>
           <CalendarGrid
             activeDate={activeDate}
@@ -94,9 +90,25 @@ export default function App({
             onVisibleMonthChange={setVisibleMonth}
             visibleMonth={visibleMonth}
           />
-          <div className="mt-3 flex w-full items-center gap-3">
+          <div className="flex w-full flex-wrap items-center justify-end gap-x-2 gap-y-1.5 md:mt-3 md:flex-nowrap md:justify-start md:gap-3">
             <StorageStatus />
             <AddReminderFab />
+            <div
+              role="group"
+              aria-label="Month navigation"
+              className="flex items-center gap-0.5 md:hidden"
+            >
+              <MonthNavigationButton
+                direction="previous"
+                placement="actions"
+                onClick={showPreviousMonth}
+              />
+              <MonthNavigationButton
+                direction="next"
+                placement="actions"
+                onClick={showNextMonth}
+              />
+            </div>
           </div>
         </div>
         {agendaIsOpen ? <AgendaDay /> : null}
