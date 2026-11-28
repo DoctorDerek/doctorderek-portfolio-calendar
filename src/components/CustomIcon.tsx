@@ -3,17 +3,20 @@ import combineClassNames from "@/utils/combineClassNames"
 
 export default function CustomIcon({
   ariaLabel,
+  id,
   onClick,
   icon,
   size = "large",
 }: {
   ariaLabel: string
+  id?: string
   onClick: () => void
   icon: CalendarIconName
   size?: "small" | "large"
 }) {
   return (
     <button
+      id={id}
       type="button"
       aria-label={ariaLabel}
       title={ariaLabel}

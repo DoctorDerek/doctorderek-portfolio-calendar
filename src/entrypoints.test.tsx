@@ -1,4 +1,10 @@
-import { fireEvent, render, screen, waitFor } from "@testing-library/react"
+import {
+  fireEvent,
+  render,
+  screen,
+  waitFor,
+  within,
+} from "@testing-library/react"
 import { HeadManagerContext } from "next/dist/shared/lib/head-manager-context.shared-runtime"
 import { HtmlContext } from "next/dist/shared/lib/html-context.shared-runtime"
 import { RouterContext } from "next/dist/shared/lib/router-context.shared-runtime"
@@ -105,7 +111,10 @@ describe("authored Next page entry points", () => {
       screen.getByRole("heading", { level: 1, name: "July 2026" }),
     ).toBeVisible()
     expect(screen.getByRole("region", { name: "Calendar" })).toBeVisible()
-    fireEvent.click(screen.getByRole("button", { name: "Next Month" }))
+    const monthNavigation = within(
+      screen.getByRole("group", { name: "Month navigation" }),
+    )
+    fireEvent.click(monthNavigation.getByRole("button", { name: "Next Month" }))
     expect(
       screen.getByRole("heading", { level: 1, name: "August 2026" }),
     ).toBeVisible()

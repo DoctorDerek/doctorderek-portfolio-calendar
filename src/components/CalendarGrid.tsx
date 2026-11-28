@@ -62,11 +62,11 @@ export default function CalendarGrid({
   return (
     <section
       aria-label="Calendar"
-      className="flex w-full flex-col items-center justify-center overflow-hidden rounded-xl shadow-xl"
+      className="min-h-24 w-full scroll-pt-6 overflow-auto rounded-xl shadow-xl md:flex md:min-h-0 md:flex-col md:items-center md:justify-center md:overflow-hidden @max-3xs/calendar-screen:min-h-0 @max-3xs/calendar-screen:flex-none @max-3xs/calendar-screen:overflow-clip"
     >
       <div
         aria-labelledby="calendar-month-heading"
-        className="w-full"
+        className="flex min-h-full w-full flex-col md:block md:min-h-0 @max-3xs/calendar-screen:block @max-3xs/calendar-screen:min-h-0"
         role="grid"
       >
         <CalendarGridDaysRow />
@@ -89,7 +89,7 @@ export default function CalendarGrid({
 function CalendarGridDaysRow() {
   return (
     <div
-      className="grid w-full grid-cols-7 bg-white/65 py-1 sm:py-2 dark:bg-gray-950/70"
+      className="dark:bg-calendar-paper-night sticky top-0 z-1 grid w-full flex-none grid-cols-7 bg-white py-1 sm:py-2 md:static md:z-auto md:bg-white/65 @max-3xs/calendar-screen:static md:dark:bg-gray-950/70"
       role="row"
     >
       {CALENDAR_WEEKDAY_NAMES.map((weekdayName) => (
@@ -217,10 +217,13 @@ function CalendarGridMonth({
   }, [calendarCells, visibleMonth])
 
   return (
-    <div role="rowgroup">
+    <div
+      role="rowgroup"
+      className="flex flex-[1_0_auto] flex-col md:block @max-3xs/calendar-screen:block"
+    >
       {calendarWeeks.map((calendarWeek) => (
         <div
-          className="grid w-full grid-cols-7"
+          className="grid w-full flex-[1_0_auto] grid-cols-7"
           key={getCalendarDateKey(calendarWeek[0])}
           role="row"
         >

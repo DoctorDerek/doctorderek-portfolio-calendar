@@ -1,3 +1,4 @@
+import type { MouseEvent } from "react"
 import CalendarIcon from "@/components/CalendarIcon"
 import { openAddReminder } from "@/redux/addReminderSlice"
 import { useAppDispatch } from "@/redux/hooks"
@@ -5,7 +6,8 @@ import { formatCalendarDate } from "@/utils/dateUtils"
 
 export default function AddReminderFab({ date }: { date?: Date | null }) {
   const dispatch = useAppDispatch()
-  const onFabAddClick = () => {
+  const onFabAddClick = (event: MouseEvent<HTMLButtonElement>) => {
+    event.currentTarget.focus({ preventScroll: true })
     dispatch(openAddReminder((date ?? new Date()).toISOString()))
   }
 
